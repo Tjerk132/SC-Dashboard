@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/tilesize.dart';
+import 'package:flutter_test_project/models/tile_size.dart';
 import 'package:flutter_test_project/printers/logger.dart';
 
 class ImageDao {

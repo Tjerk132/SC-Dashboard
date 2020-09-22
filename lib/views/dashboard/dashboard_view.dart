@@ -3,7 +3,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
-import 'package:flutter_test_project/models/tilesize.dart';
+import 'package:flutter_test_project/models/tile_size.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

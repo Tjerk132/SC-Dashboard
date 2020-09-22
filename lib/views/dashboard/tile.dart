@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/tilesize.dart';
+import 'package:flutter_test_project/models/tile_size.dart';
 
 class Tile extends StatefulWidget {
   const Tile(this.index, this.size, this.image);

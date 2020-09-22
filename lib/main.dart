@@ -1,18 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/context_navigator.dart';
 import 'package:flutter_test_project/dialogs/dialog_actions.dart';
-import 'file:///C:/Users/Tjerk_2/Desktop/flutter_test_project/lib/views/browser/browser_view.dart';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:flutter_test_project/views/browser/browser_view.dart';
 
 import 'package:flutter_test_project/views/todo_view.dart';
 
 import 'controllers/todo_view_controller.dart';
+import 'subject.dart';
 import 'dialogs/custom_dialog.dart';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 void main() {
-  runApp(App());
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Subject()),
+        ],
+        child: App()
+      )
+  );
 }
 
 class App extends StatelessWidget {
@@ -44,10 +56,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    this.performResumeCheckVersionAndInternet();
+    this.checkInternet();
   }
 
-  void performResumeCheckVersionAndInternet() {
+  void checkInternet() {
     this.isConnectedToInternet().then((isConnected) => {
       print('isConnected: $isConnected'),
       if (!isConnected)
@@ -97,13 +109,7 @@ class _HomePageState extends State<HomePage> {
         leading:
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () =>
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BrowserView()),
-              )
-            }
+            onPressed: () => ContextNavigator.push(context, BrowserView())
           ),
       ),
       body: TodoView(controller: controller),

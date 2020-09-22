@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 
 class ComputeTest extends StatefulWidget {
   @override
@@ -11,6 +10,7 @@ class _ComputeTestState extends State<ComputeTest> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Compute test'),
@@ -36,18 +36,21 @@ class _ComputeTestState extends State<ComputeTest> {
               },
               child: Text("calculate non-computed")
           ),
+//        LineChartSample1(),
+//        PieChartSample1(),
+//        BarChartGraph(),
         ],
-      ),
+      )
     );
   }
 }
 
-int press (int max) {
+
+int press(int max) {
   int sum = 0;
   DateTime start = DateTime.now();
   for (int i = 0; i < max; ++i) {
-    sum+= i;
-
+    sum += i;
   }
   DateTime end = DateTime.now();
   print('done in:  ${end.difference(start).inMilliseconds}');
