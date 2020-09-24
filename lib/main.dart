@@ -1,29 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test_project/context_navigator.dart';
-import 'package:flutter_test_project/dialogs/dialog_actions.dart';
-
-import 'package:connectivity/connectivity.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:flutter_test_project/views/browser/browser_view.dart';
-
-import 'package:flutter_test_project/views/todo_view.dart';
-
-import 'controllers/todo_view_controller.dart';
-import 'subject.dart';
-import 'dialogs/custom_dialog.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_test_project/connection.dart';
+import 'package:flutter_test_project/context_navigator.dart';
+import 'package:flutter_test_project/dialogs/dialog_actions.dart';
+import 'package:flutter_test_project/views/browser/browser_view.dart';
+import 'package:flutter_test_project/views/todo_view.dart';
+
+import 'controllers/todo_view_controller.dart';
+import 'slot_machine_provider.dart';
+
+import 'dialogs/custom_dialog.dart';
+
 void main() {
   runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => Subject()),
-        ],
-        child: App()
-      )
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SlotMachineProvider(),
+        ),
+      ],
+      child: App(),
+    ),
   );
 }
 
@@ -60,24 +59,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void checkInternet() {
-    this.isConnectedToInternet().then((isConnected) => {
-      print('isConnected: $isConnected'),
-      if (!isConnected)
-      {
-        print('Please connect to the internet'),
-        this.showDialogConnectToInternet(
-            'It is advised to connect you device to the internet in order to use this application'),
-      }
-      });
-  }
-
-  Future<bool> isConnectedToInternet() async {
-    ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
-    // user is connected via wifi or mobile data
-    if (connectivityResult != ConnectivityResult.none) {
-      return await DataConnectionChecker().hasConnection ? true : false;
-    }
-    return false;
+    Connection.isConnectedToInternet().then(
+      (isConnected) => {
+        print('isConnected: $isConnected'),
+        if (!isConnected)
+          {
+            print('Please connect to the internet'),
+            this.showDialogConnectToInternet(
+                'It is advised to connect you device to the internet in order to use this application'),
+          }
+      },
+    );
   }
 
   showDialogConnectToInternet(textAlert) async {
@@ -106,11 +98,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        leading:
-          IconButton(
+        leading: IconButton(
             icon: Icon(Icons.search),
-            onPressed: () => ContextNavigator.push(context, BrowserView())
-          ),
+            onPressed: () => ContextNavigator.push(context, BrowserView())),
       ),
       body: TodoView(controller: controller),
       floatingActionButton: FloatingActionButton.extended(

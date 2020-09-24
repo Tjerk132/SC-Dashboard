@@ -16,7 +16,8 @@ class SlotMachine {
 
   /// set the minimal and maximal index the slotMachine slot can animate to, to calculate the
   /// duration of the animation in [calculateDurationMillis]
-  SlotMachineSpin calculateSpin(int currentIndex, int itemLength, {curve = Curves.easeOutSine}) {
+  SlotMachineSpin calculateSpin(int currentIndex, int itemLength,
+      {curve = Curves.easeOutSine}) {
     // skip index 0 & 1
     int minIndex = 2;
     // e.g if 99 is the last index then the length is 100, and maxIndex is 100 - 3 = 97
@@ -25,24 +26,25 @@ class SlotMachine {
 
     int toIndex = r.nextInt(itemLength - 1);
 
-    if(toIndex < minIndex) toIndex = minIndex;
+    if (toIndex < minIndex) toIndex = minIndex;
 
-    if(toIndex > maxIndex) toIndex = maxIndex;
+    if (toIndex > maxIndex) toIndex = maxIndex;
 
     int durationMillis = calculateDurationMillis(currentIndex, toIndex);
 
-    return new SlotMachineSpin(toIndex: toIndex, duration: durationMillis, curve: curve);
+    return new SlotMachineSpin(
+        toIndex: toIndex, duration: durationMillis, curve: curve);
   }
 
   /// calculate the duration (in milliseconds) in which the slotMachine slot has animate to [toIndex]
   int calculateDurationMillis(int currentIndex, int toIndex) {
     int durationMillis = 0;
-    if(currentIndex >= toIndex) {
+    if (currentIndex >= toIndex) {
       durationMillis = currentIndex - toIndex;
-    }
-    else durationMillis = toIndex - currentIndex;
+    } else
+      durationMillis = toIndex - currentIndex;
 
-    if(durationMillis.isNegative) {
+    if (durationMillis.isNegative) {
       durationMillis *= -1;
     }
     durationMillis *= perIndexMillis;
@@ -56,10 +58,8 @@ class SlotMachine {
   /// between the values given to method [intMaxMin]
   /// to the power of the outcome of [multiplyByRandomPower]
   List<int> generateNumbers(int count) {
-    return new List.generate(count,
-        (i) => multiplyByRandomPower(
-            r.intMaxMin(9), 5)
-    );
+    return new List.generate(
+        count, (i) => multiplyByRandomPower(r.intMaxMin(9), 5));
   }
 
   /// return the given [number] to the power of a random wih max [maxPower]
@@ -70,7 +70,8 @@ class SlotMachine {
 }
 
 class SlotMachineSpin {
-  SlotMachineSpin({@required this.toIndex, @required int duration, @required this.curve}) {
+  SlotMachineSpin(
+      {@required this.toIndex, @required int duration, @required this.curve}) {
     this.duration = new Duration(milliseconds: duration);
   }
 

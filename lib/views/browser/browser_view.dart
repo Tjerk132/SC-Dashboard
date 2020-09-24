@@ -17,7 +17,6 @@ class BrowserView extends StatefulWidget {
 TextEditingController _textEditingController = new TextEditingController();
 
 class BrowserViewState extends State<BrowserView> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +38,13 @@ class BrowserViewState extends State<BrowserView> {
         ],
       ),
       body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(children: <Widget>[
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: <Widget>[
               Container(
-                padding: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                padding:
+                    new EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 child: TextField(
                   controller: _textEditingController,
                   onSubmitted: (value) => null,
@@ -62,8 +63,10 @@ class BrowserViewState extends State<BrowserView> {
               TopLinks(topLinkUrls: 'lib/assets/youtube.jpg'),
               Divider(height: 10.0),
               LinkHighLights(highLightUrls: 'lib/assets/youtube.jpg'),
-            ]),
-      )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
