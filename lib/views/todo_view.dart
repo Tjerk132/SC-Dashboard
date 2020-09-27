@@ -16,7 +16,6 @@ class TodoView extends StatefulWidget {
 }
 
 class TodoViewState extends State<TodoView> {
-
   List<Todo> todos;
   TodoDao dao;
 
@@ -56,47 +55,50 @@ class TodoViewState extends State<TodoView> {
 
   @override
   Widget build(BuildContext context) {
-
-    Size contextSize = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
-      child: Column(children: <Widget>[
+      child: Column(
+        children: <Widget>[
           ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                Todo todo = todos[index];
-                return Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: contextSize.width * 0.6,
-                        height: contextSize.height * 0.2,
-                        child: GestureDetector(
-                          onTap: () => setState(() => todo.toggleCompleted()),
-                          child: Center(
-                            child: Text(todo.title,
-                                textAlign: TextAlign.center,
-                                style: new TextStyle(
-                                    fontSize: 22.0,
-                                    decoration: todo.completed
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none)),
-                          ),
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: todos.length,
+            itemBuilder: (context, index) {
+              Todo todo = todos[index];
+              return Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: size.width * 0.6,
+                    height: size.height * 0.2,
+                    child: GestureDetector(
+                      onTap: () => setState(() => todo.toggleCompleted()),
+                      child: Center(
+                        child: Text(
+                          todo.title,
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                              fontSize: 22.0,
+                              decoration: todo.completed
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none),
                         ),
                       ),
-                      SizedBox(
-                        width: contextSize.width * 0.4,
-                        child: FlatButton(
-                          onPressed: () => removeTodo(todo),
-                          child: Center(
-                            child: Text('remove'),
-                          ),
-                        ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.width * 0.4,
+                    child: FlatButton(
+                      onPressed: () => removeTodo(todo),
+                      child: Center(
+                        child: Text('remove'),
                       ),
-                    ],
-                  );
-              }),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
           Container(
             padding: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
             child: TextField(
@@ -106,7 +108,7 @@ class TodoViewState extends State<TodoView> {
               onSubmitted: (value) => addTodo(),
             ),
           ),
-        ]
+        ],
       ),
     );
   }

@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test_project/context_navigator.dart';
 import 'package:flutter_test_project/views/browser/top_links_view.dart';
 import 'package:flutter_test_project/views/compute_test.dart';
+import 'package:flutter_test_project/views/dashboard/dashboard_view.dart';
 import 'package:flutter_test_project/views/slot_machine/slotmachine_view.dart';
 
-import '../dashboard/dashboard_view.dart';
 import 'link_highlights_view.dart';
 
 class BrowserView extends StatefulWidget {
