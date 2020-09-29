@@ -1,9 +1,11 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_test_project/models/tile_size.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 
 class Dashboard extends StatefulWidget {
   final int crossAxisCount = 4;
@@ -13,15 +15,15 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
   final List<TileSize> _sizes = TileSize.createSizes(57).toList();
 
   DashboardLogic _logic;
 
   @override
   void initState() {
-    _logic = new DashboardLogic(_sizes);
     super.initState();
+    _logic =
+        new DashboardLogic(_sizes.length, widget.crossAxisCount);
   }
 
   @override
@@ -31,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
         title: new Text('Dashboard'),
       ),
       body: FutureBuilder<List<NetworkImage>>(
-        future: _logic.getImages(),
+        future: _logic.getImages(_sizes),
         builder: (context, AsyncSnapshot<List<NetworkImage>> snapshot) {
           return StaggeredGridView.countBuilder(
             physics: BouncingScrollPhysics(),
@@ -43,14 +45,15 @@ class _DashboardState extends State<Dashboard> {
             crossAxisSpacing: 0,
             itemBuilder: (context, index) {
               if (snapshot.hasData) {
-                return _logic.createTile(snapshot.data[index], index, widget.crossAxisCount);
+                //todo setstate data
+                  _logic.setStateHasData(index);
+                return _logic.createTile(
+                    snapshot.data[index], index, _sizes.length);
               }
-              else {
-                return _logic.createShimmer(index);
-              }
+              else return _logic.createShimmer(index);
             },
             staggeredTileBuilder: (int index) => new StaggeredTile.count(2,
-              _logic.getTileShimmer(index) ||  _logic.getTileAlignVertical(index) ? 2 : 1),
+              _logic.getTileShimmer(index) || _logic.getTileAlignVertical(index) ? 2 : 1),
           );
         },
       ),

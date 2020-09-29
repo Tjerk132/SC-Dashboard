@@ -1,48 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/models/tile_group_data.dart';
 import '../tile.dart';
 
 abstract class TileGroup extends StatefulWidget {
-  TileGroup(this.image, {this.horizontal, this.vertical});
+//  TileGroup(this.image, {Key key, int horizontal, int vertical, int size})
+//      : super(key: key) {
+//    if (size != null) {
+//      if (horizontal != null || vertical != null) {
+//        throw new ArgumentError(
+//            'only provide the dimensions or the size of the group');
+//      }
+//      else
+//        this.data = new TileGroupData.fromSize(this.image, size);
+//    }
+//    else
+//      this.data =
+//          new TileGroupData.fromDimensions(this.image, horizontal, vertical);
+//  }
 
-  final int horizontal;
-  final int vertical;
-  final NetworkImage image;
+  TileGroup.fromSize(NetworkImage image, {int size}) {
+    this.data = TileGroupData.fromSize(image, size);
+  }
+
+  factory TileGroup.sizeFactory(NetworkImage image, {int size}) {
+    TileGroupData data = TileGroupData.fromSize(image, size);
+    return data.group(data.size);
+  }
+
+  TileGroup.fromDimensions(NetworkImage image, {int horizontal, int vertical}) {
+    this.data = TileGroupData.fromDimensions(image, horizontal, vertical);
+  }
+
+  factory TileGroup.dimensionFactory(NetworkImage image, {int horizontal, int vertical}) {
+    TileGroupData data =
+        new TileGroupData.fromDimensions(image, horizontal, vertical);
+    return data.group(data.size);
+  }
+
+  TileGroupData data;
 
   @override
   _TileGroupState createState() => _TileGroupState();
 }
 
 class _TileGroupState extends State<TileGroup> {
-  bool alignVertical;
-
-  @override
-  void initState() {
-    super.initState();
-    alignVertical = widget.horizontal != widget.vertical;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      children: <Widget>[
-        Column(
+      children: List.generate(
+        widget.data.vertical,
+        (index) => Row(
+          mainAxisSize: MainAxisSize.max,
           children: List.generate(
-            widget.vertical,
-            (index) => Row(
-              mainAxisSize: MainAxisSize.max,
-              children: List.generate(
-                alignVertical ? 1 : widget.horizontal,
-                (index) => Expanded(
-                  flex: 1,
-                  child: Tile(
-                      index: index,
-                      image: widget.image),
-                ),
-              ),
+            widget.data.alignVertically ? 1 : widget.data.horizontal,
+            (index) => Expanded(
+              flex: 1,
+              child: Tile(index: index, image: widget.data.image),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

@@ -13,29 +13,22 @@ class Logger {
 
   bool supportsAnsiEscapes = io.stdout.supportsAnsiEscapes;
 
-  log({Level level = Level.info, String message, Type exception = Exception}) {
+  void log({Level level = Level.info, String message, Type exception = Exception}) {
     LogRecord lr = new LogRecord(level, message);
     lr.exception = exception.toString();
     doLog(lr);
   }
 
-  doLog(LogRecord lr) {
+  void doLog(LogRecord lr) {
     lr.loggerName = name.toString();
     String message = createLogMessage(lr).toString();
     printLogRecord(message, lr.level);
   }
 
-  printLogRecord(String message, Level level) {
-    if(supportsAnsiEscapes) {
-      print(level.inColor(message));
-    }
-    else print(message);
-  }
-
   StringBuffer createLogMessage(LogRecord lr) {
     StringBuffer buffer = new StringBuffer();
     if(timedPrinting) {
-      buffer.write(getTimePrint());
+      buffer.write(timePrint);
     }
     buffer.writeAll(List<String>.from([
       '(${this.name}) ',
@@ -45,7 +38,14 @@ class Logger {
     return buffer;
   }
 
-  getTimePrint() => '[${DateTime.now()}] ';
+  void printLogRecord(String message, Level level) {
+    if(supportsAnsiEscapes) {
+      print(level.inColor(message));
+    }
+    else print(message);
+  }
+
+  String get timePrint => '[${DateTime.now()}] ';
 }
 
 class LogRecord {
