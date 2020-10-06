@@ -1,15 +1,32 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import 'chart.dart';
 import 'indicator.dart';
 
-class PieChartGraph extends StatefulWidget {
+class PieChartGraph extends Chart {
   @override
   State<StatefulWidget> createState() => PieChartGraphState();
 }
 
 class PieChartGraphState extends State {
   int touchedIndex;
+
+  int pieCount = 3;
+
+  Map<int, String> indicatorText = {
+    0: "One",
+    1: "Two",
+    2: "Three",
+    3: "Four"
+  };
+
+  Map<int, Color> sectionColor = {
+    0: Color(0xff0293ee),
+    1: Color(0xfff8b250),
+    2: Color(0xff845bef),
+    3: Color(0xff13d38e)
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -25,36 +42,15 @@ class PieChartGraphState extends State {
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
+              children: List<Widget>.generate(pieCount, (index) =>
                 Indicator(
-                  color: const Color(0xff0293ee),
-                  text: 'One',
+                  color: sectionColor[index],
+                  text: '${indicatorText[index]}',
                   shape: BoxShape.circle,
-                  size: touchedIndex == 0 ? 18 : 16,
-                  textColor: touchedIndex == 0 ? Colors.black : Colors.grey,
+                  size: touchedIndex == index ? 18 : 16,
+                  textColor: touchedIndex == index ? Colors.black : Colors.grey,
                 ),
-                Indicator(
-                  color: const Color(0xfff8b250),
-                  text: 'Two',
-                  shape: BoxShape.circle,
-                  size: touchedIndex == 1 ? 18 : 16,
-                  textColor: touchedIndex == 1 ? Colors.black : Colors.grey,
-                ),
-                Indicator(
-                  color: const Color(0xff845bef),
-                  text: 'Three',
-                  shape: BoxShape.circle,
-                  size: touchedIndex == 2 ? 18 : 16,
-                  textColor: touchedIndex == 2 ? Colors.black : Colors.grey,
-                ),
-                Indicator(
-                  color: const Color(0xff13d38e),
-                  text: 'Four',
-                  shape: BoxShape.circle,
-                  size: touchedIndex == 3 ? 18 : 16,
-                  textColor: touchedIndex == 3 ? Colors.black : Colors.grey,
-                ),
-              ],
+              )
             ),
             const SizedBox(
               height: 18,
@@ -64,19 +60,17 @@ class PieChartGraphState extends State {
                 aspectRatio: 1,
                 child: PieChart(
                   PieChartData(
-                      pieTouchData: PieTouchData(
-                          touchCallback: (pieTouchResponse) {
-                            setState(() {
-                              if (pieTouchResponse
-                                  .touchInput is FlLongPressEnd ||
-                                  pieTouchResponse.touchInput is FlPanEnd) {
-                                touchedIndex = -1;
-                              } else {
-                                touchedIndex =
-                                    pieTouchResponse.touchedSectionIndex;
-                              }
-                            });
-                          }),
+                      pieTouchData:
+                          PieTouchData(touchCallback: (pieTouchResponse) {
+                        setState(() {
+                          if (pieTouchResponse.touchInput is FlLongPressEnd ||
+                              pieTouchResponse.touchInput is FlPanEnd) {
+                            touchedIndex = -1;
+                          } else {
+                            touchedIndex = pieTouchResponse.touchedSectionIndex;
+                          }
+                        });
+                      }),
                       startDegreeOffset: 180,
                       borderData: FlBorderData(
                         show: false,
@@ -94,64 +88,20 @@ class PieChartGraphState extends State {
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(
-        4,
-            (i) {
-          final isTouched = i == touchedIndex;
-          final double opacity = isTouched ? 1 : 0.6;
-          switch (i) {
-            case 0:
-              return PieChartSectionData(
-                color: const Color(0xff0293ee).withOpacity(opacity),
-                value: 20,
-                title: '',
-                radius: isTouched ? 120 : 60,
-                titleStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff044d7c)),
-                titlePositionPercentageOffset: 0.55,
-              );
-            case 1:
-              return PieChartSectionData(
-                color: const Color(0xfff8b250).withOpacity(opacity),
-                value: 30,
-                title: '',
-                radius: isTouched ? 120 : 60,
-                titleStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff90672d)),
-                titlePositionPercentageOffset: 0.55,
-              );
-            case 2:
-              return PieChartSectionData(
-                color: const Color(0xff845bef).withOpacity(opacity),
-                value: 38,
-                title: '',
-                radius: isTouched ? 120 : 60,
-                titleStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff4c3788)),
-                titlePositionPercentageOffset: 0.6,
-              );
-            case 3:
-              return PieChartSectionData(
-                color: const Color(0xff13d38e).withOpacity(opacity),
-                value: 12,
-                title: '',
-                radius: isTouched ? 120 : 60,
-                titleStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff0c7f55)),
-                titlePositionPercentageOffset: 0.55,
-              );
-            default:
-              return null;
-          }
-        }
-    );
+    return List.generate(pieCount, (i) {
+      final isTouched = i == touchedIndex;
+      final double opacity = isTouched ? 1 : 0.6;
+      return PieChartSectionData(
+        color: sectionColor[i].withOpacity(opacity),
+        value: 100 / pieCount,
+        title: '',
+        radius: isTouched ? 120 : 60,
+        titleStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: sectionColor[i]),
+        titlePositionPercentageOffset: 0.55,
+      );
+    });
   }
 }

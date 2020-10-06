@@ -32,7 +32,6 @@ class _TileShimmerState extends State<TileShimmer> {
   void initState() {
     super.initState();
     _imageShimmerHeight = widget.height * widget.imageShimmerRatio;
-//    spacerHeight = widget.height * 0.02;
     _textShimmers = widget.textShimmers;
   }
 
@@ -42,16 +41,22 @@ class _TileShimmerState extends State<TileShimmer> {
     return Container(
       height: widget.height,
       padding: EdgeInsets.all(4.0),
-      child: Column(
+      child: Wrap(
         children: <Widget>[
           Skeleton(height: _imageShimmerHeight, width: size.width),
-          widget.titleShimmer
-              ? TextShimmer(height: 25, width: size.width * 0.2)
-              : SizedBox(),
-          ...List.generate(
-            _textShimmers,
-            (index) => new TextShimmer(width: size.width * 0.4),
-          ),
+          Center(
+            child: Column(
+              children: <Widget>[
+                widget.titleShimmer
+                    ? TextShimmer(height: 24, width: size.width * 0.2)
+                    : SizedBox(),
+                ...List.generate(
+                  _textShimmers,
+                      (index) => new TextShimmer(width: size.width * 0.4),
+                ),
+              ],
+            ),
+          )
         ],
       ),
       decoration: BoxDecoration(

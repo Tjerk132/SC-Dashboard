@@ -9,7 +9,7 @@ import 'package:flutter_test_project/views/browser/browser_view.dart';
 import 'package:flutter_test_project/views/todo_view.dart';
 
 import 'controllers/todo_view_controller.dart';
-import 'slot_machine_provider.dart';
+import 'providers/slot_machine_provider.dart';
 
 import 'dialogs/custom_dialog.dart';
 

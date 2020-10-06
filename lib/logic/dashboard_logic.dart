@@ -1,6 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/models/charts/bar_chart.dart';
+import 'package:flutter_test_project/models/charts/chart.dart';
+import 'package:flutter_test_project/models/charts/line_chart.dart';
+import 'package:flutter_test_project/models/charts/pie_chart.dart';
+import 'package:flutter_test_project/utility/utility.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
@@ -20,6 +25,8 @@ class DashboardLogic {
   int occupied = 0;
   Random r;
 
+  bool createPlaceholder = false;
+
   DashboardLogic(int sizesLength, this.crossAxisCount) {
     this._states = List.generate(
       sizesLength,
@@ -29,32 +36,43 @@ class DashboardLogic {
     this.r = new Random();
   }
 
-  TileGroup createTile(NetworkImage image, int index, int sizesLength) {
-    //todo callback hasData
+  TileGroup createTile(Chart chart, int index, int sizesLength) {
+    setStateHasData(index);
     if (index == sizesLength - 1) {
-      return createLastTile(index, image);
+      checkLastTile(chart);
     }
-    return createNewTile(index, image);
+    return createNewTile(index, chart);
   }
 
-  TileGroup createNewTile(int index, NetworkImage image) {
-    int dimension = r.nextInt(3) + 1;
+  TileGroup createNewTile(int index, Chart chart) {
+    //random between tiles of size 1x1 to 2x2
+    TileGroup group = TileGroup.dimensionFactory(chart,
+        horizontal: r.intMaxMin(2), vertical: r.intMaxMin(2));
 
-    TileGroup group = TileGroup.dimensionFactory(image,
-        horizontal: dimension, vertical: dimension);
-    occupied += group.data.occupiedSpaces;
+    occupied += group.occupiedSpaces;
 
-    if (group is MediumTileGroup) {
-      //todo callback aligned vertical
+    if(group.alignVertically) {
       _states[index].alignVertical = true;
     }
     return group;
   }
 
-  TileGroup createLastTile(int index, NetworkImage image) {
+  void checkLastTile(Chart chart) {
     int size = occupied % crossAxisCount;
-    logger.log(message: 'space for last tile is $size');
-    return TileGroup.sizeFactory(image, size: size);
+    logger.log('space for last tile is $size');
+    TileGroup group = TileGroup.sizeFactory(chart, size: size);
+    //no group could be created with the remaining space
+    if (group == null) {
+      createPlaceholder = true;
+      logger.log('a placeholder will be created with size $size');
+    }
+  }
+
+  TileGroup createLastTile() {
+    int size = occupied % crossAxisCount;
+    int horizontal = size ~/ 2;
+    int vertical = size - horizontal;
+    return PlaceholderTileGroup(horizontal, vertical);
   }
 
   Widget createShimmer(int index) {
@@ -66,15 +84,26 @@ class DashboardLogic {
         textShimmers: 2);
   }
 
+  Future<List<Chart>> getCharts(int sizesLength) async {
+    List<Chart> charts = new List<Chart>();
+    for (int i = 0; i < sizesLength; i+=3) {
+        charts.add(new BarChartGraph());
+        charts.add(new LineChartGraph());
+        charts.add(new PieChartGraph());
+    }
+    return charts;
+  }
+
+
   Future<List<NetworkImage>> getImages(List<TileSize> sizes) async =>
       await _dao.getImages(sizes);
+
+  bool getIsShimmering(int index) => _states[index].shimmering;
 
   void setTileShimmering(int index, bool shimmer) =>
       _states[index].shimmering = shimmer;
 
-  bool getTileShimmer(int index) => _states[index].shimmering;
-
-  bool getTileAlignVertical(int index) => _states[index].alignVertical;
+  bool getIsAlignedVertical(int index) => _states[index].alignVertical;
 
   void setStateHasData(int index) => _states[index].setHasData();
 }

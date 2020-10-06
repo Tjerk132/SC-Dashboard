@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/slot_machine.dart';
 import 'package:provider/provider.dart';
-import '../../slot_machine_provider.dart';
+import '../../providers/slot_machine_provider.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
 class SlotMachineSlot extends StatefulWidget {

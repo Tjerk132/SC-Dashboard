@@ -1,11 +1,10 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
+import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_size.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 
 class Dashboard extends StatefulWidget {
   final int crossAxisCount = 4;
@@ -32,9 +31,9 @@ class _DashboardState extends State<Dashboard> {
       appBar: new AppBar(
         title: new Text('Dashboard'),
       ),
-      body: FutureBuilder<List<NetworkImage>>(
-        future: _logic.getImages(_sizes),
-        builder: (context, AsyncSnapshot<List<NetworkImage>> snapshot) {
+      body: FutureBuilder<List<Chart>>(
+        future: _logic.getCharts(_sizes.length),
+        builder: (context, AsyncSnapshot<List<Chart>> snapshot) {
           return StaggeredGridView.countBuilder(
             physics: BouncingScrollPhysics(),
             addAutomaticKeepAlives: true,
@@ -45,15 +44,17 @@ class _DashboardState extends State<Dashboard> {
             crossAxisSpacing: 0,
             itemBuilder: (context, index) {
               if (snapshot.hasData) {
-                //todo setstate data
-                  _logic.setStateHasData(index);
+                // if(_logic.createPlaceholder) {
+                //   return _logic.createLastTile();
+                // }
                 return _logic.createTile(
                     snapshot.data[index], index, _sizes.length);
               }
-              else return _logic.createShimmer(index);
+              else
+                return _logic.createShimmer(index);
             },
             staggeredTileBuilder: (int index) => new StaggeredTile.count(2,
-              _logic.getTileShimmer(index) || _logic.getTileAlignVertical(index) ? 2 : 1),
+              _logic.getIsAlignedVertical(index) || _logic.getIsShimmering(index) ? 2 : 1),
           );
         },
       ),

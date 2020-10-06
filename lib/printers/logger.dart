@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
 
-import 'package:flutter_test_project/data/image_dao.dart';
-
 class Logger {
 
   Logger({@required this.name, this.timedPrinting = false});
@@ -13,16 +11,28 @@ class Logger {
 
   bool supportsAnsiEscapes = io.stdout.supportsAnsiEscapes;
 
-  void log({Level level = Level.info, String message, Type exception = Exception}) {
-    LogRecord lr = new LogRecord(level, message);
-    lr.exception = exception.toString();
-    doLog(lr);
+  void log(String message, {Type error}) {
+    LogRecord lr = new LogRecord(Level.info, message);
+    doLog(lr, error);
   }
 
-  void doLog(LogRecord lr) {
+  void warn(String message, {Type error}) {
+    LogRecord lr = new LogRecord(Level.warning, message);
+    doLog(lr, error);
+  }
+
+  void doLog(LogRecord lr, Type error) {
+    addError(lr, error);
     lr.loggerName = name.toString();
     String message = createLogMessage(lr).toString();
-    printLogRecord(message, lr.level);
+    printLogRecord(message, lr);
+  }
+
+  void addError(LogRecord lr, Type error) {
+    if(error != null) {
+      lr.error = error;
+      lr.throwError = true;
+    }
   }
 
   StringBuffer createLogMessage(LogRecord lr) {
@@ -38,11 +48,14 @@ class Logger {
     return buffer;
   }
 
-  void printLogRecord(String message, Level level) {
+  void printLogRecord(String message, LogRecord lr) {
     if(supportsAnsiEscapes) {
-      print(level.inColor(message));
+      print(lr.level.inColor(message));
     }
-    else print(message);
+    print(message);
+    if(lr.throwError) {
+      throw '${lr.error}: [${lr.message}]';
+    }
   }
 
   String get timePrint => '[${DateTime.now()}] ';
@@ -51,13 +64,12 @@ class Logger {
 class LogRecord {
   LogRecord(this.level, this.message);
 
-  Level level;
-
-  String message;
+  final Level level;
+  final String message;
 
   String loggerName;
-
-  String exception;
+  bool throwError = false;
+  Type error;
 }
 
 enum Level {

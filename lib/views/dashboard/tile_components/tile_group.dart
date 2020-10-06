@@ -1,43 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/tile_group_data.dart';
+import 'package:flutter_test_project/models/charts/chart.dart';
+import 'package:flutter_test_project/models/tile_group_creator.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
+import 'package:flutter_test_project/views/dashboard/tile_placeholder.dart';
 import '../tile.dart';
 
 abstract class TileGroup extends StatefulWidget {
-//  TileGroup(this.image, {Key key, int horizontal, int vertical, int size})
-//      : super(key: key) {
-//    if (size != null) {
-//      if (horizontal != null || vertical != null) {
-//        throw new ArgumentError(
-//            'only provide the dimensions or the size of the group');
-//      }
-//      else
-//        this.data = new TileGroupData.fromSize(this.image, size);
-//    }
-//    else
-//      this.data =
-//          new TileGroupData.fromDimensions(this.image, horizontal, vertical);
-//  }
 
-  TileGroup.fromSize(NetworkImage image, {int size}) {
-    this.data = TileGroupData.fromSize(image, size);
+  TileGroup.fromSize(this.chart, this.horizontal, this.vertical);
+
+  factory TileGroup.sizeFactory(Chart chart, {int size}) {
+    return TileGroupCreator(size).group(chart);
   }
 
-  factory TileGroup.sizeFactory(NetworkImage image, {int size}) {
-    TileGroupData data = TileGroupData.fromSize(image, size);
-    return data.group(data.size);
+  TileGroup.fromDimensions(this.chart, {this.horizontal, this.vertical});
+      // : creator = TileGroupCreator(horizontal * vertical);
+
+  factory TileGroup.dimensionFactory(Chart chart,
+      {int horizontal, int vertical}) {
+    return TileGroupCreator(horizontal * vertical).group(chart);
   }
 
-  TileGroup.fromDimensions(NetworkImage image, {int horizontal, int vertical}) {
-    this.data = TileGroupData.fromDimensions(image, horizontal, vertical);
-  }
+  final Chart chart;
 
-  factory TileGroup.dimensionFactory(NetworkImage image, {int horizontal, int vertical}) {
-    TileGroupData data =
-        new TileGroupData.fromDimensions(image, horizontal, vertical);
-    return data.group(data.size);
-  }
+  final int horizontal;
+  final int vertical;
 
-  TileGroupData data;
+  int get occupiedSpaces => horizontal * vertical;
+
+  bool get alignVertically => horizontal != vertical;
+
+  bool get isPlaceHolder => this is PlaceholderTileGroup;
 
   @override
   _TileGroupState createState() => _TileGroupState();
@@ -48,14 +41,16 @@ class _TileGroupState extends State<TileGroup> {
   Widget build(BuildContext context) {
     return Wrap(
       children: List.generate(
-        widget.data.vertical,
+        widget.vertical,
         (index) => Row(
           mainAxisSize: MainAxisSize.max,
           children: List.generate(
-            widget.data.alignVertically ? 1 : widget.data.horizontal,
+            widget.alignVertically ? 1 : widget.horizontal,
             (index) => Expanded(
               flex: 1,
-              child: Tile(index: index, image: widget.data.image),
+              child: widget.isPlaceHolder
+                  ? TilePlaceholder()
+                  : Tile(index: index, chart: widget.chart),
             ),
           ),
         ),

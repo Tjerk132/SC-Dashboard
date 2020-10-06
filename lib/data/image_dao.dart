@@ -42,7 +42,7 @@ class ImageDao {
     isolateCount = calculateIsolateCount(sizes.length);
 
     if(isolateCount > 0) {
-      logger.log(message: '$isolateCount isolates are going to be spawned');
+      logger.log('$isolateCount isolates are going to be spawned');
       List<NetworkImage> images = new List<NetworkImage>();
 
       // handle the non dividable on main thread
@@ -52,8 +52,8 @@ class ImageDao {
         images.addAll(retrieveNondividableItems(sizes));
       }
       // let isolates compute images
-      List<List<TileSize>> subLists = divideList(sizes, isolateCount);
-      for (List<TileSize> sizes in subLists) {
+      Map<int, List<TileSize>> subLists = divideList(sizes, isolateCount);
+      for (List<TileSize> sizes in subLists.values) {
         List<NetworkImage> isolateImages = await compute(retrieveImages, sizes);
         images.addAll(isolateImages);
       }
@@ -68,7 +68,7 @@ class ImageDao {
   int calculateIsolateCount(int sizeLength) {
 
     if(sizeLength.isOdd) {
-      logger.log(message: 'uneven list: not all items will be computed');
+      logger.log('uneven list: not all items will be computed');
       unevenItemCount = true;
     }
     if(sizeLength > minimalToCompute) {
@@ -76,7 +76,7 @@ class ImageDao {
 
       if(!(isolateCount is int || isolateCount == isolateCount.roundToDouble())) {
         dividableToIsolates = false;
-        logger.log(message: 'non dividable: not all items could be divided with the available number of isolates');
+        logger.log('non dividable: not all items could be divided with the available number of isolates');
       }
       return isolateCount.floor();
     }
@@ -84,14 +84,14 @@ class ImageDao {
   }
 
   /// Divide the given [sizes] list into subLists with a length of [divideIn]
-  List<List<TileSize>> divideList(List<TileSize> sizes, int divideIn) {
+  Map<int, List<TileSize>> divideList(List<TileSize> sizes, int divideIn) {
     int totalLength = sizes.length;
     int subListLength = (totalLength / divideIn).round();
-    List<List<TileSize>> subLists = List<List<TileSize>>();
+    Map<int, List<TileSize>> subLists = Map<int, List<TileSize>>();
 
     for(int i = 0; i < totalLength; i += subListLength) {
       int end = i + subListLength;
-      subLists.add(sizes.sublist(i,end));
+      subLists.putIfAbsent(i, () => sizes.sublist(i, end));
     }
     return subLists;
   }
