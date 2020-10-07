@@ -44,17 +44,16 @@ class _DashboardState extends State<Dashboard> {
             crossAxisSpacing: 0,
             itemBuilder: (context, index) {
               if (snapshot.hasData) {
-                // if(_logic.createPlaceholder) {
-                //   return _logic.createLastTile();
-                // }
+                if(_logic.createPlaceholder) {
+                  return _logic.createLastTile();
+                }
                 return _logic.createTile(
                     snapshot.data[index], index, _sizes.length);
               }
               else
                 return _logic.createShimmer(index);
             },
-            staggeredTileBuilder: (int index) => new StaggeredTile.count(2,
-              _logic.getIsAlignedVertical(index) || _logic.getIsShimmering(index) ? 2 : 1),
+            staggeredTileBuilder: (int index) => new StaggeredTile.fit(2)
           );
         },
       ),

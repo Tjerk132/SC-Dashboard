@@ -1,10 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/bar_chart.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/models/charts/line_chart.dart';
-import 'package:flutter_test_project/models/charts/pie_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
@@ -51,7 +48,7 @@ class DashboardLogic {
 
     occupied += group.occupiedSpaces;
 
-    if(group.alignVertically) {
+    if (group.alignVertically) {
       _states[index].alignVertical = true;
     }
     return group;
@@ -85,15 +82,11 @@ class DashboardLogic {
   }
 
   Future<List<Chart>> getCharts(int sizesLength) async {
-    List<Chart> charts = new List<Chart>();
-    for (int i = 0; i < sizesLength; i+=3) {
-        charts.add(new BarChartGraph());
-        charts.add(new LineChartGraph());
-        charts.add(new PieChartGraph());
-    }
-    return charts;
+    return <Chart>[
+      for (int i = 0; i < sizesLength; i += Chart.values.length)
+        ...Chart.values.values
+    ];
   }
-
 
   Future<List<NetworkImage>> getImages(List<TileSize> sizes) async =>
       await _dao.getImages(sizes);

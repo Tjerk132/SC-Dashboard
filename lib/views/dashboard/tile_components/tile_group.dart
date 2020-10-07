@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
-import 'package:flutter_test_project/views/dashboard/tile_placeholder.dart';
+import 'package:flutter_test_project/views/dashboard/vertical_tile.dart';
+import '../place_holder_tile.dart';
 import '../tile.dart';
 
 abstract class TileGroup extends StatefulWidget {
@@ -37,6 +38,16 @@ abstract class TileGroup extends StatefulWidget {
 }
 
 class _TileGroupState extends State<TileGroup> {
+
+  Widget getTile() {
+    if(widget.alignVertically) {
+      return VerticalTile(chart: widget.chart);
+    }
+    else if(widget.isPlaceHolder) {
+      return PlaceholderTile(size: widget.occupiedSpaces);
+    }
+    else return Tile(chart: widget.chart);
+  }
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -48,10 +59,24 @@ class _TileGroupState extends State<TileGroup> {
             widget.alignVertically ? 1 : widget.horizontal,
             (index) => Expanded(
               flex: 1,
-              child: widget.isPlaceHolder
-                  ? TilePlaceholder()
-                  : Tile(index: index, chart: widget.chart),
-            ),
+              child: getTile(),
+              // child: Column(
+              //   children: <Widget>[
+              //
+              //     widget.alignVertically ?
+              //      VerticalTile(chart: widget.chart),
+              //     :
+              //     ;
+              //     if(widget.isPlaceHolder || widget.alignVertically)
+              //     ...[
+              //       VerticalTile(chart: widget.chart),
+              //       // TilePlaceholder(chart: widget.chart),
+              //     ]
+              //     else Tile(chart: widget.chart),
+              //
+              //   ],
+              // )
+            )
           ),
         ),
       ),

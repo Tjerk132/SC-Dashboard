@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 
 class Tile extends StatefulWidget {
-  const Tile({this.index, this.chart});
+  const Tile({this.chart});
 
-  final int index;
   final Chart chart;
 
   @override
