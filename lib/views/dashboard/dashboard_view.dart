@@ -3,7 +3,6 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/models/tile_size.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Dashboard extends StatefulWidget {
@@ -14,15 +13,17 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final List<TileSize> _sizes = TileSize.createSizes(57).toList();
+
+  final int _tileCount = 12;
+
+  // final List<TileSize> _sizes = TileSize.createSizes(57).toList();
 
   DashboardLogic _logic;
 
   @override
   void initState() {
     super.initState();
-    _logic =
-        new DashboardLogic(_sizes.length, widget.crossAxisCount);
+    _logic = new DashboardLogic(_tileCount, widget.crossAxisCount);
   }
 
   @override
@@ -32,28 +33,28 @@ class _DashboardState extends State<Dashboard> {
         title: new Text('Dashboard'),
       ),
       body: FutureBuilder<List<Chart>>(
-        future: _logic.getCharts(_sizes.length),
+        future: _logic.getCharts(_tileCount),
         builder: (context, AsyncSnapshot<List<Chart>> snapshot) {
           return StaggeredGridView.countBuilder(
             physics: BouncingScrollPhysics(),
-            addAutomaticKeepAlives: true,
-            primary: true,
-            itemCount: _sizes.length,
+            // addAutomaticKeepAlives: true,
+            // primary: true,
+            itemCount: _tileCount,
             crossAxisCount: widget.crossAxisCount,
             mainAxisSpacing: 0,
             crossAxisSpacing: 0,
             itemBuilder: (context, index) {
               if (snapshot.hasData) {
-                if(_logic.createPlaceholder) {
-                  return _logic.createLastTile();
-                }
                 return _logic.createTile(
-                    snapshot.data[index], index, _sizes.length);
+                    snapshot.data[index], index, _tileCount);
               }
               else
                 return _logic.createShimmer(index);
             },
-            staggeredTileBuilder: (int index) => new StaggeredTile.fit(2)
+            //get the correct fit for each tile by the space they take it (2 for default)
+            staggeredTileBuilder: (int index) =>
+                new StaggeredTile.fit(2),
+            // new StaggeredTile.fit(_logic.getTileType(index)?.occupiedSpace ?? 2),
           );
         },
       ),

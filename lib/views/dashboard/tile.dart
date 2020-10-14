@@ -18,21 +18,20 @@ class _TileState extends State<Tile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero
-      ),
-      clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        clipBehavior: Clip.antiAlias,
 //      elevation: 4,
-      child: AspectRatio(
-        aspectRatio: 1.0,
-        child: _chart,
+        child: AspectRatio(
+          aspectRatio: 1.0,
+          child: _chart,
+        )
         // child: FadeInImage(
         //   fit: BoxFit.cover,
         //   image: _image,
         //   placeholder: AssetImage('lib/assets/placeholder.jpg'),
         // ),
-      ),
-    );
+
+        );
   }
 }

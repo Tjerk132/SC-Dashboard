@@ -15,14 +15,14 @@ import '../models/tile_state.dart';
 class DashboardLogic {
   Logger logger = new Logger(name: DashboardLogic, timedPrinting: true);
 
-  ImageDao _dao;
-  List<TileState> _states;
-
   final int crossAxisCount;
   int occupied = 0;
+
+  List<TileState> _states;
+  ImageDao _dao;
   Random r;
 
-  bool createPlaceholder = false;
+  //todo as tile groups are now saved as states check if tiles can fit with each other by looking at their neighbours of each tile when returning
 
   DashboardLogic(int sizesLength, this.crossAxisCount) {
     this._states = List.generate(
@@ -33,12 +33,11 @@ class DashboardLogic {
     this.r = new Random();
   }
 
-  TileGroup createTile(Chart chart, int index, int sizesLength) {
-    setStateHasData(index);
-    if (index == sizesLength - 1) {
-      checkLastTile(chart);
-    }
-    return createNewTile(index, chart);
+  TileGroup createTile(Chart chart, int index, int count) {
+    setHasData(index);
+    return isLastTile(index, count)
+        ? createLastTile(index, chart)
+        : createNewTile(index, chart);
   }
 
   TileGroup createNewTile(int index, Chart chart) {
@@ -46,33 +45,43 @@ class DashboardLogic {
     TileGroup group = TileGroup.dimensionFactory(chart,
         horizontal: r.intMaxMin(2), vertical: r.intMaxMin(2));
 
-    occupied += group.occupiedSpaces;
+    print('randomed $group for index $index with chart $chart');
+
+    occupied += group.occupiedSpace;
+    setTileType(index, group);
 
     if (group.alignVertically) {
-      _states[index].alignVertical = true;
+      setAlignedVertical(index, true);
     }
     return group;
   }
 
-  void checkLastTile(Chart chart) {
+  TileGroup createLastTile(int index, Chart chart) {
     int size = occupied % crossAxisCount;
-    logger.log('space for last tile is $size');
-    TileGroup group = TileGroup.sizeFactory(chart, size: size);
-    //no group could be created with the remaining space
-    if (group == null) {
-      createPlaceholder = true;
-      logger.log('a placeholder will be created with size $size');
+    if (size != 0) {
+      TileGroup group = TileGroup.sizeFactory(chart, size: size);
+
+      /// no group could be created with the remaining space if group is null
+      if (group == null) {
+        logger.log('a placeholder will be created with size $size');
+        group = createPlaceholder(size);
+      } else {
+        logger.log('group is created with leftover size $size');
+      }
+      setTileType(index, group);
+      return group;
     }
+    // size = 0 so the tiles align, should never reach this return
+    return null;
   }
 
-  TileGroup createLastTile() {
-    int size = occupied % crossAxisCount;
+  PlaceholderTileGroup createPlaceholder(int size) {
     int horizontal = size ~/ 2;
     int vertical = size - horizontal;
     return PlaceholderTileGroup(horizontal, vertical);
   }
 
-  Widget createShimmer(int index) {
+  TileShimmer createShimmer(int index) {
     setTileShimmering(index, true);
     return TileShimmer(
         height: 600,
@@ -81,10 +90,16 @@ class DashboardLogic {
         textShimmers: 2);
   }
 
-  Future<List<Chart>> getCharts(int sizesLength) async {
+  Future<List<Chart>> getCharts(int count) async {
+    List<int> indexes = new List.generate(count, (index) => index);
     return <Chart>[
-      for (int i = 0; i < sizesLength; i += Chart.values.length)
-        ...Chart.values.values
+      for (int i = 0; i < count; i += Chart.count)
+        ...Chart.types(
+          //generate charts with indexes
+          List<int>.of(
+            indexes.getRange(i, i + Chart.count),
+          ),
+        ).values
     ];
   }
 
@@ -98,5 +113,14 @@ class DashboardLogic {
 
   bool getIsAlignedVertical(int index) => _states[index].alignVertical;
 
-  void setStateHasData(int index) => _states[index].setHasData();
+  void setAlignedVertical(int index, bool alignVertical) =>
+      _states[index].alignVertical = alignVertical;
+
+  void setHasData(int index) => _states[index].setHasData();
+
+  void setTileType(int index, TileGroup group) => _states[index].group = group;
+
+  TileGroup getTileType(int index) => _states[index].group;
+
+  bool isLastTile(int index, int count) => index == count - 1;
 }

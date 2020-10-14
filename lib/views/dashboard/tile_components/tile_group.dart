@@ -7,76 +7,60 @@ import '../place_holder_tile.dart';
 import '../tile.dart';
 
 abstract class TileGroup extends StatefulWidget {
-
   TileGroup.fromSize(this.chart, this.horizontal, this.vertical);
 
-  factory TileGroup.sizeFactory(Chart chart, {int size}) {
+  factory TileGroup.sizeFactory(Chart chart, {@required int size}) {
     return TileGroupCreator(size).group(chart);
   }
 
-  TileGroup.fromDimensions(this.chart, {this.horizontal, this.vertical});
-      // : creator = TileGroupCreator(horizontal * vertical);
+  TileGroup.fromDimensions(this.chart,
+      {@required this.horizontal, @required this.vertical});
 
   factory TileGroup.dimensionFactory(Chart chart,
-      {int horizontal, int vertical}) {
+      {@required int horizontal, @required int vertical}) {
     return TileGroupCreator(horizontal * vertical).group(chart);
   }
 
   final Chart chart;
 
+  //represents the number of rows that can fit within the current tile group
   final int horizontal;
+  //represents the number of columns that can fit within the current tile group
   final int vertical;
 
-  int get occupiedSpaces => horizontal * vertical;
+  int get occupiedSpace => horizontal * vertical;
 
   bool get alignVertically => horizontal != vertical;
 
-  bool get isPlaceHolder => this is PlaceholderTileGroup;
-
   @override
   _TileGroupState createState() => _TileGroupState();
+
 }
 
 class _TileGroupState extends State<TileGroup> {
-
   Widget getTile() {
-    if(widget.alignVertically) {
+    if (widget is PlaceholderTileGroup) {
+      return PlaceholderTile(size: widget.horizontal+widget.vertical);
+    }
+    else if (widget.alignVertically) {
       return VerticalTile(chart: widget.chart);
     }
-    else if(widget.isPlaceHolder) {
-      return PlaceholderTile(size: widget.occupiedSpaces);
-    }
-    else return Tile(chart: widget.chart);
+    else
+      return Tile(chart: widget.chart);
   }
+
   @override
   Widget build(BuildContext context) {
-    return Wrap(
+    return Column(
       children: List.generate(
         widget.vertical,
         (index) => Row(
-          mainAxisSize: MainAxisSize.max,
+          // mainAxisSize: MainAxisSize.max,
           children: List.generate(
             widget.alignVertically ? 1 : widget.horizontal,
             (index) => Expanded(
-              flex: 1,
               child: getTile(),
-              // child: Column(
-              //   children: <Widget>[
-              //
-              //     widget.alignVertically ?
-              //      VerticalTile(chart: widget.chart),
-              //     :
-              //     ;
-              //     if(widget.isPlaceHolder || widget.alignVertically)
-              //     ...[
-              //       VerticalTile(chart: widget.chart),
-              //       // TilePlaceholder(chart: widget.chart),
-              //     ]
-              //     else Tile(chart: widget.chart),
-              //
-              //   ],
-              // )
-            )
+            ),
           ),
         ),
       ),

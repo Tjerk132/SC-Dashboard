@@ -5,11 +5,13 @@ import 'chart.dart';
 import 'indicator.dart';
 
 class PieChartGraph extends Chart {
+  PieChartGraph(int index) : super(index);
+
   @override
-  State<StatefulWidget> createState() => PieChartGraphState();
+  State<PieChartGraph> createState() => PieChartGraphState();
 }
 
-class PieChartGraphState extends State {
+class PieChartGraphState extends State<PieChartGraph> {
   int touchedIndex;
 
   int pieCount = 3;
@@ -36,6 +38,8 @@ class PieChartGraphState extends State {
         color: Colors.white,
         child: Column(
           children: <Widget>[
+            //todo remove after testing
+            Text('index ${widget.index}',style: TextStyle(fontSize: 12)),
             const SizedBox(
               height: 28,
             ),
@@ -88,7 +92,7 @@ class PieChartGraphState extends State {
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(pieCount, (i) {
+    return List<PieChartSectionData>.generate(pieCount, (i) {
       final isTouched = i == touchedIndex;
       final double opacity = isTouched ? 1 : 0.6;
       return PieChartSectionData(

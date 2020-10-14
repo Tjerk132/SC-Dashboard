@@ -4,7 +4,7 @@ import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.
 
 class SmallTileGroup extends TileGroup {
   SmallTileGroup(Chart chart)
-      : super.fromDimensions(chart, horizontal: 1, vertical: 1);
+      : super.fromDimensions(chart, horizontal: 2, vertical: 2);
 }
 
 class MediumTileGroup extends TileGroup {
@@ -14,7 +14,7 @@ class MediumTileGroup extends TileGroup {
 
 class LargeTileGroup extends TileGroup {
   LargeTileGroup(Chart chart)
-      : super.fromDimensions(chart, horizontal: 2, vertical: 2);
+      : super.fromDimensions(chart, horizontal: 1, vertical: 1);
 }
 
 class PlaceholderTileGroup extends TileGroup {

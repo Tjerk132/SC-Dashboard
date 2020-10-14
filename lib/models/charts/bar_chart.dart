@@ -6,6 +6,7 @@ import 'package:flutter_test_project/models/charts/chart_title.dart';
 import 'chart_data/bar_chart_data_samples.dart';
 
 class BarChartGraph extends Chart {
+  BarChartGraph(int index) : super(index);
 
   @override
   State<StatefulWidget> createState() => BarChartGraphState();
@@ -45,6 +46,7 @@ class BarChartGraphState extends State<BarChartGraph> {
               padding: const EdgeInsets.all(16),
               child: ChartTitle(
                 data: sample.mainBarData(barTouchCallBack),
+                index: widget.index,
                 title: 'Bar graph title',
                 subTitle: 'Bar graph subtext',
               ),

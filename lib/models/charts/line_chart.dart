@@ -4,6 +4,8 @@ import 'package:flutter_test_project/models/charts/chart_title.dart';
 import 'chart.dart';
 
 class LineChartGraph extends Chart {
+  LineChartGraph(int index) : super(index);
+
   @override
   State<StatefulWidget> createState() => LineChartGraphState();
 }
@@ -39,6 +41,7 @@ class LineChartGraphState extends State<LineChartGraph> {
               data: isShowingMainData
                   ? LineChartDataSamples().sampleData1()
                   : LineChartDataSamples().sampleData2(),
+              index: widget.index,
               title: 'Line chart title',
               subTitle: 'Line Chart subtitle'),
             IconButton(

@@ -2,9 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ChartTitle extends StatefulWidget {
-  ChartTitle({this.data, this.title, this.subTitle});
+  ChartTitle({@required this.data, @required this.index, this.title = 'Title', this.subTitle = 'subTitle'});
 
   final AxisChartData data;
+  final int index;
   final String title;
   final String subTitle;
 
@@ -38,7 +39,7 @@ class _ChartTitleState extends State<ChartTitle> {
           height: 4,
         ),
         Text(
-          widget.title,
+          '${widget.title} i=${widget.index}',
           style: TextStyle(
               color: Colors.white,
               fontSize: 24,
