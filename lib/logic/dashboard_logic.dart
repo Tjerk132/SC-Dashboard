@@ -65,7 +65,7 @@ class DashboardLogic {
       /// no group could be created with the remaining space if group is null
       if (group == null) {
         logger.log('a placeholder will be created with size $size');
-        group = createPlaceholder(size);
+        group = PlaceholderTileGroup(size);
       }
       else {
         logger.log('group is created with leftover size $size');
@@ -75,10 +75,6 @@ class DashboardLogic {
     }
     // size = 0 so the tiles align, should never reach this return
     return null;
-  }
-
-  PlaceholderTileGroup createPlaceholder(int size) {
-    return PlaceholderTileGroup(size);
   }
 
   TileShimmer createShimmer(int index) {

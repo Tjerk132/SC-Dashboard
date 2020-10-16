@@ -1,18 +1,18 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class ChartTitle extends StatefulWidget {
-  ChartTitle({@required this.data, this.title = 'Title', this.subTitle = 'subTitle'});
+class ChartData extends StatefulWidget {
+  ChartData({@required this.data, this.title = 'Title', this.subTitle = 'subTitle'});
 
   final AxisChartData data;
   final String title;
   final String subTitle;
 
   @override
-  State<StatefulWidget> createState() => _ChartTitleState();
+  State<ChartData> createState() => _ChartDataState();
 }
 
-class _ChartTitleState extends State<ChartTitle> {
+class _ChartDataState extends State<ChartData> {
   final Duration animDuration = const Duration(milliseconds: 250);
 
   @override
@@ -44,7 +44,8 @@ class _ChartTitleState extends State<ChartTitle> {
         ),
         Padding(
           //todo only set padding to 15 if small group else to zero
-          padding: EdgeInsets.only(left: 15.0),
+          padding: EdgeInsets.zero,
+          // padding: EdgeInsets.only(left: 15.0),
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(

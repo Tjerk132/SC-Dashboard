@@ -6,6 +6,10 @@ import 'package:flutter_test_project/utility/utility.dart';
 
 class LineChartDataSamples {
 
+  LineChartDataSamples(this.lineWidth);
+
+  final double lineWidth;
+
   final List<String> values = [
     '1m',
     '2m',
@@ -89,7 +93,7 @@ class LineChartDataSamples {
       lineBarsData: linesBarData1(),
     );
   }
-
+  //green line
   List<LineChartBarData> linesBarData1() {
     final LineChartBarData lineChartBarData1 = LineChartBarData(
       spots: [
@@ -105,7 +109,7 @@ class LineChartDataSamples {
       colors: [
         const Color(0xff4af699),
       ],
-      barWidth: 8,
+      barWidth: lineWidth,
       isStrokeCapRound: true,
       dotData: FlDotData(
         show: false,
@@ -114,6 +118,8 @@ class LineChartDataSamples {
         show: false,
       ),
     );
+
+    // purple line
     final LineChartBarData lineChartBarData2 = LineChartBarData(
       spots: [
         FlSpot(1, 1),
@@ -127,7 +133,7 @@ class LineChartDataSamples {
       colors: [
         const Color(0xffaa4cfc),
       ],
-      barWidth: 8,
+      barWidth: lineWidth,
       isStrokeCapRound: true,
       dotData: FlDotData(
         show: false,
@@ -136,6 +142,8 @@ class LineChartDataSamples {
         const Color(0x00aa4cfc),
       ]),
     );
+
+    // blue line
     final LineChartBarData lineChartBarData3 = LineChartBarData(
       spots: [
         FlSpot(1, 2.8),
@@ -148,7 +156,7 @@ class LineChartDataSamples {
       colors: const [
         Color(0xff27b6fc),
       ],
-      barWidth: 8,
+      barWidth: lineWidth,
       isStrokeCapRound: true,
       dotData: FlDotData(
         show: false,

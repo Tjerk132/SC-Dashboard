@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/models/charts/chart_title.dart';
+import 'package:flutter_test_project/models/charts/chart_data.dart';
 
 import 'chart_data/bar_chart_data_samples.dart';
 
@@ -15,23 +15,22 @@ class BarChartGraph extends Chart {
 }
 
 class BarChartGraphState extends State<BarChartGraph> {
-  BarChartGraphState(double barWidth) {
-    sample = BarChartDataSampleData(barWidth: barWidth);
-  }
+  BarChartGraphState(double barWidth)
+      : samples = BarChartDataSamples(barWidth: barWidth);
 
   void barTouchCallBack(BarTouchResponse barTouchResponse) {
     setState(() {
       if (barTouchResponse.spot != null &&
           barTouchResponse.touchInput is! FlPanEnd &&
           barTouchResponse.touchInput is! FlLongPressEnd) {
-        sample.touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+        samples.touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
       } else {
-        sample.touchedIndex = -1;
+        samples.touchedIndex = -1;
       }
     });
   }
 
-  BarChartDataSampleData sample;
+  final BarChartDataSamples samples;
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +55,8 @@ class BarChartGraphState extends State<BarChartGraph> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: ChartTitle(
-              data: sample.mainBarData(barTouchCallBack),
+            child: ChartData(
+              data: samples.mainBarData(barTouchCallBack),
               title: 'Bar graph title',
               subTitle: 'Bar graph subtext',
             ),

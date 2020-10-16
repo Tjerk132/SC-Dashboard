@@ -2,8 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
-class BarChartDataSampleData {
-  BarChartDataSampleData({@required this.barWidth})
+class BarChartDataSamples {
+  BarChartDataSamples({@required this.barWidth})
     :
     barValues = const [5.0, 6.5, 5.0, 7.5, 9.0, 11.5, 6.5],
     barBackgroundColor = const Color(0xff72d8bf),

@@ -16,7 +16,7 @@ extension ChartTypeExtension on ChartType {
       case ChartType.BarChart:
         return BarChartGraph(barWidth: (singularSize * 16.0) / singularSize);
       case ChartType.LineChart:
-        return LineChartGraph();
+        return LineChartGraph(lineWidth: singularSize * 3.0);
       case ChartType.PieChart:
         return PieChartGraph(pieRadius: (singularSize * 65.0) / singularSize);
       default: return null;

@@ -19,8 +19,8 @@ import '../tile.dart';
 /// }
 /// ```
 /// and require the parameters [horizontal], [vertical]
-/// and [object]. [object] is what will be displayed inside the TileGroup and has
-/// to be of type [Widget].
+/// and [type]. [type] is what will be the type of graph
+/// displayed inside the TileGroup and has to be of type [Widget].
 abstract class TileGroup extends StatefulWidget {
 
   TileGroup.fromSize(this.type,
@@ -47,10 +47,13 @@ abstract class TileGroup extends StatefulWidget {
 
   //todo general: now 1 component is duplicated to fill up the tile group's space (keep a list of this group's tiles)
 
+  /// the type of chart the group will get
   final ChartType type;
 
+  /// represents the size of one element in this group
   final int singularSize;
 
+  /// represents the size in total that this groups takes in
   final int occupationSize;
 
   /// represents the number of rows that can fit within the current tile group
@@ -69,14 +72,16 @@ abstract class TileGroup extends StatefulWidget {
 
 class _TileGroupState extends State<TileGroup> {
   Widget getTile() {
-    //todo remove index of assign properly
+
     final Chart chart = Chart.byType(widget.type, widget);
 
     if (widget is PlaceholderTileGroup) {
       return PlaceholderTile(size: widget.horizontal + widget.vertical);
-    } else if (widget.alignVertically) {
+    }
+    else if (widget.alignVertically) {
       return VerticalTile(chart: chart);
-    } else
+    }
+    else
       return Tile(chart: chart);
   }
 
