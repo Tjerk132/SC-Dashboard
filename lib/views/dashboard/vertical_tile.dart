@@ -14,16 +14,24 @@ class VerticalTile extends StatefulWidget {
 class _VerticalTileState extends State<VerticalTile> {
   //orig = 6.2
   // ratio to which 2x1 tile matches the height of a 1x1 tile todo: now only works for fit 2
-  final double verticalTileHeightRatio = 6.5;
+  final double verticalTileHeightRatio = 6.2;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    MediaQueryData data = MediaQuery.of(context);
     return Container(
       color: Colors.amber,
-      constraints: BoxConstraints(
-        maxHeight: size.height / verticalTileHeightRatio,
-        minWidth: size.width),
+      constraints:
+      data.orientation == Orientation.landscape ?
+      BoxConstraints(
+        maxHeight: data.size.height / 4,
+        maxWidth: data.size.width
+      )
+      :
+      BoxConstraints(
+        maxHeight: data.size.height / verticalTileHeightRatio,
+        maxWidth: data.size.width
+      ),
       child: Tile(chart: widget.chart),
     );
   }

@@ -2,10 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ChartTitle extends StatefulWidget {
-  ChartTitle({@required this.data, @required this.index, this.title = 'Title', this.subTitle = 'subTitle'});
+  ChartTitle({@required this.data, this.title = 'Title', this.subTitle = 'subTitle'});
 
   final AxisChartData data;
-  final int index;
   final String title;
   final String subTitle;
 
@@ -19,41 +18,52 @@ class _ChartTitleState extends State<ChartTitle> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         const SizedBox(
-          // height: 37,
-          height: 12,
+          height: 2,
         ),
-        Text(
-          widget.subTitle,
-          style: TextStyle(
-            color: Color(0xff827daa),
-            fontSize: 12,
+        Padding(
+          padding: EdgeInsets.zero,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              widget.subTitle,
+              style: TextStyle(
+                color: Color(0xff827daa),
+                // fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
-          textAlign: TextAlign.center,
         ),
         const SizedBox(
-          height: 4,
+          height: 2,
         ),
-        Text(
-          '${widget.title} i=${widget.index}',
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2),
-          textAlign: TextAlign.center,
+        Padding(
+          //todo only set padding to 15 if small group else to zero
+          padding: EdgeInsets.only(left: 15.0),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${widget.title}',
+              style: TextStyle(
+                  color: Colors.white,
+                  // fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2),
+              textAlign: TextAlign.right,
+            ),
+          ),
         ),
         const SizedBox(
-          // height: 37,
-          height: 12,
+          height: 2,
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 6.0),
+            padding: EdgeInsets.all(2.0),
             child: widget.data is LineChartData ?
               LineChart(
                 widget.data,
@@ -67,7 +77,7 @@ class _ChartTitleState extends State<ChartTitle> {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 2,
         ),
       ],
     );

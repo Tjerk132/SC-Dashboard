@@ -4,10 +4,9 @@ import 'package:flutter_test_project/models/charts/chart_title.dart';
 import 'chart.dart';
 
 class LineChartGraph extends Chart {
-  LineChartGraph(int index) : super(index);
 
   @override
-  State<StatefulWidget> createState() => LineChartGraphState();
+  State<LineChartGraph> createState() => LineChartGraphState();
 }
 
 class LineChartGraphState extends State<LineChartGraph> {
@@ -37,24 +36,27 @@ class LineChartGraphState extends State<LineChartGraph> {
         ),
         child: Stack(
           children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                alignment: Alignment.topLeft,
+                icon: Icon(
+                  Icons.refresh,
+                  color: Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+                ),
+                onPressed: () {
+                  setState(() {
+                    isShowingMainData = !isShowingMainData;
+                  });
+                },
+              ),
+            ),
             ChartTitle(
               data: isShowingMainData
                   ? LineChartDataSamples().sampleData1()
                   : LineChartDataSamples().sampleData2(),
-              index: widget.index,
               title: 'Line chart title',
               subTitle: 'Line Chart subtitle'),
-            IconButton(
-              icon: Icon(
-                Icons.refresh,
-                color: Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
-              ),
-              onPressed: () {
-                setState(() {
-                  isShowingMainData = !isShowingMainData;
-                });
-              },
-            )
           ],
         ),
       ),

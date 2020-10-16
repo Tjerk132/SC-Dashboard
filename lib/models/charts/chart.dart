@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 
 abstract class Chart extends StatefulWidget {
-  Chart(this.index);
+
+  const Chart();
 
   @override
-  State<StatefulWidget> createState();
-1
-  final int index;
+  State<Chart> createState();
 
-  // final ChartType type;
+  static int length = ChartType.values.length;
 
-  static int count = ChartType.values.length;
-
-  static Map<ChartType, Chart> types(List<int> indexes) {
-    return {
-      for (ChartType type in ChartType.values.toList())
-        type: type.instance(indexes[ChartType.values.indexOf(type)])
-    };
+  factory Chart.byType(ChartType type, TileGroup group) {
+    return type.instance(group.singularSize);
   }
+
+  static List<ChartType> types() => [
+    for (int i = 0; i < length; i++)
+        ChartType.values[i]
+  ];
+
 }

@@ -11,14 +11,14 @@ enum ChartType {
 
 extension ChartTypeExtension on ChartType {
 
-  Chart instance(int index) {
+  Chart instance(int singularSize) {
     switch(this) {
       case ChartType.BarChart:
-        return BarChartGraph(index);
+        return BarChartGraph(barWidth: (singularSize * 16.0) / singularSize);
       case ChartType.LineChart:
-        return LineChartGraph(index);
+        return LineChartGraph();
       case ChartType.PieChart:
-        return PieChartGraph(index);
+        return PieChartGraph(pieRadius: (singularSize * 65.0) / singularSize);
       default: return null;
     }
   }

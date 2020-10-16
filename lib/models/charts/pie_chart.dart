@@ -5,23 +5,22 @@ import 'chart.dart';
 import 'indicator.dart';
 
 class PieChartGraph extends Chart {
-  PieChartGraph(int index) : super(index);
+  PieChartGraph({this.pieRadius = 60});
+
+  final double pieRadius;
 
   @override
   State<PieChartGraph> createState() => PieChartGraphState();
 }
 
 class PieChartGraphState extends State<PieChartGraph> {
+
   int touchedIndex;
 
+  /// the number of pie's that will be created (testing purpose)
   int pieCount = 3;
 
-  Map<int, String> indicatorText = {
-    0: "One",
-    1: "Two",
-    2: "Three",
-    3: "Four"
-  };
+  Map<int, String> indicatorText = {0: "One", 1: "Two", 2: "Three", 3: "Four"};
 
   Map<int, Color> sectionColor = {
     0: Color(0xff0293ee),
@@ -38,30 +37,29 @@ class PieChartGraphState extends State<PieChartGraph> {
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            //todo remove after testing
-            Text('index ${widget.index}',style: TextStyle(fontSize: 12)),
             const SizedBox(
-              height: 28,
+              height: 6,
             ),
             Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List<Widget>.generate(pieCount, (index) =>
-                Indicator(
-                  color: sectionColor[index],
-                  text: '${indicatorText[index]}',
-                  shape: BoxShape.circle,
-                  size: touchedIndex == index ? 18 : 16,
-                  textColor: touchedIndex == index ? Colors.black : Colors.grey,
-                ),
-              )
-            ),
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List<Widget>.generate(
+                  pieCount,
+                  (index) => Indicator(
+                    color: sectionColor[index],
+                    text: '${indicatorText[index]}',
+                    shape: BoxShape.circle,
+                    size: touchedIndex == index ? 18 : 16,
+                    textColor:
+                        touchedIndex == index ? Colors.black : Colors.grey,
+                  ),
+                )),
             const SizedBox(
-              height: 18,
+              height: 2,
             ),
             Expanded(
               child: AspectRatio(
-                aspectRatio: 1,
+                aspectRatio: 1.0,
                 child: PieChart(
                   PieChartData(
                       pieTouchData:
@@ -99,11 +97,9 @@ class PieChartGraphState extends State<PieChartGraph> {
         color: sectionColor[i].withOpacity(opacity),
         value: 100 / pieCount,
         title: '',
-        radius: isTouched ? 120 : 60,
+        radius: isTouched ? widget.pieRadius * 1.2 : widget.pieRadius,
         titleStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: sectionColor[i]),
+            fontSize: 18, fontWeight: FontWeight.bold, color: sectionColor[i]),
         titlePositionPercentageOffset: 0.55,
       );
     });

@@ -1,12 +1,13 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Dashboard extends StatefulWidget {
-  final int crossAxisCount = 4;
+  final int crossAxisCount = 8;
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -32,9 +33,9 @@ class _DashboardState extends State<Dashboard> {
       appBar: new AppBar(
         title: new Text('Dashboard'),
       ),
-      body: FutureBuilder<List<Chart>>(
+      body: FutureBuilder<List<ChartType>>(
         future: _logic.getCharts(_tileCount),
-        builder: (context, AsyncSnapshot<List<Chart>> snapshot) {
+        builder: (context, AsyncSnapshot<List<ChartType>> snapshot) {
           return StaggeredGridView.countBuilder(
             physics: BouncingScrollPhysics(),
             // addAutomaticKeepAlives: true,
@@ -53,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
             },
             //get the correct fit for each tile by the space they take it (2 for default)
             staggeredTileBuilder: (int index) =>
-                new StaggeredTile.fit(2),
+                new StaggeredTile.fit(widget.crossAxisCount ~/ 2),
             // new StaggeredTile.fit(_logic.getTileType(index)?.occupiedSpace ?? 2),
           );
         },

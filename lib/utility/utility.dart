@@ -34,11 +34,13 @@ extension IndexedIterable<E> on Iterable<E> {
       throw new NullThrownError();
   }
 
-  // determines if at least one item in the list satisfies the value of
-  /// the given [property]
-  // usage:
-  /// [List.anyMatch(property: 'hasData');
-  // where 'hasData' is the name of the property
+  /// determines if at least one item in the list satisfies the value of
+  /// the given [property].
+  /// Usage:
+  /// ```dart
+  /// List.anyMatch(property: 'hasData');
+  /// ```
+  /// where 'hasData' is the name of the property
   bool anyMatch({@required String property}) {
     this.nullCheck();
     for (E item in this) {
@@ -51,11 +53,13 @@ extension IndexedIterable<E> on Iterable<E> {
     return false;
   }
 
-  // determines if every item in the list satisfies the value of
-  /// the given [property]
-  // usage:
-  /// [List.allMatch(property: 'hasData');
-  // where 'hasData' is the name of the property
+  /// determines if every item in the list satisfies the value of
+  /// the given [property].
+  /// Usage:
+  /// ```dart
+  /// List.allMatch(property: 'hasData');
+  /// ```
+  /// where 'hasData' is the name of the property
   bool allMatch({@required String property}) {
     this.nullCheck();
     for (E item in this) {
@@ -70,7 +74,7 @@ extension IndexedIterable<E> on Iterable<E> {
 }
 
 extension ObjectExtension on Object {
-  /// create a json string with all the given properties from [properties]
+  /// creates a json string with all the given items in [properties]
   String allProperties(Map<String, dynamic> properties) {
     StringBuffer buffer = new StringBuffer();
 
@@ -91,15 +95,24 @@ extension ObjectExtension on Object {
     return buffer.toString();
   }
 
-  // please make sure you override the toString method (with the correct json format)
-  // so it's possible to retrieve the object's properties
-  /// gets the value of the given [property] if present
+  /// please make sure you override the toString method and
+  /// call the [allProperties] method and insert all the properties
+  /// the object has by their name and value.
+  /// Example:
+  /// ```dart
+  /// return allProperties({
+  /// 'foo': foo,
+  /// 'bar': bar
+  /// });
+  /// ```
+  // then it is possible to retrieve the object's properties.
   //
+  /// gets the value of the given [property] if present
   /// throws [TypeError] if the value isn't found
   dynamic getProperty(String property) {
     Map<String, dynamic> properties = json.decode(this.toString());
-    dynamic oProperty = properties.getOrElse(property, '');
-    if (oProperty == '')
+    dynamic oProperty = properties[property];
+    if (oProperty == null)
       throw new TypeError();
     else
       return oProperty;

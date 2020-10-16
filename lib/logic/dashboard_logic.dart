@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
@@ -24,30 +25,30 @@ class DashboardLogic {
 
   //todo as tile groups are now saved as states check if tiles can fit with each other by looking at their neighbours of each tile when returning
 
-  DashboardLogic(int sizesLength, this.crossAxisCount) {
+  DashboardLogic(int count, this.crossAxisCount) {
     this._states = List.generate(
-      sizesLength,
+      count,
       (index) => new TileState(index),
     );
     this._dao = new ImageDao();
     this.r = new Random();
   }
 
-  TileGroup createTile(Chart chart, int index, int count) {
+  TileGroup createTile(ChartType type, int index, int count) {
     setHasData(index);
     return isLastTile(index, count)
-        ? createLastTile(index, chart)
-        : createNewTile(index, chart);
+        ? createLastTile(index, type)
+        : createNewTile(index, type);
   }
 
-  TileGroup createNewTile(int index, Chart chart) {
+  TileGroup createNewTile(int index, ChartType type) {
     //random between tiles of size 1x1 to 2x2
-    TileGroup group = TileGroup.dimensionFactory(chart,
+    TileGroup group = TileGroup.dimensionFactory(type,
         horizontal: r.intMaxMin(2), vertical: r.intMaxMin(2));
 
-    print('randomed $group for index $index with chart $chart');
+    print('randomized $group for index $index with chart $type');
 
-    occupied += group.occupiedSpace;
+    occupied += group.occupationSize;
     setTileType(index, group);
 
     if (group.alignVertically) {
@@ -56,16 +57,17 @@ class DashboardLogic {
     return group;
   }
 
-  TileGroup createLastTile(int index, Chart chart) {
+  TileGroup createLastTile(int index, ChartType type) {
     int size = occupied % crossAxisCount;
     if (size != 0) {
-      TileGroup group = TileGroup.sizeFactory(chart, size: size);
+      TileGroup group = TileGroup.sizeFactory(type, size: size);
 
       /// no group could be created with the remaining space if group is null
       if (group == null) {
         logger.log('a placeholder will be created with size $size');
         group = createPlaceholder(size);
-      } else {
+      }
+      else {
         logger.log('group is created with leftover size $size');
       }
       setTileType(index, group);
@@ -76,9 +78,7 @@ class DashboardLogic {
   }
 
   PlaceholderTileGroup createPlaceholder(int size) {
-    int horizontal = size ~/ 2;
-    int vertical = size - horizontal;
-    return PlaceholderTileGroup(horizontal, vertical);
+    return PlaceholderTileGroup(size);
   }
 
   TileShimmer createShimmer(int index) {
@@ -90,16 +90,10 @@ class DashboardLogic {
         textShimmers: 2);
   }
 
-  Future<List<Chart>> getCharts(int count) async {
-    List<int> indexes = new List.generate(count, (index) => index);
-    return <Chart>[
-      for (int i = 0; i < count; i += Chart.count)
-        ...Chart.types(
-          //generate charts with indexes
-          List<int>.of(
-            indexes.getRange(i, i + Chart.count),
-          ),
-        ).values
+  Future<List<ChartType>> getCharts(int count) async {
+    return [
+      for (int i = 0; i < count; i += Chart.length)
+        ...Chart.types()
     ];
   }
 
@@ -120,7 +114,7 @@ class DashboardLogic {
 
   void setTileType(int index, TileGroup group) => _states[index].group = group;
 
-  TileGroup getTileType(int index) => _states[index].group;
+  TileGroup getTileGroup(int index) => _states[index].group;
 
   bool isLastTile(int index, int count) => index == count - 1;
 }

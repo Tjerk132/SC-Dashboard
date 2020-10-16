@@ -3,28 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
 class BarChartDataSampleData {
-  final List<Color> availableColors = [
-    Colors.purpleAccent,
-    Colors.yellow,
-    Colors.lightBlue,
-    Colors.orange,
-    Colors.pink,
-    Colors.redAccent,
-  ];
+  BarChartDataSampleData({@required this.barWidth})
+    :
+    barValues = const [5.0, 6.5, 5.0, 7.5, 9.0, 11.5, 6.5],
+    barBackgroundColor = const Color(0xff72d8bf),
+    availableColors = const [
+      Colors.purpleAccent,
+      Colors.yellow,
+      Colors.lightBlue,
+      Colors.orange,
+      Colors.pink,
+      Colors.redAccent,
+    ],
+    daysOfTheWeek = const [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
 
-  final List<String> daysOfTheWeek = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
+  final List<Color> availableColors;
 
-  final List<double> barValues = [5.0, 6.5, 5.0, 7.5, 9.0, 11.5, 6.5];
+  final List<String> daysOfTheWeek;
 
-  final Color barBackgroundColor = const Color(0xff72d8bf);
+  final List<double> barValues;
+
+  final Color barBackgroundColor;
+
+  final double barWidth;
 
   int touchedIndex;
 
@@ -64,13 +73,13 @@ class BarChartDataSampleData {
       borderData: FlBorderData(
         show: false,
       ),
-      barGroups: showingGroups(),
+      barGroups: showingGroups(barWidth),
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
+  List<BarChartGroupData> showingGroups(barWidth) => List.generate(7, (i) {
         return makeGroupData(i, barValues.getOrElse(i, null),
-            isTouched: i == touchedIndex);
+            isTouched: i == touchedIndex, width: barWidth);
       });
 
   BarChartGroupData makeGroupData(
