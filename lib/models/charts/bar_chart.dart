@@ -1,9 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/models/charts/chart_data.dart';
 
-import 'chart_data/bar_chart_data_samples.dart';
+import 'bar_chart/bars.dart';
 
 class BarChartGraph extends Chart {
   BarChartGraph({this.barWidth});
@@ -11,31 +10,42 @@ class BarChartGraph extends Chart {
   final double barWidth;
 
   @override
-  State<BarChartGraph> createState() => BarChartGraphState(this.barWidth);
+  State<BarChartGraph> createState() => BarChartGraphState();
 }
 
 class BarChartGraphState extends State<BarChartGraph> {
-  BarChartGraphState(double barWidth)
-      : samples = BarChartDataSamples(barWidth: barWidth);
+  // testing data
+  final List<String> daysOfTheWeek = const [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  final List<double> barValues = const [5.0, 6.5, 5.0, 7.5, 9.0, 11.5, 6.5];
+  final int barCount = 7;
+
+  int touchedIndex;
 
   void barTouchCallBack(BarTouchResponse barTouchResponse) {
     setState(() {
       if (barTouchResponse.spot != null &&
           barTouchResponse.touchInput is! FlPanEnd &&
           barTouchResponse.touchInput is! FlLongPressEnd) {
-        samples.touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      } else {
-        samples.touchedIndex = -1;
+        touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+      }
+      else {
+        touchedIndex = -1;
       }
     });
   }
 
-  final BarChartDataSamples samples;
-
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: const Color(0xff81e5cd),
       child: Stack(
         children: <Widget>[
@@ -55,10 +65,15 @@ class BarChartGraphState extends State<BarChartGraph> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: ChartData(
-              data: samples.mainBarData(barTouchCallBack),
+            child: Bars(
               title: 'Bar graph title',
               subTitle: 'Bar graph subtext',
+              barWidth: widget.barWidth,
+              barCount: barCount,
+              touchedIndex: touchedIndex,
+              barValues: barValues,
+              barTouchTooltipData: daysOfTheWeek,
+              barTouchCallBack: barTouchCallBack,
             ),
           ),
         ],

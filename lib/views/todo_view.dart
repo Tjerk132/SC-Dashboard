@@ -12,7 +12,7 @@ class TodoView extends StatefulWidget {
   final TodoViewController controller;
 
   @override
-  State<StatefulWidget> createState() => TodoViewState(controller: controller);
+  State<TodoView> createState() => TodoViewState(controller: controller);
 }
 
 class TodoViewState extends State<TodoView> {

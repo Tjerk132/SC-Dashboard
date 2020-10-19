@@ -8,7 +8,7 @@ class VerticalTile extends StatefulWidget {
   final Chart chart;
 
   @override
-  State<StatefulWidget> createState() => _VerticalTileState();
+  State<VerticalTile> createState() => _VerticalTileState();
 }
 
 class _VerticalTileState extends State<VerticalTile> {

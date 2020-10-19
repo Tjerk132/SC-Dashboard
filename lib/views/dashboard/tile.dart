@@ -7,7 +7,7 @@ class Tile extends StatefulWidget {
   final Chart chart;
 
   @override
-  State<StatefulWidget> createState() => _TileState(chart);
+  State<Tile> createState() => _TileState(chart);
 }
 
 class _TileState extends State<Tile> {

@@ -87,7 +87,7 @@ extension ObjectExtension on Object {
       else {
         buffer.write('"$key": $value');
       }
-      if(key != properties.keys.last)
+      if (key != properties.keys.last)
         buffer.write(',');
     });
     buffer.write('}');

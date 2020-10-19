@@ -25,45 +25,48 @@ class LineChartGraphState extends State<LineChartGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.23,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(18)),
-          gradient: LinearGradient(
-            colors: const [
-              Color(0xff2c274c),
-              Color(0xff46426c),
-            ],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-          ),
-        ),
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                alignment: Alignment.topLeft,
-                icon: Icon(
-                  Icons.refresh,
-                  color:
-                      Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
-                ),
-                onPressed: () {
-                  setState(() {
-                    isShowingMainData = !isShowingMainData;
-                  });
-                },
-              ),
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: AspectRatio(
+        aspectRatio: 1.23,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(18)),
+            gradient: LinearGradient(
+              colors: const [
+                Color(0xff2c274c),
+                Color(0xff46426c),
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
             ),
-            ChartData(
-                data: isShowingMainData
-                    ? samples.sampleData1()
-                    : samples.sampleData2(),
-                title: 'Line chart title',
-                subTitle: 'Line Chart subtitle'),
-          ],
+          ),
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  alignment: Alignment.topLeft,
+                  icon: Icon(
+                    Icons.refresh,
+                    color:
+                        Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isShowingMainData = !isShowingMainData;
+                    });
+                  },
+                ),
+              ),
+              ChartData(
+                  data: isShowingMainData
+                      ? samples.sampleData1()
+                      : samples.sampleData2(),
+                  title: 'Line chart title',
+                  subTitle: 'Line Chart subtitle'),
+            ],
+          ),
         ),
       ),
     );

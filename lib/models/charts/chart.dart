@@ -17,7 +17,7 @@ abstract class Chart extends StatefulWidget {
 
   static List<ChartType> types() => [
     for (int i = 0; i < length; i++)
-        ChartType.values[i]
+      ChartType.values[i]
   ];
 
 }

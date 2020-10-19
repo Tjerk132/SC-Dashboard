@@ -74,7 +74,6 @@ class _TileGroupState extends State<TileGroup> {
   Widget getTile() {
 
     final Chart chart = Chart.byType(widget.type, widget);
-
     if (widget is PlaceholderTileGroup) {
       return PlaceholderTile(size: widget.horizontal + widget.vertical);
     }
