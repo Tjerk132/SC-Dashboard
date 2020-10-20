@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/indicator.dart';
+import 'package:flutter_test_project/models/charts/pie_chart/pie.dart';
 import 'chart.dart';
 
 class PieChartGraph extends Chart {
@@ -17,9 +18,8 @@ class PieChartGraphState extends State<PieChartGraph> {
 
   /// the number of pies that will be created (testing purpose)
   int pieCount = 3;
-
+  // testing data
   Map<int, String> indicatorText = {0: "One", 1: "Two", 2: "Three", 3: "Four"};
-
   Map<int, Color> sectionColor = {
     0: Color(0xff0293ee),
     1: Color(0xfff8b250),
@@ -32,7 +32,8 @@ class PieChartGraphState extends State<PieChartGraph> {
       if (pieTouchResponse.touchInput is FlLongPressEnd ||
           pieTouchResponse.touchInput is FlPanEnd) {
         touchedIndex = -1;
-      } else {
+      }
+      else {
         touchedIndex = pieTouchResponse.touchedSectionIndex;
       }
     });
@@ -82,10 +83,11 @@ class PieChartGraphState extends State<PieChartGraph> {
                     ),
                     sectionsSpace: 12,
                     centerSpaceRadius: 0,
-                    sections: List<PieChartSectionData>.generate(
+                    sections: List<Pie>.generate(
                       pieCount,
-                      (index) => showingSection(
+                      (index) => Pie(
                         index: index,
+                        isTouched: index == touchedIndex,
                         color: sectionColor[index],
                         value: 100 / pieCount,
                         pieRadius: widget.pieRadius,
@@ -98,27 +100,6 @@ class PieChartGraphState extends State<PieChartGraph> {
           ],
         ),
       ),
-    );
-  }
-
-  PieChartSectionData showingSection(
-    {int index,
-    Color color,
-    double value,
-    String title = '',
-    double pieRadius}) {
-
-    final bool isTouched = index == touchedIndex;
-    final double opacity = isTouched ? 1 : 0.6;
-
-    return PieChartSectionData(
-      color: color.withOpacity(opacity),
-      value: value,
-      title: title,
-      radius: isTouched ? pieRadius * 1.2 : pieRadius,
-      titleStyle:
-          TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
-      titlePositionPercentageOffset: 0.55,
     );
   }
 }
