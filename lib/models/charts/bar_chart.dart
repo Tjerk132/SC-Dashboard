@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
+import 'package:flutter_test_project/models/charts/chart_data.dart';
 
 import 'bar_chart/bars.dart';
 
@@ -65,15 +66,17 @@ class BarChartGraphState extends State<BarChartGraph> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Bars(
+            child: ChartData(
+              data: Bars(
+                barTouchCallBack: barTouchCallBack,
+                barTouchTooltipData: daysOfTheWeek,
+                barValues: barValues,
+                barWidth: widget.barWidth,
+                barCount: barCount,
+                touchedIndex: touchedIndex,
+              ),
               title: 'Bar graph title',
               subTitle: 'Bar graph subtext',
-              barWidth: widget.barWidth,
-              barCount: barCount,
-              touchedIndex: touchedIndex,
-              barValues: barValues,
-              barTouchTooltipData: daysOfTheWeek,
-              barTouchCallBack: barTouchCallBack,
             ),
           ),
         ],

@@ -10,7 +10,6 @@ class _ComputeTestState extends State<ComputeTest> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Compute test'),

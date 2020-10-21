@@ -1,91 +1,96 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/chart_data.dart';
+import 'package:flutter_test_project/models/charts/base_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
-import 'bar.dart';
+class Bars extends BarChartData {
 
-class Bars extends StatefulWidget {
-  final String title;
-  final String subTitle;
+  @protected
+  Bars._({
+    List<BarChartGroupData> barGroups,
+    double groupsSpace,
+    BarChartAlignment alignment,
+    FlTitlesData titlesData,
+    BarTouchData barTouchData,
+    FlAxisTitleData axisTitleData,
+    double maxY,
+    double minY,
+    FlGridData gridData,
+    FlBorderData borderData,
+    RangeAnnotations rangeAnnotations,
+    Color backgroundColor,
+  }) : super(
+          barGroups: barGroups,
+          groupsSpace: groupsSpace,
+          alignment: alignment,
+          titlesData: titlesData,
+          barTouchData: barTouchData,
+          axisTitleData: axisTitleData,
+          maxY: maxY,
+          minY: minY,
+          gridData: gridData,
+          borderData: borderData,
+          rangeAnnotations: rangeAnnotations,
+          backgroundColor: backgroundColor,
+        );
 
-  final double barWidth;
-  final int barCount;
-  final int touchedIndex;
-  final List<double> barValues;
-  final List<String> barTouchTooltipData;
-  final Function(BarTouchResponse) barTouchCallBack;
+  factory Bars({
+    @required Function(BarTouchResponse) barTouchCallBack,
+    @required List<String> barTouchTooltipData,
+    @required List<double> barValues,
+    @required double barWidth,
+    @required int barCount,
+    @required int touchedIndex,
+    List<BarChartGroupData> barGroups,
+    double groupsSpace,
+    BarChartAlignment alignment,
+    FlTitlesData titlesData,
+    BarTouchData barTouchData,
+    FlAxisTitleData axisTitleData,
+    double maxY,
+    double minY,
+    FlGridData gridData,
+    FlBorderData borderData,
+    RangeAnnotations rangeAnnotations,
+    Color backgroundColor,
+  }) {
+    //todo give usable fallback value for callback
+    barTouchCallBack = barTouchCallBack ?? () {};
+    barTouchTooltipData = barTouchTooltipData ?? const [];
+    barValues = barValues ?? const [];
+    barWidth = barWidth ?? 22;
+    barCount = barCount ?? 5;
+    touchedIndex = touchedIndex ?? -1;
 
-  Bars({
-    Key key,
-    this.title,
-    this.subTitle,
-    this.barWidth,
-    this.barCount = 5,
-    this.touchedIndex = -1,
-    this.barValues = const [],
-    this.barTouchTooltipData = const [],
-    this.barTouchCallBack,
-  }) : super(key: key);
+    BaseChart base = BaseChart();
 
-  @override
-  _BarsState createState() => _BarsState();
-}
+    barTouchData = barTouchData ??
+        base.baseTouchData(barTouchTooltipData, barTouchCallBack);
+    titlesData = titlesData ??
+        base.baseTitleData(
+          showTitles: true,
+          getTitlesBottom: (double value) =>
+              barTouchTooltipData.getOrElse(value.toInt(), '').substring(0, 1),
+          showBottomTitles: true,
+          showLeftTitles: false,
+        );
+    borderData = borderData ?? FlBorderData(show: false);
+    barGroups = barGroups ??
+        base.baseBarGroups(barCount, barValues, touchedIndex, barWidth);
 
-class _BarsState extends State<Bars> {
-  @override
-  Widget build(BuildContext context) {
-    return ChartData(
-      title: widget.title,
-      subTitle: widget.subTitle,
-      data: BarChartData(
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: Colors.blueGrey,
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                int x = group.x.toInt();
-                String tooltip = widget.barTouchTooltipData[x];
-                return BarTooltipItem(
-                  '$tooltip\n${rod.y - 1}',
-                  TextStyle(color: Colors.yellow),
-                );
-              }),
-          touchCallback: (barTouchResponse) =>
-              widget.barTouchCallBack(barTouchResponse),
-        ),
-        titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-            margin: 16,
-            getTitles: (double value) {
-              int iValue = value.toInt();
-              String day = widget.barTouchTooltipData.getOrElse(iValue, '');
-              return day.substring(0, 1);
-            },
-          ),
-          leftTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-        borderData: FlBorderData(
-          show: false,
-        ),
-        barGroups: List<Bar>.generate(
-          widget.barCount,
-          (i) => Bar(
-            i,
-            widget.barValues.getOrElse(i, null),
-            isTouched: i == widget.touchedIndex,
-            width: widget.barWidth,
-          ),
-        ),
-      ),
+    return Bars._(
+      barGroups: barGroups,
+      groupsSpace: groupsSpace,
+      alignment: alignment,
+      titlesData: titlesData,
+      barTouchData: barTouchData,
+      axisTitleData: axisTitleData,
+      maxY: maxY,
+      minY: minY,
+      gridData: gridData,
+      borderData: borderData,
+      rangeAnnotations: rangeAnnotations,
+      backgroundColor: backgroundColor,
     );
   }
 }

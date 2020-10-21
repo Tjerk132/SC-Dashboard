@@ -3,9 +3,8 @@ import 'package:flutter/painting.dart';
 
 class Pie extends PieChartSectionData {
   Pie({
-    int index,
-    bool isTouched,
     Color color,
+    bool isTouched,
     double value,
     String title = '',
     double pieRadius,

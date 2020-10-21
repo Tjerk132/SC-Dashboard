@@ -1,8 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/line_chart/line.dart';
 import 'package:flutter_test_project/models/charts/line_chart/lines.dart';
-import 'package:flutter_test_project/utility/utility.dart';
 
 class LineChartDataSamples {
   LineChartDataSamples(this.lineWidth, this.lineCount);

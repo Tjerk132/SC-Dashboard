@@ -86,9 +86,8 @@ class PieChartGraphState extends State<PieChartGraph> {
                     sections: List<Pie>.generate(
                       pieCount,
                       (index) => Pie(
-                        index: index,
-                        isTouched: index == touchedIndex,
                         color: sectionColor[index],
+                        isTouched: index == touchedIndex,
                         value: 100 / pieCount,
                         pieRadius: widget.pieRadius,
                       ),

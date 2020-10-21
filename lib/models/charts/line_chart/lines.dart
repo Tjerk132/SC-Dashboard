@@ -3,21 +3,13 @@ import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/line_chart/line.dart';
+import 'package:flutter_test_project/models/charts/base_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
 class Lines extends LineChartData {
-  final int lineCount;
-  final Map<int, List<FlSpot>> spots;
-  final Map<int, Color> colors;
-  final double lineWidth;
 
   @protected
   Lines._({
-    this.lineCount,
-    this.spots,
-    this.colors,
-    this.lineWidth,
     List<LineChartBarData> lineBarsData,
     LineTouchData lineTouchData,
     FlGridData gridData,
@@ -60,85 +52,34 @@ class Lines extends LineChartData {
     colors = colors ?? const [];
     lineWidth = lineWidth ?? 6.0;
 
-    List<LineChartBarData> lineBarsData = List<Line>.generate(
-      lineCount,
-      (index) => Line(
-        spots: spots[index],
-        isCurved: true,
-        colors: [
-          colors[index],
-        ],
-        barWidth: lineWidth,
-        isStrokeCapRound: true,
-        dotData: FlDotData(
-          show: false,
-        ),
-        belowBarData: BarAreaData(
-          show: false,
-          //for purple only
-          colors: [
-            const Color(0x00aa4cfc),
-          ],
-        ),
-      ),
-    );
+    BaseChart base = BaseChart();
+
+    List<LineChartBarData> lineBarsData =
+        base.baseLineGroups(lineCount, spots, colors, lineWidth);
+
     gridData = gridData ?? FlGridData(show: false);
     titlesData = titlesData ??
-        FlTitlesData(
-          bottomTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 22,
-            textStyle: const TextStyle(
-              color: Color(0xff72719b),
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-            margin: 10,
-            getTitles: (value) {
-              int iValue = value.toInt();
-              return bottomTitles.getOrElse(iValue, '');
-            },
-          ),
-          leftTitles: SideTitles(
-            showTitles: true,
-            textStyle: const TextStyle(
-              color: Color(0xff75729e),
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-            getTitles: (value) {
-              int iValue = value.toInt();
-              return leftTitles.getOrElse(iValue, '');
-            },
-            margin: 8,
-            reservedSize: 30,
-          ),
+        base.baseTitleData(
+          showTitles: true,
+          getTitlesBottom: (double value) =>
+              bottomTitles.getOrElse(value.toInt(), ''),
+          getTitlesLeft: (double value) =>
+              leftTitles.getOrElse(value.toInt(), ''),
+          showBottomTitles: true,
+          showLeftTitles: true,
         );
     borderData = borderData ??
         FlBorderData(
           show: true,
           border: Border(
-            bottom: BorderSide(
-              color: Color(0xff4e4965),
-              width: 4,
-            ),
-            left: BorderSide(
-              color: Colors.transparent,
-            ),
-            right: BorderSide(
-              color: Colors.transparent,
-            ),
-            top: BorderSide(
-              color: Colors.transparent,
-            ),
+            bottom: BorderSide(color: Color(0xff4e4965), width: 4),
+            left: BorderSide(color: Colors.transparent),
+            right: BorderSide(color: Colors.transparent),
+            top: BorderSide(color: Colors.transparent),
           ),
         );
 
     return Lines._(
-      lineCount: lineCount,
-      spots: spots,
-      colors: colors,
-      lineWidth: lineWidth,
       lineBarsData: lineBarsData,
       lineTouchData: lineTouchData,
       gridData: gridData,

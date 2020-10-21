@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'bar_chart/bars.dart';
+import 'line_chart/lines.dart';
 
 class ChartData extends StatefulWidget {
   final AxisChartData data;
@@ -71,16 +73,7 @@ class _ChartDataState extends State<ChartData> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(2.0),
-            //todo make usable for all types of charts
-            child: widget.data is LineChartData
-                ? LineChart(
-                    widget.data,
-                    swapAnimationDuration: widget.animDuration,
-                  )
-                : BarChart(
-                    widget.data,
-                    swapAnimationDuration: widget.animDuration,
-                  ),
+            child: chartByData(),
           ),
         ),
         const SizedBox(
@@ -88,5 +81,23 @@ class _ChartDataState extends State<ChartData> {
         ),
       ],
     );
+  }
+
+  Widget chartByData() {
+    AxisChartData data = widget.data;
+    switch (data.runtimeType) {
+      case Lines:
+        return LineChart(
+          data,
+          swapAnimationDuration: widget.animDuration,
+        );
+      case Bars:
+        return BarChart(
+          data,
+          swapAnimationDuration: widget.animDuration,
+        );
+      default:
+        return null;
+    }
   }
 }
