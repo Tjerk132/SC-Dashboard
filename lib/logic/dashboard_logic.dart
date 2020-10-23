@@ -6,7 +6,6 @@ import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
-import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
@@ -24,6 +23,7 @@ class DashboardLogic {
   Random r;
 
   //todo as tile groups are now saved as states check if tiles can fit with each other by looking at their neighbours of each tile when returning
+  //this depends on tod.o in TileGroup
 
   DashboardLogic(int count, this.crossAxisCount) {
     this._states = List.generate(
@@ -46,7 +46,7 @@ class DashboardLogic {
     TileGroup group = TileGroup.dimensionFactory(type,
         horizontal: r.intMaxMin(2), vertical: r.intMaxMin(2));
 
-    print('randomized $group for index $index with chart $type');
+    // print('randomized $group for index $index with chart $type');
 
     occupied += group.occupationSize;
     setTileType(index, group);
@@ -59,37 +59,27 @@ class DashboardLogic {
 
   TileGroup createLastTile(int index, ChartType type) {
     int size = occupied % crossAxisCount;
-    if (size != 0) {
-      TileGroup group = TileGroup.sizeFactory(type, size: size);
-
-      /// no group could be created with the remaining space if group is null
-      if (group == null) {
-        logger.log('a placeholder will be created with size $size');
-        group = PlaceholderTileGroup(size);
-      }
-      else {
-        logger.log('group is created with leftover size $size');
-      }
-      setTileType(index, group);
-      return group;
+    if (size == 0) {
+      logger.log(
+          'no place is left for the last tile with aligning bottom as the max width of tiles can only be 2',
+          error: Error);
     }
-    // size = 0 so the tiles align, should never reach this return
-    return null;
+    TileGroup group = TileGroup.sizeFactory(type, size: size);
+
+    /// no group could be created with the remaining space if group is null
+    if (group == null) {
+      logger.log('a placeholder will be created with size $size');
+      group = PlaceholderTileGroup(size);
+    } else {
+      logger.log('group is created with leftover size $size');
+    }
+    setTileType(index, group);
+    return group;
   }
 
-  TileShimmer createShimmer(int index) {
-    setTileShimmering(index, true);
-    return TileShimmer(
-        height: 600,
-        imageShimmerRatio: 0.45,
-        titleShimmer: true,
-        textShimmers: 2);
-  }
-
-  Future<List<ChartType>> getCharts(int count) async {
+  List<ChartType> getChartTypes(int count) {
     return [
-      for (int i = 0; i < count; i += Chart.length)
-        ...Chart.types()
+      for (int i = 0; i < count; i += Chart.length) ...Chart.types()
     ];
   }
 

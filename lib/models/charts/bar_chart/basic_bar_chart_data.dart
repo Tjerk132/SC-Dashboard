@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/base_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
-class Bars extends BarChartData {
-
+class BasicBarChartData extends BarChartData {
   @protected
-  Bars._({
+  BasicBarChartData._({
     List<BarChartGroupData> barGroups,
     double groupsSpace,
     BarChartAlignment alignment,
@@ -34,13 +33,14 @@ class Bars extends BarChartData {
           backgroundColor: backgroundColor,
         );
 
-  factory Bars({
+  factory BasicBarChartData({
     @required Function(BarTouchResponse) barTouchCallBack,
     @required List<String> barTouchTooltipData,
     @required List<double> barValues,
     @required double barWidth,
     @required int barCount,
     @required int touchedIndex,
+    TextStyle textStyle,
     List<BarChartGroupData> barGroups,
     double groupsSpace,
     BarChartAlignment alignment,
@@ -54,13 +54,13 @@ class Bars extends BarChartData {
     RangeAnnotations rangeAnnotations,
     Color backgroundColor,
   }) {
-    //todo give usable fallback value for callback
-    barTouchCallBack = barTouchCallBack ?? () {};
+    barTouchCallBack = barTouchCallBack ?? (BarTouchResponse barTouchResponse) {};
     barTouchTooltipData = barTouchTooltipData ?? const [];
     barValues = barValues ?? const [];
     barWidth = barWidth ?? 22;
     barCount = barCount ?? 5;
     touchedIndex = touchedIndex ?? -1;
+    textStyle = textStyle ?? TextStyle();
 
     BaseChart base = BaseChart();
 
@@ -68,17 +68,16 @@ class Bars extends BarChartData {
         base.baseTouchData(barTouchTooltipData, barTouchCallBack);
     titlesData = titlesData ??
         base.baseTitleData(
-          showTitles: true,
+          show: true,
+          textStyle: textStyle,
           getTitlesBottom: (double value) =>
               barTouchTooltipData.getOrElse(value.toInt(), '').substring(0, 1),
-          showBottomTitles: true,
-          showLeftTitles: false,
         );
     borderData = borderData ?? FlBorderData(show: false);
     barGroups = barGroups ??
         base.baseBarGroups(barCount, barValues, touchedIndex, barWidth);
 
-    return Bars._(
+    return BasicBarChartData._(
       barGroups: barGroups,
       groupsSpace: groupsSpace,
       alignment: alignment,

@@ -1,16 +1,16 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/line_chart/lines.dart';
+import 'package:flutter_test_project/models/charts/line_chart/basic_line_chart_data.dart';
 
-class LineChartDataSamples {
-  LineChartDataSamples(this.lineWidth, this.lineCount);
+class LineCharts {
+  LineCharts(this.lineWidth, this.lineCount);
 
   final double lineWidth;
   final int lineCount;
 
-  Lines sampleData1(List<String> leftTitles, Map<int, String> bottomTitles,
+  BasicLineChartData mainDataGraph(List<String> leftTitles, Map<int, String> bottomTitles,
       Map<int, List<FlSpot>> spots, Map<int, Color> colors) {
-    return Lines(
+    return BasicLineChartData(
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
@@ -28,12 +28,17 @@ class LineChartDataSamples {
       spots: spots,
       colors: colors,
       lineWidth: lineWidth,
+      textStyle: TextStyle(
+        color: Colors.grey[200],
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
     );
   }
 
-  Lines sampleData2(List<String> leftTitles, Map<int, String> bottomTitles,
+  BasicLineChartData otherDataGraph(List<String> leftTitles, Map<int, String> bottomTitles,
       Map<int, List<FlSpot>> spots, Map<int, Color> colors) {
-    return Lines(
+    return BasicLineChartData(
       lineTouchData: LineTouchData(
         enabled: false,
       ),
@@ -47,6 +52,11 @@ class LineChartDataSamples {
       spots: spots,
       colors: colors,
       lineWidth: lineWidth,
+      textStyle: TextStyle(
+        color: Colors.grey[200],
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
     );
   }
 }

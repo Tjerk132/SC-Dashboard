@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/base_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
-class Lines extends LineChartData {
-
+class BasicLineChartData extends LineChartData {
   @protected
-  Lines._({
+  BasicLineChartData._({
     List<LineChartBarData> lineBarsData,
     LineTouchData lineTouchData,
     FlGridData gridData,
@@ -31,13 +30,14 @@ class Lines extends LineChartData {
           maxY: maxY,
         );
 
-  factory Lines({
+  factory BasicLineChartData({
     @required int lineCount,
     @required Map<int, List<FlSpot>> spots,
     @required Map<int, Color> colors,
     @required double lineWidth,
     @required List<String> leftTitles,
     @required Map<int, String> bottomTitles,
+    TextStyle textStyle,
     LineTouchData lineTouchData,
     FlGridData gridData,
     FlTitlesData titlesData,
@@ -51,6 +51,7 @@ class Lines extends LineChartData {
     spots = spots ?? const [];
     colors = colors ?? const [];
     lineWidth = lineWidth ?? 6.0;
+    textStyle = textStyle ?? TextStyle();
 
     BaseChart base = BaseChart();
 
@@ -60,13 +61,12 @@ class Lines extends LineChartData {
     gridData = gridData ?? FlGridData(show: false);
     titlesData = titlesData ??
         base.baseTitleData(
-          showTitles: true,
+          show: true,
+          textStyle: textStyle,
           getTitlesBottom: (double value) =>
               bottomTitles.getOrElse(value.toInt(), ''),
           getTitlesLeft: (double value) =>
               leftTitles.getOrElse(value.toInt(), ''),
-          showBottomTitles: true,
-          showLeftTitles: true,
         );
     borderData = borderData ??
         FlBorderData(
@@ -79,7 +79,7 @@ class Lines extends LineChartData {
           ),
         );
 
-    return Lines._(
+    return BasicLineChartData._(
       lineBarsData: lineBarsData,
       lineTouchData: lineTouchData,
       gridData: gridData,

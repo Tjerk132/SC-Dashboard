@@ -3,30 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
 
-import 'bar_chart/bars.dart';
+import 'basic_bar_chart_data.dart';
 
 class BarChartGraph extends Chart {
-  BarChartGraph({this.barWidth});
-
   final double barWidth;
+  final int barCount;
+  final List<double> barValues;
+  final List<String> barTouchTooltipData;
+
+  BarChartGraph({
+    this.barWidth,
+    this.barCount = 7,
+    this.barValues = const [],
+    this.barTouchTooltipData = const [],
+  });
+
+  factory BarChartGraph.fromJson(Map<String, dynamic> json) {
+    return new BarChartGraph(
+      barWidth: json["barWidth"] as double,
+      barCount: json["barCount"] as int,
+      barValues: (json["barValues"] as List<dynamic>).cast<double>(),
+      barTouchTooltipData: (json["barTouchTooltipData"] as List<dynamic>).cast<String>(),
+    );
+  }
 
   @override
   State<BarChartGraph> createState() => BarChartGraphState();
 }
 
 class BarChartGraphState extends State<BarChartGraph> {
-  // testing data
-  final List<String> daysOfTheWeek = const [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
-  final List<double> barValues = const [5.0, 6.5, 5.0, 7.5, 9.0, 11.5, 6.5];
-  final int barCount = 7;
 
   int touchedIndex;
 
@@ -36,8 +41,7 @@ class BarChartGraphState extends State<BarChartGraph> {
           barTouchResponse.touchInput is! FlPanEnd &&
           barTouchResponse.touchInput is! FlLongPressEnd) {
         touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      }
-      else {
+      } else {
         touchedIndex = -1;
       }
     });
@@ -67,13 +71,20 @@ class BarChartGraphState extends State<BarChartGraph> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ChartData(
-              data: Bars(
-                barTouchCallBack: barTouchCallBack,
-                barTouchTooltipData: daysOfTheWeek,
-                barValues: barValues,
-                barWidth: widget.barWidth,
-                barCount: barCount,
-                touchedIndex: touchedIndex,
+              data: BarChart(
+                BasicBarChartData(
+                  barTouchCallBack: barTouchCallBack,
+                  barTouchTooltipData: widget.barTouchTooltipData,
+                  barValues: widget.barValues,
+                  barWidth: widget.barWidth,
+                  barCount: widget.barCount,
+                  touchedIndex: touchedIndex,
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
               ),
               title: 'Bar graph title',
               subTitle: 'Bar graph subtext',

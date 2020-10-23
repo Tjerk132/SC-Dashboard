@@ -1,5 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'file:///C:/Users/Tjerk_2/Desktop/Flutter-TestApp/lib/models/charts/pie_chart/indicator.dart';
+import 'package:flutter_test_project/models/charts/pie_chart/pie.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import 'bar_chart/bar.dart';
 import 'line_chart/line.dart';
@@ -22,49 +24,52 @@ class BaseChart {
     );
   }
 
-  FlTitlesData baseTitleData(
-      {@required bool showTitles,
-      String Function(double) getTitlesBottom,
-      String Function(double) getTitlesLeft,
-      bool showBottomTitles,
-      bool showLeftTitles}) {
+  FlTitlesData baseTitleData({
+    @required bool show,
+    @required TextStyle textStyle,
+    double margin = 16,
+    String Function(double) getTitlesTop,
+    String Function(double) getTitlesBottom,
+    String Function(double) getTitlesLeft,
+    String Function(double) getTitlesRight,
+  }) {
+    bool showTop = getTitlesTop != null;
+    bool showBottom = getTitlesBottom != null;
+    bool showLeft = getTitlesLeft != null;
+    bool showRight = getTitlesRight != null;
     return FlTitlesData(
-      show: showTitles,
-      bottomTitles: showBottomTitles
-          ? SideTitles(
-              showTitles: true,
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-              margin: 16,
-              getTitles: getTitlesBottom,
-            )
-          : SideTitles(
-              showTitles: false,
-            ),
-      leftTitles: showLeftTitles
-          ? SideTitles(
-              showTitles: true,
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-              margin: 16,
-              getTitles: getTitlesLeft,
-            )
-          : SideTitles(
-              showTitles: false,
-            ),
+      show: show,
+      topTitles: SideTitles(
+        showTitles: showTop,
+        textStyle: textStyle,
+        margin: margin,
+        getTitles: getTitlesTop,
+      ),
+      bottomTitles: SideTitles(
+        showTitles: showBottom,
+        textStyle: textStyle,
+        margin: margin,
+        getTitles: getTitlesBottom,
+      ),
+      leftTitles: SideTitles(
+        showTitles: showLeft,
+        textStyle: textStyle,
+        margin: margin,
+        getTitles: getTitlesLeft,
+      ),
+      rightTitles: SideTitles(
+        showTitles: showRight,
+        textStyle: textStyle,
+        margin: margin,
+        getTitles: getTitlesRight,
+      ),
     );
   }
 
   List<BarChartGroupData> baseBarGroups(
-      int barCount, List<double> barValues, int touchedIndex, double barWidth) {
+      int count, List<double> barValues, int touchedIndex, double barWidth) {
     return List<Bar>.generate(
-      barCount,
+      count,
       (i) => Bar(
         i,
         barValues.getOrElse(i, null),
@@ -74,22 +79,35 @@ class BaseChart {
     );
   }
 
-  List<LineChartBarData> baseLineGroups(int lineCount,
-      Map<int, List<FlSpot>> spots, Map<int, Color> colors, double lineWidth) {
+  List<LineChartBarData> baseLineGroups(int count, Map<int, List<FlSpot>> spots,
+      Map<int, Color> colors, double lineWidth) {
     return List<Line>.generate(
-      lineCount,
-      (index) => Line(
-        spots: spots[index],
+      count,
+      (i) => Line(
+        spots: spots[i],
         isCurved: true,
-        colors: [colors[index]],
+        colors: [colors[i]],
         barWidth: lineWidth,
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
           show: false,
-          //for purple only
+          //todo should be for purple only
           colors: [const Color(0x00aa4cfc)],
         ),
+      ),
+    );
+  }
+
+  List<Pie> basePieGroups(int count, List<Color> sectionColors,
+      int touchedIndex, double pieRadius, List<double> values) {
+    return List<Pie>.generate(
+      count,
+      (i) => Pie(
+        color: sectionColors[i],
+        isTouched: i == touchedIndex,
+        value: values[i],
+        pieRadius: pieRadius,
       ),
     );
   }

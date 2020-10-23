@@ -3,6 +3,11 @@ import 'package:flutter_test_project/shimmering/skeleton.dart';
 import 'package:flutter_test_project/shimmering/text_shimmer.dart';
 
 class TileShimmer extends StatefulWidget {
+  final double height;
+  final double imageShimmerRatio;
+  final int textShimmers;
+  final bool titleShimmer;
+
   TileShimmer(
       {this.height = 400,
       this.imageShimmerRatio = 0.3,
@@ -14,27 +19,11 @@ class TileShimmer extends StatefulWidget {
     }
   }
 
-  final double height;
-  final double imageShimmerRatio;
-  final int textShimmers;
-  final bool titleShimmer;
-
   @override
   _TileShimmerState createState() => _TileShimmerState();
 }
 
 class _TileShimmerState extends State<TileShimmer> {
-
-  double _imageShimmerHeight;
-  int _textShimmers;
-
-  @override
-  void initState() {
-    super.initState();
-    _imageShimmerHeight = widget.height * widget.imageShimmerRatio;
-    _textShimmers = widget.textShimmers;
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -43,16 +32,22 @@ class _TileShimmerState extends State<TileShimmer> {
       padding: EdgeInsets.all(4.0),
       child: Wrap(
         children: <Widget>[
-          Skeleton(height: _imageShimmerHeight, width: size.width),
+          Skeleton(
+            height: widget.height * widget.imageShimmerRatio,
+            width: size.width,
+          ),
           Center(
             child: Column(
               children: <Widget>[
                 widget.titleShimmer
-                    ? TextShimmer(height: 24, width: size.width * 0.2)
+                    ? TextShimmer(
+                        height: 24,
+                        width: size.width * 0.2,
+                      )
                     : SizedBox(),
                 ...List.generate(
-                  _textShimmers,
-                      (index) => new TextShimmer(width: size.width * 0.4),
+                  widget.textShimmers,
+                  (index) => new TextShimmer(width: size.width * 0.4),
                 ),
               ],
             ),

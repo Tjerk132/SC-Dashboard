@@ -30,8 +30,7 @@ extension IndexedIterable<E> on Iterable<E> {
   }
 
   void nullCheck() {
-    if (this == null || this.isEmpty)
-      throw new NullThrownError();
+    if (this == null || this.isEmpty) throw new NullThrownError();
   }
 
   /// determines if at least one item in the list satisfies the value of
@@ -71,10 +70,40 @@ extension IndexedIterable<E> on Iterable<E> {
     }
     return true;
   }
+
+  /// determines if no items in the list satisfy the value of
+  /// the given [property].
+  /// Usage:
+  /// ```dart
+  /// List.noneMatch(property: 'hasData');
+  /// ```
+  /// where 'hasData' is the name of the property
+  bool noneMatch({@required String property}) {
+    this.nullCheck();
+    for (E item in this) {
+      dynamic oProperty = item.getProperty(property);
+      // all are required to be false to make the outcome true
+      if (oProperty) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 extension ObjectExtension on Object {
   /// creates a json string with all the given items in [properties]
+  /// Use this method in the [toString] method and place the object's
+  /// properties by their name and value inside.
+  /// Example:
+  /// ```dart
+  /// return allProperties({
+  /// 'foo': foo,
+  /// 'bar': bar
+  /// });
+  /// ```
+  /// then you can call [getProperty] to get the value of one property
+  /// by it's name.
   String allProperties(Map<String, dynamic> properties) {
     StringBuffer buffer = new StringBuffer();
 
@@ -83,12 +112,10 @@ extension ObjectExtension on Object {
       //json only supports simple types
       if (value is Widget) {
         buffer.write('"$key": "$value"');
-      }
-      else {
+      } else {
         buffer.write('"$key": $value');
       }
-      if (key != properties.keys.last)
-        buffer.write(',');
+      if (key != properties.keys.last) buffer.write(',');
     });
     buffer.write('}');
 
@@ -96,16 +123,8 @@ extension ObjectExtension on Object {
   }
 
   /// please make sure you override the toString method and
-  /// call the [allProperties] method and insert all the properties
-  /// the object has by their name and value.
-  /// Example:
-  /// ```dart
-  /// return allProperties({
-  /// 'foo': foo,
-  /// 'bar': bar
-  /// });
-  /// ```
-  // then it is possible to retrieve the object's properties.
+  /// call the [allProperties] method and insert all the object's
+  /// properties so it is possible to retrieve the object's properties.
   //
   /// gets the value of the given [property] if present
   /// throws [TypeError] if the value isn't found
@@ -123,4 +142,14 @@ extension NextIntWithMin on Random {
   // dart doesn't support function overloading and use of optional
   // unnamed/named is not possible so create different named method
   int intMaxMin(int max, {int min = 1}) => nextInt(max) + min;
+}
+
+class JsonColor extends Color {
+  JsonColor._(int value) : super(value);
+
+  factory JsonColor(String colorString) {
+    final String valueString = colorString.split('(0x')[1].split(')')[0];
+    int value = int.parse(valueString, radix: 16);
+    return JsonColor._(value);
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
+import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 import 'package:flutter_test_project/views/dashboard/vertical_tile.dart';
 import '../place_holder_tile.dart';
@@ -22,7 +23,6 @@ import '../tile.dart';
 /// and [type]. [type] is what will be the type of graph
 /// displayed inside the TileGroup and has to be of type [Widget].
 abstract class TileGroup extends StatefulWidget {
-
   TileGroup.fromSize(this.type,
       {@required this.singularSize,
       @required this.occupationSize,
@@ -71,11 +71,9 @@ abstract class TileGroup extends StatefulWidget {
 }
 
 class _TileGroupState extends State<TileGroup> {
-  Widget getTile() {
-
-    final Chart chart = Chart.byType(widget.type, widget);
+  Widget getTile(Chart chart) {
     if (widget is PlaceholderTileGroup) {
-      return PlaceholderTile(size: widget.horizontal + widget.vertical);
+      return PlaceholderTile(size: widget.occupationSize);
     }
     else if (widget.alignVertically) {
       return VerticalTile(chart: chart);
@@ -94,7 +92,27 @@ class _TileGroupState extends State<TileGroup> {
           children: List.generate(
             widget.alignVertically ? 1 : widget.horizontal,
             (index) => Expanded(
-              child: getTile(),
+              child: FutureBuilder<Chart>(
+                future: Chart.byGroup(context, widget),
+                builder: (BuildContext context, AsyncSnapshot<Chart> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return Text('No future implemented');
+                    case ConnectionState.waiting:
+                      return TileShimmer(
+                        height: 600,
+                        imageShimmerRatio: 0.45,
+                        titleShimmer: true,
+                        textShimmers: 2,
+                      );
+                    default:
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      else
+                        return getTile(snapshot.data);
+                  }
+                },
+              ),
             ),
           ),
         ),

@@ -15,10 +15,7 @@ class TileGroupCreator {
       case 2:
         return MediumTileGroup(type);
       case 3:
-        //todo implement logger
-        print('Warn [No tile could be created with the given size $size]');
-      //todo 3sized tile (tbi) & change alignVertical for this case
-        return null;
+        return PlaceholderTileGroup(size);
       case 4:
         return LargeTileGroup(type);
       default:

@@ -3,21 +3,21 @@ import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 
 abstract class Chart extends StatefulWidget {
-
   const Chart();
 
   @override
   State<Chart> createState();
 
-  static int length = ChartType.values.length;
+  static final int length = ChartType.values.length;
 
-  factory Chart.byType(ChartType type, TileGroup group) {
-    return type.instance(group.singularSize);
-  }
-
-  static List<ChartType> types() => [
+  static List<ChartType> types() =>
+  [
     for (int i = 0; i < length; i++)
       ChartType.values[i]
   ];
 
+  // return the chart by the given tileGroup
+  static Future<Chart> byGroup(BuildContext context, TileGroup group) {
+    return group.type.instance(context, group.singularSize);
+  }
 }
