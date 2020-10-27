@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
 import 'package:flutter_test_project/models/charts/line_chart/line_spots.dart';
 import '../chart.dart';
@@ -28,15 +29,18 @@ class LineChartGraph extends Chart {
     this.otherDataSpots = const {},
     this.mainDataColors = const {},
     this.otherDataColors = const {},
-  });
+  }) : super(type: ChartType.LineChart);
 
-  factory LineChartGraph.fromJson(Map<String, dynamic> json) {
+  factory LineChartGraph.fromJson(Map<String, dynamic> json, {double lineWidth = 6.0}) {
     return new LineChartGraph(
-      lineWidth: json["lineWidth"] as double,
+      lineWidth: lineWidth,
       lineCount: json["lineCount"] as int,
       leftTitles: (json["leftTitles"] as List<dynamic>).cast<String>(),
-      bottomTitles:
-          (json["bottomTitles"] as Map<dynamic, dynamic>).cast<int, String>(),
+      bottomTitles: {
+        for (MapEntry<String, String> entry
+        in (json["bottomTitles"] as Map<dynamic, dynamic>).cast<String, String>().entries)
+          int.parse(entry.key): entry.value,
+      },
       mainDataSpots: {
         for (MapEntry<String, List<dynamic>> entry
         in (json["mainDataSpots"] as Map<dynamic, dynamic>).cast<String, List<dynamic>>().entries)
@@ -127,8 +131,8 @@ class LineChartGraphState extends State<LineChartGraph> {
                           widget.otherDataColors,
                         ),
                 ),
-                title: 'Line chart title',
-                subTitle: 'Line Chart subtitle',
+                title: 'Parcours',
+                subTitle: 'Laatst gespeelde spel',
               ),
             ],
           ),

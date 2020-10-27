@@ -4,17 +4,19 @@ import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.
 import 'package:flutter_test_project/utility/utility.dart';
 
 class TileState {
-                          //initially unset is false
-  TileState(this.index, {this.alignVertical = false, this.shimmering = true});
-
   int index;
   bool alignVertical;
-
-  //initially always true
   bool shimmering;
-  bool hasData = false;
-
+  bool hasData;
   TileGroup group;
+
+  TileState(
+    this.index, {
+    //initial align unset is false
+    this.alignVertical = false,
+    this.shimmering = true,
+    this.hasData = false,
+  });
 
   void setHasData() {
     this.shimmering = false;

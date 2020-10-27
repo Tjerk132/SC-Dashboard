@@ -1,15 +1,15 @@
 {
-  "PieChart": {
-    "pieRadius": 60.0,
-    "pieCount": 3,
+  "PieChart2": {
+    "pieCount": 2,
     "values": [
-      33.33,
-      33.33,
-      33.33
+      62.20,
+      37.80,
+      25.00,
+      63.25
     ],
     "indicatorText": [
-      "One",
-      "Two",
+      "Reactie",
+      "Parcours",
       "Three",
       "Four"
     ],
@@ -20,42 +20,61 @@
       "Color(0xff13d38e)"
     ]
   },
+  "PieChart": {
+    "pieCount": 3,
+    "values": [
+      40.00,
+      30.00,
+      15.00,
+      15.00
+    ],
+    "indicatorText": [
+      "First",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    "sectionColors": [
+      "Color(0xff0293ee)",
+      "Color(0xfff8b250)",
+      "Color(0xff845bef)",
+      "Color(0xff13d38e)"
+    ]
+  },
   "BarChart": {
-    "barWidth": 16.0,
     "barCount": 7,
     "barTouchTooltipData": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
+      "Maandag",
+      "Dinsdag",
+      "Woensdag",
+      "Donderdag",
+      "Vrijdag",
+      "Zaterdag",
+      "Zondag"
     ],
     "barValues": [
-      5.0,
-      6.5,
-      5.0,
-      7.5,
-      9.0,
-      11.5,
-      6.5
+      7.0,
+      5.5,
+      6.0,
+      12.5,
+      13.0,
+      15.5,
+      17.0
     ]
   },
   "LineChart": {
-    "lineWidth": 6.0,
-    "lineCount": 3,
+    "lineCount": 1,
     "bottomTitles": {
-      "2": "SEPT",
-      "7": "OCT",
-      "12": "DEC"
+      "2": "SEP",
+      "7": "OKT",
+      "12": "NOV"
     },
     "leftTitles": [
-      "1m",
-      "2m",
-      "3m",
-      "5m",
-      "6m"
+      "0s",
+      "1s",
+      "2s",
+      "3s",
+      "4s"
     ],
     "mainDataColors": {
       "0": "Color(0xff4af699)",

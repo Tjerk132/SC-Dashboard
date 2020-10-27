@@ -8,7 +8,8 @@ class LineCharts {
   final double lineWidth;
   final int lineCount;
 
-  BasicLineChartData mainDataGraph(List<String> leftTitles, Map<int, String> bottomTitles,
+  BasicLineChartData mainDataGraph(List<String> leftTitles,
+      Map<int, String> bottomTitles,
       Map<int, List<FlSpot>> spots, Map<int, Color> colors) {
     return BasicLineChartData(
       lineTouchData: LineTouchData(
@@ -28,6 +29,15 @@ class LineCharts {
       spots: spots,
       colors: colors,
       lineWidth: lineWidth,
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+          bottom: BorderSide(color: Color(0xff4e4965), width: 4),
+          left: BorderSide(color: Colors.transparent),
+          right: BorderSide(color: Colors.transparent),
+          top: BorderSide(color: Colors.transparent),
+        ),
+      ),
       textStyle: TextStyle(
         color: Colors.grey[200],
         fontWeight: FontWeight.bold,
@@ -36,7 +46,8 @@ class LineCharts {
     );
   }
 
-  BasicLineChartData otherDataGraph(List<String> leftTitles, Map<int, String> bottomTitles,
+  BasicLineChartData otherDataGraph(List<String> leftTitles,
+      Map<int, String> bottomTitles,
       Map<int, List<FlSpot>> spots, Map<int, Color> colors) {
     return BasicLineChartData(
       lineTouchData: LineTouchData(
@@ -52,6 +63,15 @@ class LineCharts {
       spots: spots,
       colors: colors,
       lineWidth: lineWidth,
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+          bottom: BorderSide(color: Color(0xff4e4965), width: 4),
+          left: BorderSide(color: Colors.transparent),
+          right: BorderSide(color: Colors.transparent),
+          top: BorderSide(color: Colors.transparent),
+        ),
+      ),
       textStyle: TextStyle(
         color: Colors.grey[200],
         fontWeight: FontWeight.bold,

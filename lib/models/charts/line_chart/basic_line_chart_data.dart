@@ -68,16 +68,7 @@ class BasicLineChartData extends LineChartData {
           getTitlesLeft: (double value) =>
               leftTitles.getOrElse(value.toInt(), ''),
         );
-    borderData = borderData ??
-        FlBorderData(
-          show: true,
-          border: Border(
-            bottom: BorderSide(color: Color(0xff4e4965), width: 4),
-            left: BorderSide(color: Colors.transparent),
-            right: BorderSide(color: Colors.transparent),
-            top: BorderSide(color: Colors.transparent),
-          ),
-        );
+    borderData = borderData ?? FlBorderData(show: false);
 
     return BasicLineChartData._(
       lineBarsData: lineBarsData,

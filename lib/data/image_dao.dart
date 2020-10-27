@@ -49,7 +49,7 @@ class ImageDao {
       // this MUST happen first because non dividable sizes for images get removed from [sizes]
       if(unevenItemCount || !dividableToIsolates) {
         // add images from sublist to images list
-        images.addAll(retrieveNondividableItems(sizes));
+        images.addAll(retrieveNonDividableItems(sizes));
       }
       // let isolates compute images
       Map<int, List<TileSize>> subLists = divideList(sizes, isolateCount);
@@ -97,7 +97,7 @@ class ImageDao {
   }
 
   /// Retrieve the non dividable items from [sizes] on the main thread
-  List<NetworkImage> retrieveNondividableItems(List<TileSize> sizes) {
+  List<NetworkImage> retrieveNonDividableItems(List<TileSize> sizes) {
     int dividableByIsolates = divideTo * isolateCount;
 
     int start = dividableByIsolates - 1;

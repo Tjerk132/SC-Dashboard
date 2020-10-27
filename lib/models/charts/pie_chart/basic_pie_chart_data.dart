@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import '../base_chart.dart';
 
 class BasicPieChartData extends PieChartData {
-
   @protected
   BasicPieChartData._({
     List<PieChartSectionData> sections,
@@ -30,6 +29,7 @@ class BasicPieChartData extends PieChartData {
     @required List<double> values,
     @required int touchedIndex,
     @required double pieRadius,
+    bool showPieTitleColorAsPieColor,
     double centerSpaceRadius,
     Color centerSpaceColor,
     double sectionsSpace,
@@ -46,7 +46,8 @@ class BasicPieChartData extends PieChartData {
     BaseChart base = BaseChart();
 
     List<PieChartSectionData> sections = base.basePieGroups(
-        pieCount, sectionColors, touchedIndex, pieRadius, values);
+        pieCount, sectionColors, touchedIndex, pieRadius, values,
+        showPieTitleColorAsPieColor: showPieTitleColorAsPieColor);
 
     return BasicPieChartData._(
       sections: sections,

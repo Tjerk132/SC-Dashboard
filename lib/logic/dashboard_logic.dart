@@ -6,8 +6,10 @@ import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
+import 'package:flutter_test_project/views/dashboard/tile.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
+import 'package:flutter_test_project/utility/utility.dart';
 
 import '../models/tile_size.dart';
 import '../models/tile_state.dart';
@@ -34,22 +36,22 @@ class DashboardLogic {
     this.r = new Random();
   }
 
-  TileGroup createTile(ChartType type, int index, int count) {
+  TileGroup createTile(Chart chart, int singularSize, int index, int count) {
     setHasData(index);
     return isLastTile(index, count)
-        ? createLastTile(index, type)
-        : createNewTile(index, type);
+        ? createLastTile(index, singularSize, chart)
+        : createNewTile(index, singularSize, chart);
   }
 
-  TileGroup createNewTile(int index, ChartType type) {
-    //random between tiles of size 1x1 to 2x2
-    TileGroup group = TileGroup.dimensionFactory(type,
-        horizontal: r.intMaxMin(2), vertical: r.intMaxMin(2));
+  TileGroup createNewTile(int index, int singularSize, Chart chart) {
+    TileGroup group = TileGroup.singularSizeFactory(chart, singularSize);
+    // TileGroup.dimensionFactory(chart,
+    //     horizontal: r.intMaxMin(2), vertical: r.intMaxMin(2));
 
-    // print('randomized $group for index $index with chart $type');
+    // print('randomized $group for index $index with chart $chart');
 
     occupied += group.occupationSize;
-    setTileType(index, group);
+    setTileGroup(index, group);
 
     if (group.alignVertically) {
       setAlignedVertical(index, true);
@@ -57,14 +59,14 @@ class DashboardLogic {
     return group;
   }
 
-  TileGroup createLastTile(int index, ChartType type) {
+  TileGroup createLastTile(int index, int singularSize, Chart chart) {
     int size = occupied % crossAxisCount;
-    if (size == 0) {
-      logger.log(
-          'no place is left for the last tile with aligning bottom as the max width of tiles can only be 2',
-          error: Error);
-    }
-    TileGroup group = TileGroup.sizeFactory(type, size: size);
+    // if (size == 0) {
+    // logger.log(
+    //     'no place is left for the last tile with aligning bottom as the max width of tiles can only be 2',
+    //     error: Error);
+    // }
+    TileGroup group = TileGroup.sizeFactory(chart, size: size);
 
     /// no group could be created with the remaining space if group is null
     if (group == null) {
@@ -73,15 +75,27 @@ class DashboardLogic {
     } else {
       logger.log('group is created with leftover size $size');
     }
-    setTileType(index, group);
+    setTileGroup(index, group);
     return group;
   }
 
-  List<ChartType> getChartTypes(int count) {
-    return [
-      for (int i = 0; i < count; i += Chart.length) ...Chart.types()
-    ];
+  Future<List<TileGroup>> groups(BuildContext context) async {
+    List<TileGroup> groups = new List<TileGroup>();
+    int count = _states.length;
+    for (int i = 0; i < count; ++i) {
+      ChartType type = ChartType.PieChart;
+      // getType();
+      int singularSize = [1, 2, 4][r.intMaxMin(2)];
+      Chart chart = await type.instance(context, singularSize);
+      TileGroup g = createTile(chart, singularSize, i, count);
+      groups.add(g);
+    }
+    return groups;
   }
+
+  // get random type (for testing purposes only)
+  ChartType getType() =>
+      ChartType.values[r.intMaxMin(ChartType.values.length, min: 0)];
 
   Future<List<NetworkImage>> getImages(List<TileSize> sizes) async =>
       await _dao.getImages(sizes);
@@ -98,7 +112,9 @@ class DashboardLogic {
 
   void setHasData(int index) => _states[index].setHasData();
 
-  void setTileType(int index, TileGroup group) => _states[index].group = group;
+  bool getHasData(int index) => _states[index].hasData;
+
+  void setTileGroup(int index, TileGroup group) => _states[index].group = group;
 
   TileGroup getTileGroup(int index) => _states[index].group;
 

@@ -12,18 +12,13 @@ enum ChartType {
 }
 
 extension ChartTypeExtension on ChartType {
-
-  Future<Chart> instance(BuildContext context, int singularSize,
-      {int pieCount = 3, int barCount = 7, int lineCount = 3}) async {
-    // lineWidth: singularSize * 3.0,
-    // barWidth: (singularSize * 16.0) / singularSize,
-    // pieRadius: (singularSize * 65.0) / singularSize,
-    return getSampleChart(context);
+  Future<Chart> instance(BuildContext context, int singularSize) async {
+    return getSampleChart(context, singularSize);
   }
 
   /// get a sample graph from the local json file (for
   /// testing purposes only)
-  Future<Chart> getSampleChart(BuildContext context) async {
+  Future<Chart> getSampleChart(BuildContext context, int singularSize) async {
     String chartString = await DefaultAssetBundle.of(context)
         .loadString('lib/enums/samples.json');
 
@@ -32,11 +27,14 @@ extension ChartTypeExtension on ChartType {
 
     switch (this) {
       case ChartType.PieChart:
-        return PieChartGraph.fromJson(s);
+        return PieChartGraph.fromJson(s,
+            pieRadius: (singularSize * 65.0) / singularSize);
       case ChartType.BarChart:
-        return BarChartGraph.fromJson(s);
+        return BarChartGraph.fromJson(s,
+            barWidth: (singularSize * 16.0) / singularSize);
       case ChartType.LineChart:
-        return LineChartGraph.fromJson(s);
+        return LineChartGraph.fromJson(s,
+            lineWidth: singularSize * 3.0);
       default:
         return null;
     }

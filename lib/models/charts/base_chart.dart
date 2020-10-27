@@ -100,10 +100,13 @@ class BaseChart {
   }
 
   List<Pie> basePieGroups(int count, List<Color> sectionColors,
-      int touchedIndex, double pieRadius, List<double> values) {
+      int touchedIndex, double pieRadius, List<double> values,
+      {bool showPieTitleColorAsPieColor = true}) {
     return List<Pie>.generate(
       count,
       (i) => Pie(
+        title: showPieTitleColorAsPieColor ?  '' : '${values[i].toInt()}%',
+        titleColor: showPieTitleColorAsPieColor ? sectionColors[i] : Colors.white,
         color: sectionColors[i],
         isTouched: i == touchedIndex,
         value: values[i],

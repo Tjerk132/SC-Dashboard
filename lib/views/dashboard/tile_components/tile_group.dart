@@ -4,9 +4,10 @@ import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
-import 'package:flutter_test_project/views/dashboard/vertical_tile.dart';
+
 import '../place_holder_tile.dart';
 import '../tile.dart';
+import '../vertical_tile.dart';
 
 /// TileGroup requires to be extended by a subclass,
 /// all extending classes of the [TileGroup] class are present
@@ -20,35 +21,39 @@ import '../tile.dart';
 /// }
 /// ```
 /// and require the parameters [horizontal], [vertical]
-/// and [type]. [type] is what will be the type of graph
-/// displayed inside the TileGroup and has to be of type [Widget].
+/// and [chart]. [chart] is what will be the type of graph
+/// displayed inside the TileGroup and has to be of type [Chart].
 abstract class TileGroup extends StatefulWidget {
-  TileGroup.fromSize(this.type,
+  TileGroup.fromSize(this.chart,
       {@required this.singularSize,
       @required this.occupationSize,
       @required int size})
       : horizontal = size ~/ 2,
         vertical = size - (size ~/ 2);
 
-  factory TileGroup.sizeFactory(ChartType type, {@required int size}) {
-    return TileGroupCreator(size).group(type);
+  factory TileGroup.sizeFactory(Chart chart, {@required int size}) {
+    return TileGroupCreator().bySize(size, chart);
   }
 
-  TileGroup.fromDimensions(this.type,
+  TileGroup.fromDimensions(this.chart,
       {@required this.singularSize,
       @required this.occupationSize,
       @required this.horizontal,
       @required this.vertical});
 
-  factory TileGroup.dimensionFactory(ChartType type,
+  factory TileGroup.dimensionFactory(Chart chart,
       {@required int horizontal, @required int vertical}) {
-    return TileGroupCreator(horizontal * vertical).group(type);
+    return TileGroupCreator().bySize(horizontal * vertical, chart);
+  }
+
+  factory TileGroup.singularSizeFactory(Chart chart, int singularSize) {
+    return TileGroupCreator().bySize(singularSize, chart);
   }
 
   //todo general: now 1 component is duplicated to fill up the tile group's space (keep a list of this group's tiles)
 
-  /// the type of chart the group will get
-  final ChartType type;
+  /// the chart the group will get
+  final Chart chart;
 
   /// represents the size of one element in this group
   final int singularSize;
@@ -71,7 +76,8 @@ abstract class TileGroup extends StatefulWidget {
 }
 
 class _TileGroupState extends State<TileGroup> {
-  Widget getTile(Chart chart) {
+  Widget getTile() {
+    Chart chart = widget.chart;
     if (widget is PlaceholderTileGroup) {
       return PlaceholderTile(size: widget.occupationSize);
     }
@@ -92,27 +98,7 @@ class _TileGroupState extends State<TileGroup> {
           children: List.generate(
             widget.alignVertically ? 1 : widget.horizontal,
             (index) => Expanded(
-              child: FutureBuilder<Chart>(
-                future: Chart.byGroup(context, widget),
-                builder: (BuildContext context, AsyncSnapshot<Chart> snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return Text('No future implemented');
-                    case ConnectionState.waiting:
-                      return TileShimmer(
-                        height: 600,
-                        imageShimmerRatio: 0.45,
-                        titleShimmer: true,
-                        textShimmers: 2,
-                      );
-                    default:
-                      if (snapshot.hasError)
-                        return Text('Error: ${snapshot.error}');
-                      else
-                        return getTile(snapshot.data);
-                  }
-                },
-              ),
+              child: getTile(),
             ),
           ),
         ),

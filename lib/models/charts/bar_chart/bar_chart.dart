@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
 
@@ -16,11 +17,11 @@ class BarChartGraph extends Chart {
     this.barCount = 7,
     this.barValues = const [],
     this.barTouchTooltipData = const [],
-  });
+  }) : super(type: ChartType.BarChart);
 
-  factory BarChartGraph.fromJson(Map<String, dynamic> json) {
+  factory BarChartGraph.fromJson(Map<String, dynamic> json, {double barWidth = 16.0}) {
     return new BarChartGraph(
-      barWidth: json["barWidth"] as double,
+      barWidth: barWidth,
       barCount: json["barCount"] as int,
       barValues: (json["barValues"] as List<dynamic>).cast<double>(),
       barTouchTooltipData: (json["barTouchTooltipData"] as List<dynamic>).cast<String>(),
@@ -86,8 +87,8 @@ class BarChartGraphState extends State<BarChartGraph> {
                   ),
                 ),
               ),
-              title: 'Bar graph title',
-              subTitle: 'Bar graph subtext',
+              title: 'afgelopen week',
+              subTitle: 'Reactie',
             ),
           ),
         ],
