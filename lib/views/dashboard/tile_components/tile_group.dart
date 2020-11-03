@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
-import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
 import '../place_holder_tile.dart';

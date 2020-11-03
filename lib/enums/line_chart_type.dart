@@ -1,0 +1,4 @@
+enum LineChartType {
+  sales,
+  stocks,
+}

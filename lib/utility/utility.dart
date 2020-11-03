@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 
 extension DefaultMap<K, V> on Map<K, V> {
@@ -21,6 +20,14 @@ extension DefaultList<E> on List<E> {
       return defaultValue;
     }
   }
+}
+
+extension DefaultNumberList<double> on List<double> {
+  double get highest => this.reduce(
+          (current, next) => (current as num) > (next as num) ? current : next);
+
+  double get lowest => this.reduce(
+          (current, next) => (current as num) < (next as num) ? current : next);
 }
 
 extension IndexedIterable<E> on Iterable<E> {
@@ -151,5 +158,16 @@ class JsonColor extends Color {
     final String valueString = colorString.split('(0x')[1].split(')')[0];
     int value = int.parse(valueString, radix: 16);
     return JsonColor._(value);
+  }
+}
+
+extension NumExtension on num {
+  int roundToFactor(int factor) {
+    // Smaller multiple
+    int a = (this ~/ factor) * factor;
+    // Larger multiple
+    int b = a + factor;
+    // Return of closest of two
+    return (this - a > b - this) ? b : a;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/base_chart.dart';
+import 'package:flutter_test_project/models/charts/base_chart/base_bar_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
 class BasicBarChartData extends BarChartData {
@@ -35,12 +35,18 @@ class BasicBarChartData extends BarChartData {
 
   factory BasicBarChartData({
     @required Function(BarTouchResponse) barTouchCallBack,
+    @required Function(String) getBottomTitle,
     @required List<String> barTouchTooltipData,
     @required List<double> barValues,
     @required double barWidth,
     @required int barCount,
     @required int touchedIndex,
-    TextStyle textStyle,
+    @required int singularSize,
+    int rodCount,
+    Color rodBackgroundColor,
+    BorderRadius rodBorderRadius,
+    TextStyle titlesTextStyle,
+    TextStyle toolTipStyle,
     List<BarChartGroupData> barGroups,
     double groupsSpace,
     BarChartAlignment alignment,
@@ -52,30 +58,54 @@ class BasicBarChartData extends BarChartData {
     FlGridData gridData,
     FlBorderData borderData,
     RangeAnnotations rangeAnnotations,
+    Color toolTipBgColor,
     Color backgroundColor,
   }) {
     barTouchCallBack = barTouchCallBack ?? (BarTouchResponse barTouchResponse) {};
+    getBottomTitle = getBottomTitle ?? (String title) => title.substring(0, 1);
     barTouchTooltipData = barTouchTooltipData ?? const [];
     barValues = barValues ?? const [];
     barWidth = barWidth ?? 22;
     barCount = barCount ?? 5;
     touchedIndex = touchedIndex ?? -1;
-    textStyle = textStyle ?? TextStyle();
 
-    BaseChart base = BaseChart();
+    rodCount = rodCount ?? 1;
+    rodBorderRadius = rodBorderRadius ?? BorderRadius.circular(20);
+    titlesTextStyle = titlesTextStyle ?? TextStyle(color: Colors.white);
+    toolTipStyle = toolTipStyle ?? TextStyle(color: Colors.yellow);
+    toolTipBgColor = toolTipBgColor ?? Colors.black;
+
+    BaseBarChart base = BaseBarChart();
 
     barTouchData = barTouchData ??
-        base.baseTouchData(barTouchTooltipData, barTouchCallBack);
+        base.baseTouchData(
+          barTouchTooltipData,
+          barTouchCallBack,
+          toolTipStyle: toolTipStyle,
+          tooltipBgColor: toolTipBgColor,
+        );
+
     titlesData = titlesData ??
         base.baseTitleData(
           show: true,
-          textStyle: textStyle,
-          getTitlesBottom: (double value) =>
-              barTouchTooltipData.getOrElse(value.toInt(), '').substring(0, 1),
+          textStyle: titlesTextStyle,
+          getTitlesBottom: (double value) => getBottomTitle(
+            barTouchTooltipData.getOrElse(value.toInt(), ''),
+          ),
         );
+
     borderData = borderData ?? FlBorderData(show: false);
     barGroups = barGroups ??
-        base.baseBarGroups(barCount, barValues, touchedIndex, barWidth);
+        base.baseBarGroups(
+          barCount,
+          barValues,
+          touchedIndex,
+          barWidth,
+          rodCount,
+          singularSize,
+          backgroundColor: rodBackgroundColor,
+          rodBorderRadius: rodBorderRadius,
+        );
 
     return BasicBarChartData._(
       barGroups: barGroups,

@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
-import '../base_chart.dart';
+import 'package:flutter_test_project/models/charts/base_chart/base_pie_chart.dart';
 
 class BasicPieChartData extends PieChartData {
   @protected
@@ -29,7 +29,8 @@ class BasicPieChartData extends PieChartData {
     @required List<double> values,
     @required int touchedIndex,
     @required double pieRadius,
-    bool showPieTitleColorAsPieColor,
+    double fontSize,
+    bool showPieTitle,
     double centerSpaceRadius,
     Color centerSpaceColor,
     double sectionsSpace,
@@ -43,11 +44,17 @@ class BasicPieChartData extends PieChartData {
     touchedIndex = touchedIndex ?? -1;
     pieRadius = pieRadius ?? 60;
 
-    BaseChart base = BaseChart();
+    BasePieChart base = BasePieChart();
 
     List<PieChartSectionData> sections = base.basePieGroups(
-        pieCount, sectionColors, touchedIndex, pieRadius, values,
-        showPieTitleColorAsPieColor: showPieTitleColorAsPieColor);
+      pieCount,
+      sectionColors,
+      touchedIndex,
+      pieRadius,
+      values,
+      showPieTitle: showPieTitle,
+      fontSize: fontSize,
+    );
 
     return BasicPieChartData._(
       sections: sections,

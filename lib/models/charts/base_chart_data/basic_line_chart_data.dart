@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/base_chart.dart';
+import 'package:flutter_test_project/models/charts/base_chart/base_line_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
 class BasicLineChartData extends LineChartData {
@@ -35,12 +35,14 @@ class BasicLineChartData extends LineChartData {
     @required Map<int, List<FlSpot>> spots,
     @required Map<int, Color> colors,
     @required double lineWidth,
-    @required List<String> leftTitles,
+    @required Map<int, String> leftTitles,
     @required Map<int, String> bottomTitles,
     TextStyle textStyle,
+    double margin,
     LineTouchData lineTouchData,
     FlGridData gridData,
     FlTitlesData titlesData,
+    double reservedSize,
     FlBorderData borderData,
     double minX,
     double maxX,
@@ -53,16 +55,22 @@ class BasicLineChartData extends LineChartData {
     lineWidth = lineWidth ?? 6.0;
     textStyle = textStyle ?? TextStyle();
 
-    BaseChart base = BaseChart();
+    BaseLineChart base = BaseLineChart();
 
-    List<LineChartBarData> lineBarsData =
-        base.baseLineGroups(lineCount, spots, colors, lineWidth);
+    List<LineChartBarData> lineBarsData = base.baseLineGroups(
+      lineCount,
+      spots,
+      colors,
+      lineWidth,
+    );
 
     gridData = gridData ?? FlGridData(show: false);
     titlesData = titlesData ??
         base.baseTitleData(
           show: true,
+          reservedSize: reservedSize,
           textStyle: textStyle,
+          margin: margin,
           getTitlesBottom: (double value) =>
               bottomTitles.getOrElse(value.toInt(), ''),
           getTitlesLeft: (double value) =>

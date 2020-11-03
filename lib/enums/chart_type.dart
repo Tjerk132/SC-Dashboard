@@ -28,13 +28,15 @@ extension ChartTypeExtension on ChartType {
     switch (this) {
       case ChartType.PieChart:
         return PieChartGraph.fromJson(s,
-            pieRadius: (singularSize * 65.0) / singularSize);
+            singularSize: singularSize);
       case ChartType.BarChart:
         return BarChartGraph.fromJson(s,
-            barWidth: (singularSize * 16.0) / singularSize);
+            singularSize: singularSize);
+        //barWidth: (singularSize * 16.0) / singularSize);
       case ChartType.LineChart:
         return LineChartGraph.fromJson(s,
-            lineWidth: singularSize * 3.0);
+            singularSize: singularSize);
+        //singularSize * 3.0
       default:
         return null;
     }

@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';

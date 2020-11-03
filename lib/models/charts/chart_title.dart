@@ -6,8 +6,8 @@ class ChartTitle extends StatefulWidget {
 
   ChartTitle({
     Key key,
-    this.title = '',
-    this.subTitle = '',
+    this.title,
+    this.subTitle,
   }) : super(key: key);
 
   @override

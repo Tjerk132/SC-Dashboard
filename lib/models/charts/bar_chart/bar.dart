@@ -5,25 +5,14 @@ class Bar extends BarChartGroupData {
   Bar(
     int x,
     double y, {
+    List<BarChartRodData> barRods,
     Color barBackgroundColor = const Color(0xff72d8bf),
-    bool isTouched = false,
     Color barColor = Colors.white,
     double width = 22,
     List<int> showTooltips = const [],
   }) : super(
           x: x,
-          barRods: [
-            BarChartRodData(
-              y: isTouched ? y + 1 : y,
-              color: isTouched ? Colors.yellow : barColor,
-              width: width,
-              backDrawRodData: BackgroundBarChartRodData(
-                show: true,
-                y: 20,
-                color: barBackgroundColor,
-              ),
-            ),
-          ],
+          barRods: barRods,
           showingTooltipIndicators: showTooltips,
         );
 }

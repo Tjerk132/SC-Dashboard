@@ -1,4 +1,3 @@
-import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 

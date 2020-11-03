@@ -11,8 +11,8 @@ class ChartData extends StatefulWidget {
     Key key,
     @required this.data,
     this.showTitle = true,
-    this.title,
-    this.subTitle,
+    this.title = '',
+    this.subTitle = '',
   }) : super(key: key);
 
   @override

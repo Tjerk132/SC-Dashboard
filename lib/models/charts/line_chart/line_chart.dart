@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
+import 'package:flutter_test_project/enums/line_chart_type.dart';
+import 'package:flutter_test_project/models/charts/chart_appearance/line_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
 import 'package:flutter_test_project/models/charts/line_chart/line_spots.dart';
 import '../chart.dart';
@@ -11,7 +13,7 @@ import 'line_charts.dart';
 class LineChartGraph extends Chart {
   final double lineWidth;
   final int lineCount;
-  final List<String> leftTitles;
+  final Map<int, String> leftTitles;
   final Map<int, String> bottomTitles;
 
   final Map<int, List<FlSpot>> mainDataSpots;
@@ -20,22 +22,35 @@ class LineChartGraph extends Chart {
   final Map<int, Color> mainDataColors;
   final Map<int, Color> otherDataColors;
 
+  final LineChartAppearanceData data;
+
+  @protected
   LineChartGraph({
+    int singularSize,
     this.lineWidth = 8,
     this.lineCount = 3,
-    this.leftTitles = const [],
+    this.leftTitles = const {},
     this.bottomTitles = const {},
     this.mainDataSpots = const {},
     this.otherDataSpots = const {},
     this.mainDataColors = const {},
     this.otherDataColors = const {},
-  }) : super(type: ChartType.LineChart);
+  })  : data = LineChartAppearanceData(
+          type: LineChartType.sales,
+          singularSize: singularSize,
+        ),
+        super(type: ChartType.LineChart);
 
-  factory LineChartGraph.fromJson(Map<String, dynamic> json, {double lineWidth = 6.0}) {
+  factory LineChartGraph.fromJson(Map<String, dynamic> json,
+      {@required int singularSize}) {
     return new LineChartGraph(
-      lineWidth: lineWidth,
+      singularSize: singularSize,
       lineCount: json["lineCount"] as int,
-      leftTitles: (json["leftTitles"] as List<dynamic>).cast<String>(),
+      leftTitles: {
+        for (MapEntry<String, String> entry
+        in (json["leftTitles"] as Map<dynamic, dynamic>).cast<String, String>().entries)
+          int.parse(entry.key): entry.value,
+      },
       bottomTitles: {
         for (MapEntry<String, String> entry
         in (json["bottomTitles"] as Map<dynamic, dynamic>).cast<String, String>().entries)
@@ -69,7 +84,6 @@ class LineChartGraph extends Chart {
 }
 
 class LineChartGraphState extends State<LineChartGraph> {
-
   LineCharts charts;
   bool isShowingMainData = true;
 
@@ -88,52 +102,72 @@ class LineChartGraphState extends State<LineChartGraph> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(18)),
-            gradient: LinearGradient(
-              colors: const [
-                Color(0xff2c274c),
-                Color(0xff46426c),
-              ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-            ),
+            gradient: widget.data.backgroundGradient,
           ),
           child: Stack(
             children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  alignment: Alignment.topLeft,
-                  icon: Icon(
-                    Icons.refresh,
-                    color:
-                        Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+              //for stocks only
+              AspectRatio(
+                aspectRatio: widget.data.aspectRatio,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(18),
+                    ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      isShowingMainData = !isShowingMainData;
-                    });
-                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 4.0,
+                      left: 4.0,
+                      top: 4,
+                      bottom: 4,
+                    ),
+                    child: ChartData(
+                      data: LineChart(
+                        isShowingMainData
+                            ? charts.mainDataGraph(
+                                widget.data.mainMinX,
+                                widget.data.mainMaxX,
+                                widget.data.mainMaxY,
+                                widget.data.mainMinY,
+                                widget.leftTitles,
+                                widget.bottomTitles,
+                                widget.mainDataSpots,
+                                widget.mainDataColors,
+                              )
+                            : charts.otherDataGraph(
+                                widget.data.otherMinX,
+                                widget.data.otherMaxX,
+                                widget.data.otherMaxY,
+                                widget.data.otherMinY,
+                                widget.leftTitles,
+                                widget.bottomTitles,
+                                widget.otherDataSpots,
+                                widget.otherDataColors,
+                              ),
+                      ),
+                      title: 'Parcours',
+                      subTitle: 'Laatst gespeelde spel',
+                    ),
+                  ),
                 ),
               ),
-              ChartData(
-                data: LineChart(
-                  isShowingMainData
-                      ? charts.mainDataGraph(
-                          widget.leftTitles,
-                          widget.bottomTitles,
-                          widget.mainDataSpots,
-                          widget.mainDataColors,
-                        )
-                      : charts.otherDataGraph(
-                          widget.leftTitles,
-                          widget.bottomTitles,
-                          widget.otherDataSpots,
-                          widget.otherDataColors,
-                        ),
-                ),
-                title: 'Parcours',
-                subTitle: 'Laatst gespeelde spel',
-              ),
+              // Align(
+              //   alignment: Alignment.topLeft,
+              //   child: IconButton(
+              //     alignment: Alignment.topLeft,
+              //     icon: Icon(
+              //       Icons.refresh,
+              //       color:
+              //           Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+              //     ),
+              //     onPressed: () {
+              //       setState(() {
+              //         isShowingMainData = !isShowingMainData;
+              //       });
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),

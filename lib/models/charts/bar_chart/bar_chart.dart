@@ -1,27 +1,31 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
+import 'package:flutter_test_project/models/charts/base_chart_data/basic_bar_chart_data.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
+import 'package:flutter_test_project/models/charts/chart_appearance/bar_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
 
-import 'basic_bar_chart_data.dart';
-
 class BarChartGraph extends Chart {
-  final double barWidth;
   final int barCount;
   final List<double> barValues;
   final List<String> barTouchTooltipData;
 
+  final BarChartAppearanceData data;
+
   BarChartGraph({
-    this.barWidth,
+    int singularSize,
     this.barCount = 7,
     this.barValues = const [],
     this.barTouchTooltipData = const [],
-  }) : super(type: ChartType.BarChart);
+  })  : data = BarChartAppearanceData(
+          singularSize: singularSize,
+        ),
+        super(type: ChartType.BarChart);
 
-  factory BarChartGraph.fromJson(Map<String, dynamic> json, {double barWidth = 16.0}) {
+  factory BarChartGraph.fromJson(Map<String, dynamic> json, {@required int singularSize}) {
     return new BarChartGraph(
-      barWidth: barWidth,
+      singularSize: singularSize,
       barCount: json["barCount"] as int,
       barValues: (json["barValues"] as List<dynamic>).cast<double>(),
       barTouchTooltipData: (json["barTouchTooltipData"] as List<dynamic>).cast<String>(),
@@ -33,7 +37,6 @@ class BarChartGraph extends Chart {
 }
 
 class BarChartGraphState extends State<BarChartGraph> {
-
   int touchedIndex;
 
   void barTouchCallBack(BarTouchResponse barTouchResponse) {
@@ -42,7 +45,8 @@ class BarChartGraphState extends State<BarChartGraph> {
           barTouchResponse.touchInput is! FlPanEnd &&
           barTouchResponse.touchInput is! FlLongPressEnd) {
         touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      } else {
+      }
+      else {
         touchedIndex = -1;
       }
     });
@@ -75,19 +79,27 @@ class BarChartGraphState extends State<BarChartGraph> {
               data: BarChart(
                 BasicBarChartData(
                   barTouchCallBack: barTouchCallBack,
+                  getBottomTitle: (String title) => title,
                   barTouchTooltipData: widget.barTouchTooltipData,
                   barValues: widget.barValues,
-                  barWidth: widget.barWidth,
+                  barWidth: widget.data.barWidth,
                   barCount: widget.barCount,
                   touchedIndex: touchedIndex,
-                  textStyle: TextStyle(
+                  singularSize: widget.data.singularSize,
+                  rodCount: 1,
+                  rodBackgroundColor: const Color(0xff72d8bf),
+                  titlesTextStyle: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
+                  toolTipStyle: TextStyle(
+                    color: Colors.yellow,
+                  ),
+                  toolTipBgColor: Colors.blueGrey,
                 ),
               ),
-              title: 'afgelopen week',
+              title: 'records op tijdslimiet',
               subTitle: 'Reactie',
             ),
           ),

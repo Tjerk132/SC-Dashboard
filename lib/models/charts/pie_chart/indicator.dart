@@ -5,6 +5,7 @@ class Indicator extends StatelessWidget {
   final String text;
   final BoxShape shape;
   final double size;
+  final double fontSize;
   final Color textColor;
 
   const Indicator({
@@ -13,6 +14,7 @@ class Indicator extends StatelessWidget {
     this.text,
     this.shape,
     this.size = 16,
+    this.fontSize = 16,
     this.textColor = const Color(0xff505050),
   }) : super(key: key);
 
@@ -35,7 +37,7 @@ class Indicator extends StatelessWidget {
           ),
           Text(
             text,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
+            style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: textColor),
           )
         ],
       ),

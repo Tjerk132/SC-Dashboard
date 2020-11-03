@@ -7,7 +7,6 @@ class TileState {
   int index;
   bool alignVertical;
   bool shimmering;
-  bool hasData;
   TileGroup group;
 
   TileState(
@@ -15,12 +14,13 @@ class TileState {
     //initial align unset is false
     this.alignVertical = false,
     this.shimmering = true,
-    this.hasData = false,
   });
 
-  void setHasData() {
+  get hasData => group != null;
+
+  set setGroup(TileGroup group) {
+    this.group = group;
     this.shimmering = false;
-    this.hasData = true;
   }
 
   @override
