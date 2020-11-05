@@ -3,34 +3,67 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 extension DefaultMap<K, V> on Map<K, V> {
+  /// see https://stackoverflow.com/questions/59736337/default-value-in-dart-map
   V getOrElse(K key, V defaultValue) {
     if (this.containsKey(key)) {
       return this[key];
-    } else {
+    }
+    else {
       return defaultValue;
     }
+  }
+
+  /// cast the json map to a map of given [K] and [T]
+  ///
+  /// Note that by default the key will be casted to
+  /// [int] and the value to the type of [T].
+  /// You can change this behaviour by supplying the
+  /// functions [getKey] and [getValue]
+  //  see: https://github.com/dart-lang/sdk/issues/36836
+  Map<K, T> castTo<K, T>({
+    K Function(dynamic) getKey,
+    T Function(dynamic) getValue,
+  }) {
+    getKey = getKey ?? (key) => int.tryParse(key as String) as K;
+    getValue = getValue ?? (value) => value as T;
+
+    return this.map(
+      (key, value) => MapEntry<K, T>(getKey(key), getValue(value)),
+    );
   }
 }
 
 extension DefaultList<E> on List<E> {
+  /// variation of https://stackoverflow.com/questions/59736337/default-value-in-dart-map
   E getOrElse(int key, E defaultValue) {
     if (this.asMap().containsKey(key)) {
       return this[key];
-    } else {
+    }
+    else {
       return defaultValue;
     }
   }
+  /// variation of https://github.com/dart-lang/sdk/issues/36836
+  List<T> castTo<T>({
+    T Function(dynamic) getValue,
+  }) {
+    getValue = getValue ?? (value) => value as T;
+
+    return List.generate(length, (index) => getValue(this[index]));
+  }
 }
 
+/// see https://stackoverflow.com/questions/20490868/dart-list-min-max-value
 extension DefaultNumberList<double> on List<double> {
   double get highest => this.reduce(
-          (current, next) => (current as num) > (next as num) ? current : next);
+      (current, next) => (current as num) > (next as num) ? current : next);
 
   double get lowest => this.reduce(
-          (current, next) => (current as num) < (next as num) ? current : next);
+      (current, next) => (current as num) < (next as num) ? current : next);
 }
 
 extension IndexedIterable<E> on Iterable<E> {
+  /// variation of https://stackoverflow.com/questions/54898767/enumerate-or-map-through-a-list-with-index-and-value-in-dart
   Iterable<T> mapIndexed<T>(T f(E e, int i)) {
     var i = 0;
     return this.map((e) => f(e, i++));
@@ -143,12 +176,21 @@ extension ObjectExtension on Object {
     else
       return oProperty;
   }
+
+  Object orElse(Object defaultValue) {
+    if (this != null) {
+      return this;
+    } else
+      return defaultValue;
+  }
 }
 
 extension NextIntWithMin on Random {
   // dart doesn't support function overloading and use of optional
   // unnamed/named is not possible so create different named method
   int intMaxMin(int max, {int min = 1}) => nextInt(max) + min;
+
+  Object nextObject(List<Object> list) => list[nextInt(list.length)];
 }
 
 class JsonColor extends Color {
@@ -162,6 +204,7 @@ class JsonColor extends Color {
 }
 
 extension NumExtension on num {
+  // see https://www.geeksforgeeks.org/round-the-given-number-to-nearest-multiple-of-10/
   int roundToFactor(int factor) {
     // Smaller multiple
     int a = (this ~/ factor) * factor;

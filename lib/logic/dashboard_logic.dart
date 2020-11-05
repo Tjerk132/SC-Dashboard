@@ -1,9 +1,9 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/utility/utility.dart';
 import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
@@ -17,7 +17,7 @@ class DashboardLogic {
   int occupied = 0;
 
   List<TileState> _states;
-  ImageDao _dao;
+  ImageDao dao;
   Random r;
 
   //todo as tile groups are now saved as states check if tiles can fit with each other by looking at their neighbours of each tile when returning
@@ -28,7 +28,7 @@ class DashboardLogic {
       count,
       (index) => new TileState(index),
     );
-    this._dao = new ImageDao();
+    this.dao = new ImageDao();
     this.r = new Random();
   }
 
@@ -47,24 +47,29 @@ class DashboardLogic {
   }
 
   Future<List<TileGroup>> groups(BuildContext context) async {
+
+    //load all charts for the local file
+    String jsonCharts = await DefaultAssetBundle.of(context)
+        .loadString('lib/enums/samples.json');
+
     List<TileGroup> groups = new List<TileGroup>();
     for (int i = 0; i < _states.length; ++i) {
-      ChartType type = ChartType.PieChart;
-      // getType();
-      int singularSize = [1, 2, 4][r.intMaxMin(3, min: 0)];
-      Chart chart = await type.instance(context, singularSize);
+      //get chart by index
+      Map<String, dynamic> props = json.decode(jsonCharts)['chart $i'];
+
+      // get type for props
+      ChartType  type = ChartType.values.firstWhere((e) => e.toString().split('.').last == props['type']);
+      int singularSize = [1, 2, 4][r.nextInt(3)];
+      Chart chart = await type.instance(props, singularSize);
+
       TileGroup g = createTile(chart, singularSize, i);
       groups.add(g);
     }
     return groups;
   }
 
-  // get random type (for testing purposes only)
-  ChartType getType() =>
-      ChartType.values[r.intMaxMin(ChartType.values.length, min: 0)];
-
   Future<List<NetworkImage>> getImages(List<TileSize> sizes) async =>
-      await _dao.getImages(sizes);
+      await dao.getImages(sizes);
 
 
   void setAlignedVertical(int index, bool alignVertical) =>

@@ -27,8 +27,8 @@ class BarChartGraph extends Chart {
     return new BarChartGraph(
       singularSize: singularSize,
       barCount: json["barCount"] as int,
-      barValues: (json["barValues"] as List<dynamic>).cast<double>(),
-      barTouchTooltipData: (json["barTouchTooltipData"] as List<dynamic>).cast<String>(),
+      barValues: (json["barValues"] as List).cast<double>(),
+      barTouchTooltipData: (json["barTouchTooltipData"] as List).cast<String>(),
     );
   }
 
@@ -99,7 +99,7 @@ class BarChartGraphState extends State<BarChartGraph> {
                   toolTipBgColor: Colors.blueGrey,
                 ),
               ),
-              title: 'records op tijdslimiet',
+              title: 'tijdslimiet records',
               subTitle: 'Reactie',
             ),
           ),

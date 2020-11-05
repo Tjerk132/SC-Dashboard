@@ -38,6 +38,7 @@ class BasicLineChartData extends LineChartData {
     @required Map<int, String> leftTitles,
     @required Map<int, String> bottomTitles,
     TextStyle textStyle,
+    bool showBelowBarData,
     double margin,
     LineTouchData lineTouchData,
     FlGridData gridData,
@@ -62,6 +63,7 @@ class BasicLineChartData extends LineChartData {
       spots,
       colors,
       lineWidth,
+      showBelowBarData: showBelowBarData,
     );
 
     gridData = gridData ?? FlGridData(show: false);

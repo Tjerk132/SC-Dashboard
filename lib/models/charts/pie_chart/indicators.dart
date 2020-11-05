@@ -82,19 +82,6 @@ class _IndicatorsState extends State<Indicators> {
               ),
             ),
         );
-      // case PieChartType.progression:
-      //   return Expanded(
-      //     child: Align(
-      //       alignment: Alignment.topLeft,
-      //       child: Text(
-      //         widget.title,
-      //         style: TextStyle(
-      //           fontWeight: FontWeight.w600,
-      //           fontSize: widget.fontSize,
-      //         ),
-      //       ),
-      //     ),
-      //   );
       default:
         return SizedBox();
     }

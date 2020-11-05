@@ -17,34 +17,37 @@ class PieChartGraph extends Chart {
   final List<String> indicatorText;
   final List<Color> sectionColors;
 
-  //change the appearance parameter to switch between between the fl pie chart samples
+  //determines the appearance of the chart (switch between the fl pie chart samples)
   final PieChartAppearanceData data;
 
   @protected
   PieChartGraph({
     int singularSize,
+    PieChartType type,
     this.pieCount = 3,
     this.values = const [],
     this.indicatorText = const [],
     this.sectionColors = const [],
   })  : data = PieChartAppearanceData(
-          type: PieChartType.divided,
+          type: type,
           singularSize: singularSize,
         ),
-        super(type: ChartType.PieChart);
+        super(type: ChartType.PieChart) {}
 
-  factory PieChartGraph.fromJson(Map<String, dynamic> json,
-      {@required int singularSize}) {
+  factory PieChartGraph.fromJson(
+    Map<String, dynamic> json, {
+    @required int singularSize,
+    @required PieChartType type,
+  }) {
     return new PieChartGraph(
-      indicatorText: (json["indicatorText"] as List<dynamic>).cast<String>(),
-      sectionColors: [
-        for (String colorString
-            in (json["sectionColors"] as List<dynamic>).cast<String>())
-          JsonColor(colorString)
-      ],
-      values: (json["values"] as List<dynamic>).cast<double>(),
-      singularSize: singularSize,
+      indicatorText: (json["indicatorText"] as List).cast<String>(),
+      sectionColors: (json["sectionColors"] as List).castTo<Color>(
+        getValue: (value) => JsonColor(value),
+      ),
+      values: (json["values"] as List).cast<double>(),
       pieCount: json["pieCount"] as int,
+      singularSize: singularSize,
+      type: type,
     );
   }
 

@@ -8,7 +8,7 @@ import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.
 
 class Dashboard extends StatefulWidget {
   final int crossAxisCount = 8;
-  final int tileCount = 12;
+  final int tileCount = 10;
 
   @override
   _DashboardState createState() => _DashboardState();

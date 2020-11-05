@@ -27,6 +27,7 @@ class LineChartGraph extends Chart {
   @protected
   LineChartGraph({
     int singularSize,
+    LineChartType type,
     this.lineWidth = 8,
     this.lineCount = 3,
     this.leftTitles = const {},
@@ -36,46 +37,31 @@ class LineChartGraph extends Chart {
     this.mainDataColors = const {},
     this.otherDataColors = const {},
   })  : data = LineChartAppearanceData(
-          type: LineChartType.sales,
+          type: type,
           singularSize: singularSize,
         ),
         super(type: ChartType.LineChart);
 
   factory LineChartGraph.fromJson(Map<String, dynamic> json,
-      {@required int singularSize}) {
+      {@required int singularSize, @required LineChartType type}) {
     return new LineChartGraph(
       singularSize: singularSize,
+      type: type,
       lineCount: json["lineCount"] as int,
-      leftTitles: {
-        for (MapEntry<String, String> entry
-        in (json["leftTitles"] as Map<dynamic, dynamic>).cast<String, String>().entries)
-          int.parse(entry.key): entry.value,
-      },
-      bottomTitles: {
-        for (MapEntry<String, String> entry
-        in (json["bottomTitles"] as Map<dynamic, dynamic>).cast<String, String>().entries)
-          int.parse(entry.key): entry.value,
-      },
-      mainDataSpots: {
-        for (MapEntry<String, List<dynamic>> entry
-        in (json["mainDataSpots"] as Map<dynamic, dynamic>).cast<String, List<dynamic>>().entries)
-          int.parse(entry.key): LineSpots.fromJson(entry.value).spots,
-      },
-      otherDataSpots: {
-        for (MapEntry<String, List<dynamic>> entry
-        in (json["otherDataSpots"] as Map<dynamic, dynamic>).cast<String, List<dynamic>>().entries)
-          int.parse(entry.key): LineSpots.fromJson(entry.value).spots,
-      },
-      mainDataColors: {
-        for (MapEntry<String, String> entry
-        in (json["mainDataColors"] as Map<dynamic, dynamic>).cast<String, String>().entries)
-          int.parse(entry.key): JsonColor(entry.value),
-      },
-      otherDataColors: {
-        for (MapEntry<String, String> entry
-        in (json["otherDataColors"] as Map<dynamic, dynamic>).cast<String, String>().entries)
-          int.parse(entry.key): JsonColor(entry.value),
-      },
+      leftTitles: (json["leftTitles"] as Map).castTo<int, String>(),
+      bottomTitles: (json["bottomTitles"] as Map).castTo<int, String>(),
+      mainDataSpots: (json["mainDataSpots"] as Map).castTo<int, List<FlSpot>>(
+        getValue: (value) => LineSpots.fromJson(value).spots,
+      ),
+      otherDataSpots: (json["otherDataSpots"] as Map).castTo<int, List<FlSpot>>(
+        getValue: (value) => LineSpots.fromJson(value).spots,
+      ),
+      mainDataColors: (json["mainDataColors"] as Map).castTo<int, Color>(
+        getValue: (value) => JsonColor(value),
+      ),
+      otherDataColors: (json["otherDataColors"] as Map).castTo<int, Color>(
+        getValue: (value) => JsonColor(value),
+      ),
     );
   }
 
@@ -116,12 +102,7 @@ class LineChartGraphState extends State<LineChartGraph> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      right: 4.0,
-                      left: 4.0,
-                      top: 4,
-                      bottom: 4,
-                    ),
+                    padding: const EdgeInsets.all(4.0),
                     child: ChartData(
                       data: LineChart(
                         isShowingMainData
@@ -134,6 +115,8 @@ class LineChartGraphState extends State<LineChartGraph> {
                                 widget.bottomTitles,
                                 widget.mainDataSpots,
                                 widget.mainDataColors,
+                                widget.data.gridData,
+                                widget.data.textStyle,
                               )
                             : charts.otherDataGraph(
                                 widget.data.otherMinX,
@@ -144,6 +127,7 @@ class LineChartGraphState extends State<LineChartGraph> {
                                 widget.bottomTitles,
                                 widget.otherDataSpots,
                                 widget.otherDataColors,
+                                widget.data.gridData,
                               ),
                       ),
                       title: 'Parcours',
@@ -152,22 +136,22 @@ class LineChartGraphState extends State<LineChartGraph> {
                   ),
                 ),
               ),
-              // Align(
-              //   alignment: Alignment.topLeft,
-              //   child: IconButton(
-              //     alignment: Alignment.topLeft,
-              //     icon: Icon(
-              //       Icons.refresh,
-              //       color:
-              //           Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
-              //     ),
-              //     onPressed: () {
-              //       setState(() {
-              //         isShowingMainData = !isShowingMainData;
-              //       });
-              //     },
-              //   ),
-              // ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  alignment: Alignment.topLeft,
+                  icon: Icon(
+                    Icons.refresh,
+                    color:
+                        Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isShowingMainData = !isShowingMainData;
+                    });
+                  },
+                ),
+              ),
             ],
           ),
         ),
