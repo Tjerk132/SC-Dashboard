@@ -40,10 +40,37 @@ class _IndicatorsState extends State<Indicators> {
         text: widget.indicatorText[index],
         shape: widget.shape,
         size: widget.touchedIndex == index
-            ? widget.indicatorSize + 2
+            ? widget.indicatorSize + 4
             : widget.indicatorSize,
         fontSize: widget.fontSize,
-        textColor: widget.touchedIndex == index ? Colors.black : Colors.grey,
+        textColor: Colors.black,
+      ),
+    );
+  }
+
+  Padding title({
+    double left = 0,
+    double top = 0,
+    double right = 0,
+    double bottom = 0,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: left,
+        top: top,
+        right: right,
+        bottom: bottom,
+      ),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text(
+          widget.title,
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: widget.fontSize,
+          ),
+        ),
       ),
     );
   }
@@ -52,35 +79,34 @@ class _IndicatorsState extends State<Indicators> {
   Widget build(BuildContext context) {
     switch (widget.type) {
       case PieChartType.divided:
-        return Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: generateIndicators(),
+        return Column(
+          children: [
+            title(bottom: 15.0),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: generateIndicators(),
+            ),
+          ],
         );
       case PieChartType.donut:
         return Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: generateIndicators(),
+          children: [title(), ...generateIndicators()],
         );
       case PieChartType.circle:
         return Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: generateIndicators(),
+          children: [title(), ...generateIndicators()],
         );
       case PieChartType.progression:
-        return Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: widget.fontSize,
-              ),
-            ),
+        return title(
+          left: 8.0,
+          top: 4.0,
         );
       default:
         return SizedBox();

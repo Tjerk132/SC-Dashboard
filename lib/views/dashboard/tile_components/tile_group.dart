@@ -3,7 +3,7 @@ import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
-import '../place_holder_tile.dart';
+import '../title_tile.dart';
 import '../tile.dart';
 import '../vertical_tile.dart';
 
@@ -19,39 +19,45 @@ import '../vertical_tile.dart';
 /// }
 /// ```
 /// and require the parameters [horizontal], [vertical]
-/// and [chart]. [chart] is what will be the type of graph
+/// and [charts]. [charts] is what will be the type of graph
 /// displayed inside the TileGroup and has to be of type [Chart].
 abstract class TileGroup extends StatefulWidget {
-  TileGroup.fromSize(this.chart,
-      {@required this.singularSize,
-      @required this.occupationSize,
-      @required int size})
-      : horizontal = size ~/ 2,
+  TileGroup.fromSize(
+    this.charts, {
+    @required this.singularSize,
+    @required this.occupationSize,
+    @required int size,
+    this.title = '',
+  })  : horizontal = 4,
         vertical = size - (size ~/ 2);
 
-  factory TileGroup.sizeFactory(Chart chart, {@required int size}) {
-    return TileGroupCreator().bySize(size, chart);
+  // factory TileGroup.sizeFactory(List<Chart> charts, {@required int size}) {
+  //   return TileGroupCreator().bySize(size, charts);
+  // }
+
+  TileGroup.fromDimensions(
+    this.charts, {
+    @required this.singularSize,
+    @required this.occupationSize,
+    @required this.horizontal,
+    @required this.vertical,
+    this.title = '',
+  });
+
+  // factory TileGroup.dimensionFactory(List<Chart> charts,
+  //     {@required int horizontal, @required int vertical}) {
+  //   return TileGroupCreator().bySize(horizontal * vertical, charts);
+  // }
+
+  factory TileGroup.singularSizeFactory(List<Chart> charts, int singularSize) {
+    return TileGroupCreator().bySize(singularSize, charts);
   }
 
-  TileGroup.fromDimensions(this.chart,
-      {@required this.singularSize,
-      @required this.occupationSize,
-      @required this.horizontal,
-      @required this.vertical});
+  /// title for title tile groups todo refactor
+  final String title;
 
-  factory TileGroup.dimensionFactory(Chart chart,
-      {@required int horizontal, @required int vertical}) {
-    return TileGroupCreator().bySize(horizontal * vertical, chart);
-  }
-
-  factory TileGroup.singularSizeFactory(Chart chart, int singularSize) {
-    return TileGroupCreator().bySize(singularSize, chart);
-  }
-
-  //todo general: now 1 component is duplicated to fill up the tile group's space (keep a list of this group's tiles)
-
-  /// the chart the group will get
-  final Chart chart;
+  /// the charts that will be displayed inside the group
+  final List<Chart> charts;
 
   /// represents the size of one element in this group
   final int singularSize;
@@ -74,16 +80,21 @@ abstract class TileGroup extends StatefulWidget {
 }
 
 class _TileGroupState extends State<TileGroup> {
+  int chartIndex = 0;
+
   Widget getTile() {
-    Chart chart = widget.chart;
-    if (widget is PlaceholderTileGroup) {
-      return PlaceholderTile(size: widget.occupationSize);
+    if (widget is TitleTileGroup) {
+      return TitleTile(text: widget.title);
     }
-    else if (widget.alignVertically) {
-      return VerticalTile(chart: chart);
+    else {
+      Chart chart = widget.charts[chartIndex];
+      chartIndex++;
+      if (widget.alignVertically) {
+        return VerticalTile(chart: chart);
+      }
+      else
+        return Tile(chart: chart);
     }
-    else
-      return Tile(chart: chart);
   }
 
   @override

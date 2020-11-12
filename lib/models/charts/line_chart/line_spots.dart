@@ -13,7 +13,7 @@ class LineSpots {
     List<FlSpot> spots = new List<FlSpot>();
     try {
       for (List<dynamic> lineCoordinates in json) {
-        List<double> spotCoordinates = List.from(lineCoordinates).map<double>((e) => e.toDouble()).toList();
+        List<double> spotCoordinates = lineCoordinates.map<double>((e) => e.toDouble()).toList();
         spots.add(new FlSpot(spotCoordinates[0], spotCoordinates[1]));
       }
     } catch (e) {

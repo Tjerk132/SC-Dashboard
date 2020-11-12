@@ -34,8 +34,10 @@ class BaseBarChart with BaseChart {
       double barWidth,
       int rodCount,
       int singularSize, {
+        Color rodColor = Colors.yellowAccent,
+        Color rodTouchedColor = Colors.white,
         Color backgroundColor,
-        BorderRadius rodBorderRadius = BorderRadius.zero,
+        BorderRadius rodBorderRadius,
         bool showBackGround = true,
       }) {
     double width = singularSize + (barWidth / rodCount);
@@ -53,9 +55,9 @@ class BaseBarChart with BaseChart {
             rodCount,
                 (i) => createRod(
               isTouched ? y + 1 : y,
-              barValues.highest.roundToFactor(10) + 1.0,
+              barValues.highest.roundToFactor(10).toDouble(),
               width: width,
-              color: isTouched ? Colors.yellowAccent : Colors.white,
+              color: isTouched ? rodTouchedColor : rodColor,
               backgroundColor: backgroundColor,
               borderRadius: rodBorderRadius,
               showBackGround: showBackGround,
@@ -73,7 +75,7 @@ class BaseBarChart with BaseChart {
     double width,
     Color color,
     Color backgroundColor = const Color(0xff72d8bf),
-    BorderRadius borderRadius,
+    BorderRadius borderRadius = BorderRadius.zero,
     bool showBackGround,
   }) {
     return BarChartRodData(

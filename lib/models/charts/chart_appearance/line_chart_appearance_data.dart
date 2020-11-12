@@ -8,6 +8,7 @@ class LineChartAppearanceData {
   FlGridData gridData;
   TextStyle textStyle;
   Gradient backgroundGradient;
+  Color backgroundColor;
 
   double mainMinX;
   double mainMaxX;
@@ -36,18 +37,22 @@ class LineChartAppearanceData {
       case LineChartType.sales:
         gridData = FlGridData(show: false);
         textStyle = TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 12,
+          fontSize: 11,
         );
         backgroundGradient = LinearGradient(
-          colors: const [
-            Color(0xff2c274c),
-            Color(0xff46426c),
+          colors: [
+            // ThemeScheme.primaryGradientColor,
+            Colors.white,
+            Colors.white,
+            // Color(0xff2c274c),
+            // Color(0xff46426c),
           ],
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
         );
+        backgroundColor = Color(0xffffffff);
         break;
       case LineChartType.stocks:
         gridData = FlGridData(
@@ -55,30 +60,36 @@ class LineChartAppearanceData {
           drawVerticalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: const Color(0xff37434d),
+              color: Colors.black,
+              // const Color(0xff37434d),
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: const Color(0xff37434d),
+              color: Colors.black,
+              // const Color(0xff37434d),
               strokeWidth: 1,
             );
           },
         );
         textStyle = TextStyle(
-          color: Colors.grey[400],
+          color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 14,
         );
         backgroundGradient = LinearGradient(
-          colors: const [
-            Color(0xff232d37),
-            Color(0xff232d41),
+          colors: [
+            // ThemeScheme.primaryGradientColor,
+            Colors.white,
+            Colors.white,
+            // Color(0xff232d37),
+            // Color(0xff232d41),
           ],
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
         );
+        backgroundColor = Color(0xfff9b34a);
         break;
       default:
         break;

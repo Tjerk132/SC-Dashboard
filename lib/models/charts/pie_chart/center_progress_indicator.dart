@@ -20,13 +20,16 @@ class _CenterProgressIndicatorState extends State<CenterProgressIndicator> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      widthFactor: 5,
-      child: Text(
-        '${widget.value}%',
-        style: TextStyle(
-          fontSize: widget.fontSize,
-          color: widget.color,
-          fontWeight: FontWeight.bold,
+      widthFactor: 5.3,
+      child: Container(
+        color: Colors.white.withOpacity(0.8),
+        child: Text(
+          '${widget.value}%',
+          style: TextStyle(
+            fontSize: widget.fontSize,
+            color: widget.color,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

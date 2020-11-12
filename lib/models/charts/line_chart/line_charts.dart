@@ -13,17 +13,20 @@ class LineCharts {
     double maxX,
     double maxY,
     double minY,
-    Map<int, String> leftTitles,
-    Map<int, String> bottomTitles,
     Map<int, List<FlSpot>> spots,
     Map<int, Color> colors,
     FlGridData gridData,
-    TextStyle textStyle,
-  ) {
+    TextStyle textStyle, {
+    Map<int, String> topTitles,
+    Map<int, String> bottomTitles,
+    Map<int, String> leftTitles,
+    Map<int, String> rightTitles,
+    Color borderColor = const Color(0xff4e4965),
+  }) {
     return BasicLineChartData(
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+          tooltipBgColor: Colors.blueGrey,
         ),
         touchCallback: (LineTouchResponse touchResponse) {},
         handleBuiltInTouches: true,
@@ -34,9 +37,10 @@ class LineCharts {
       //     show: true,
       //     border: Border.all(color: const Color(0xff37434d), width: 1)),
       margin: 8,
-
+      topTitles: topTitles,
       bottomTitles: bottomTitles,
       leftTitles: leftTitles,
+      rightTitles: rightTitles,
       minX: minX,
       maxX: maxX,
       maxY: maxY,
@@ -49,8 +53,8 @@ class LineCharts {
       borderData: FlBorderData(
         show: true,
         border: Border(
-          bottom: BorderSide(color: Color(0xff4e4965), width: 2),
-          left: BorderSide(color: Color(0xff4e4965), width: 2),
+          bottom: BorderSide(color: borderColor, width: 2),
+          left: BorderSide(color: borderColor, width: 2),
           right: BorderSide(color: Colors.transparent),
           top: BorderSide(color: Colors.transparent),
         ),
@@ -64,12 +68,15 @@ class LineCharts {
     double maxX,
     double maxY,
     double minY,
-    Map<int, String> leftTitles,
-    Map<int, String> bottomTitles,
     Map<int, List<FlSpot>> spots,
     Map<int, Color> colors,
-    FlGridData gridData,
-  ) {
+    FlGridData gridData, {
+    Map<int, String> topTitles,
+    Map<int, String> bottomTitles,
+    Map<int, String> leftTitles,
+    Map<int, String> rightTitles,
+    Color borderColor = const Color(0xff4e4965),
+  }) {
     return BasicLineChartData(
       lineTouchData: LineTouchData(
         enabled: false,
@@ -86,8 +93,10 @@ class LineCharts {
       // //16 for sale 8 for stocks
       // margin: 16,
 
+      topTitles: topTitles,
       bottomTitles: bottomTitles,
       leftTitles: leftTitles,
+      rightTitles: rightTitles,
       minX: minX,
       maxX: maxX,
       maxY: maxY,
@@ -99,7 +108,7 @@ class LineCharts {
       borderData: FlBorderData(
         show: true,
         border: Border(
-          bottom: BorderSide(color: Color(0xff4e4965), width: 4),
+          bottom: BorderSide(color: borderColor, width: 4),
           left: BorderSide(color: Colors.transparent),
           right: BorderSide(color: Colors.transparent),
           top: BorderSide(color: Colors.transparent),

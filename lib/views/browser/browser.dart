@@ -9,15 +9,15 @@ import 'package:flutter_test_project/views/slot_machine/slot_machine_view.dart';
 
 import 'link_highlights_view.dart';
 
-class BrowserView extends StatefulWidget {
+class Browser extends StatefulWidget {
 
   @override
-  State<BrowserView> createState() => BrowserViewState();
+  State<Browser> createState() => BrowserState();
 }
 
 TextEditingController _textEditingController = new TextEditingController();
 
-class BrowserViewState extends State<BrowserView> {
+class BrowserState extends State<Browser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

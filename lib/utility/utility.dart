@@ -7,8 +7,7 @@ extension DefaultMap<K, V> on Map<K, V> {
   V getOrElse(K key, V defaultValue) {
     if (this.containsKey(key)) {
       return this[key];
-    }
-    else {
+    } else {
       return defaultValue;
     }
   }
@@ -24,6 +23,8 @@ extension DefaultMap<K, V> on Map<K, V> {
     K Function(dynamic) getKey,
     T Function(dynamic) getValue,
   }) {
+    if (this == null) return const {};
+
     getKey = getKey ?? (key) => int.tryParse(key as String) as K;
     getValue = getValue ?? (value) => value as T;
 
@@ -38,18 +39,20 @@ extension DefaultList<E> on List<E> {
   E getOrElse(int key, E defaultValue) {
     if (this.asMap().containsKey(key)) {
       return this[key];
-    }
-    else {
+    } else {
       return defaultValue;
     }
   }
+
   /// variation of https://github.com/dart-lang/sdk/issues/36836
   List<T> castTo<T>({
     T Function(dynamic) getValue,
   }) {
+    if (this == null) return const [];
+
     getValue = getValue ?? (value) => value as T;
 
-    return List.generate(length, (index) => getValue(this[index]));
+    return List<T>.generate(length, (index) => getValue(this[index]));
   }
 }
 
@@ -69,10 +72,6 @@ extension IndexedIterable<E> on Iterable<E> {
     return this.map((e) => f(e, i++));
   }
 
-  void nullCheck() {
-    if (this == null || this.isEmpty) throw new NullThrownError();
-  }
-
   /// determines if at least one item in the list satisfies the value of
   /// the given [property].
   /// Usage:
@@ -81,7 +80,7 @@ extension IndexedIterable<E> on Iterable<E> {
   /// ```
   /// where 'hasData' is the name of the property
   bool anyMatch({@required String property}) {
-    this.nullCheck();
+    if (this == null) throw new NullThrownError();
     for (E item in this) {
       dynamic oProperty = item.getProperty(property);
       // just one is required to be true to make the outcome true
@@ -100,7 +99,7 @@ extension IndexedIterable<E> on Iterable<E> {
   /// ```
   /// where 'hasData' is the name of the property
   bool allMatch({@required String property}) {
-    this.nullCheck();
+    if (this == null) throw new NullThrownError();
     for (E item in this) {
       dynamic oProperty = item.getProperty(property);
       // just one is required to be false to make the outcome false
@@ -119,7 +118,7 @@ extension IndexedIterable<E> on Iterable<E> {
   /// ```
   /// where 'hasData' is the name of the property
   bool noneMatch({@required String property}) {
-    this.nullCheck();
+    if (this == null) throw new NullThrownError();
     for (E item in this) {
       dynamic oProperty = item.getProperty(property);
       // all are required to be false to make the outcome true
@@ -193,14 +192,23 @@ extension NextIntWithMin on Random {
   Object nextObject(List<Object> list) => list[nextInt(list.length)];
 }
 
-class JsonColor extends Color {
-  JsonColor._(int value) : super(value);
+/// see https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
+extension HexColor on Color {
+  /// String is in the format "aabbcc" or "ffaabbcc" with an optional leading "#".
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
 
-  factory JsonColor(String colorString) {
-    final String valueString = colorString.split('(0x')[1].split(')')[0];
-    int value = int.parse(valueString, radix: 16);
-    return JsonColor._(value);
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
+
+  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
+  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+      '${alpha.toRadixString(16).padLeft(2, '0')}'
+      '${red.toRadixString(16).padLeft(2, '0')}'
+      '${green.toRadixString(16).padLeft(2, '0')}'
+      '${blue.toRadixString(16).padLeft(2, '0')}';
 }
 
 extension NumExtension on num {
@@ -212,5 +220,62 @@ extension NumExtension on num {
     int b = a + factor;
     // Return of closest of two
     return (this - a > b - this) ? b : a;
+  }
+}
+
+extension StringFormat on DateTime {
+  String formatToString({
+    bool withDate = false,
+    bool withWeekDay = false,
+    bool withTime = true,
+    bool withSeconds = true,
+    bool withMillis = false,
+    bool withMicros = false,
+  }) {
+    StringBuffer buffer = StringBuffer();
+    if (withDate) {
+      String date = toCorrectDigits([this.day, this.month, this.year], endDivider: '-');
+      buffer.write('$date ');
+    }
+    if (withWeekDay) {
+      String weekday = toCorrectDigits([this.weekday]);
+      buffer.write('$weekday ');
+    }
+    if (withTime) {
+      if (withSeconds) {
+        buffer.write(
+          toCorrectDigits([this.hour, this.minute, this.second], endDivider: ':'),
+        );
+      }
+      else
+        buffer.write(
+          toCorrectDigits([this.hour, this.minute], endDivider: ':'),
+        );
+    }
+    if (withMicros || (withMillis && withMicros)) {
+      buffer.write(
+        toCorrectDigits([this.millisecond, this.microsecond], startDivider: '.'),
+      );
+    }
+    else if (withMillis) {
+      buffer.write(
+        toCorrectDigits([this.millisecond], startDivider: '.'),
+      );
+    }
+    return buffer.toString();
+  }
+
+  String toCorrectDigits(List<int> timeUnits, {String startDivider, String endDivider}) {
+    StringBuffer buffer = StringBuffer();
+    for (int timeUnit in timeUnits) {
+      if(startDivider != null) {
+        buffer.write(startDivider);
+      }
+      buffer.write('${timeUnit < 10 ? '0$timeUnit' : timeUnit}');
+      if (timeUnit != timeUnits.last && endDivider != null) {
+        buffer.write(endDivider);
+      }
+    }
+    return buffer.toString();
   }
 }

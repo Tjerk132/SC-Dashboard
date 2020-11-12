@@ -6,18 +6,18 @@ import 'charts/chart.dart';
 class TileGroupCreator {
 
 
-  TileGroup bySize(int size, Chart chart) {
+  TileGroup bySize(int size, List<Chart> charts) {
     switch (size) {
       case 1:
-        return SmallTileGroup(chart);
+        return SmallTileGroup(charts);
       case 2:
-        return MediumTileGroup(chart);
+        return MediumTileGroup(charts);
       case 3:
-        return PlaceholderTileGroup(size);
+        return TitleTileGroup('');
       case 4:
-        return LargeTileGroup(chart);
+        return LargeTileGroup(charts);
       default:
-        return SmallTileGroup(chart);
+        return SmallTileGroup(charts);
     }
   }
 }

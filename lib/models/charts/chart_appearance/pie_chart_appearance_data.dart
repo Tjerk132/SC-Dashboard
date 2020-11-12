@@ -13,6 +13,7 @@ class PieChartAppearanceData {
   double centerSpaceRadius;
   bool showPieTitle;
   bool centerProgressIndicator;
+  Color backgroundColor;
   double indicatorSize;
   double fontSize;
 
@@ -20,24 +21,25 @@ class PieChartAppearanceData {
     @required this.type,
     int singularSize,
   }) {
+    this.backgroundColor = Colors.white;
     double factor = 6.5;
     switch (this.type) {
       case PieChartType.donut:
-        this.pieRadius = 30 + (4.0 * singularSize);
+        this.pieRadius = 32 + (4.0 * singularSize);
         this.axis = Axis.horizontal;
         this.sectionSpace = 0;
-        this.centerSpaceRadius = singularSize * 15.0;
-        this.showPieTitle = false;
+        this.centerSpaceRadius = singularSize * 18.0;
+        this.showPieTitle = true;
         this.centerProgressIndicator = false;
         this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 10.0 + singularSize;
+        this.fontSize = 11.0 + singularSize;
         break;
 
       case PieChartType.divided:
         this.pieRadius = (1 + singularSize) * (factor * 3.5);
         this.axis = Axis.vertical;
         this.sectionSpace = 8.0 + singularSize;
-        this.centerSpaceRadius = 0;
+        this.centerSpaceRadius = 12;
         this.showPieTitle = true;
         this.centerProgressIndicator = false;
         this.indicatorSize = 11 + (singularSize * 3.0);

@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/base_chart/base_bar_chart.dart';
-import 'package:flutter_test_project/utility/utility.dart';
 
 class BasicBarChartData extends BarChartData {
   @protected
@@ -35,7 +34,7 @@ class BasicBarChartData extends BarChartData {
 
   factory BasicBarChartData({
     @required Function(BarTouchResponse) barTouchCallBack,
-    @required Function(String) getBottomTitle,
+    @required String Function(String) getBottomTitle,
     @required List<String> barTouchTooltipData,
     @required List<double> barValues,
     @required double barWidth,
@@ -43,6 +42,8 @@ class BasicBarChartData extends BarChartData {
     @required int touchedIndex,
     @required int singularSize,
     int rodCount,
+    Color rodColor,
+    Color rodTouchedColor,
     Color rodBackgroundColor,
     BorderRadius rodBorderRadius,
     TextStyle titlesTextStyle,
@@ -62,7 +63,7 @@ class BasicBarChartData extends BarChartData {
     Color backgroundColor,
   }) {
     barTouchCallBack = barTouchCallBack ?? (BarTouchResponse barTouchResponse) {};
-    getBottomTitle = getBottomTitle ?? (String title) => title.substring(0, 1);
+    getBottomTitle = getBottomTitle ?? (String title) => title;
     barTouchTooltipData = barTouchTooltipData ?? const [];
     barValues = barValues ?? const [];
     barWidth = barWidth ?? 22;
@@ -89,9 +90,7 @@ class BasicBarChartData extends BarChartData {
         base.baseTitleData(
           show: true,
           textStyle: titlesTextStyle,
-          getTitlesBottom: (double value) => getBottomTitle(
-            barTouchTooltipData.getOrElse(value.toInt(), ''),
-          ),
+          bottomTitles: barTouchTooltipData.asMap(),
         );
 
     borderData = borderData ?? FlBorderData(show: false);
@@ -103,6 +102,8 @@ class BasicBarChartData extends BarChartData {
           barWidth,
           rodCount,
           singularSize,
+          rodColor: rodColor,
+          rodTouchedColor: rodTouchedColor,
           backgroundColor: rodBackgroundColor,
           rodBorderRadius: rodBorderRadius,
         );

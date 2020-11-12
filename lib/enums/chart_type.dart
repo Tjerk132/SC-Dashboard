@@ -1,11 +1,7 @@
-import 'dart:math';
-import 'package:flutter_test_project/enums/line_chart_type.dart';
-import 'package:flutter_test_project/enums/pie_chart_type.dart';
 import 'package:flutter_test_project/models/charts/bar_chart/bar_chart.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/line_chart/line_chart.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/pie_chart.dart';
-import 'package:flutter_test_project/utility/utility.dart';
 
 enum ChartType {
   LineChart,
@@ -14,18 +10,18 @@ enum ChartType {
 }
 
 extension ChartTypeExtension on ChartType {
-  Future<Chart> instance(Map<String, dynamic> jsonChart, int singularSize) async {
-    return getSampleChart(jsonChart, singularSize);
+  Future<Chart> instance(Map<String, dynamic> jsonChart, int singularSize, dynamic type) async {
+    return getSampleChart(jsonChart, singularSize, type);
   }
 
-  Future<Chart> getSampleChart(Map<String, dynamic> jsonChart, int singularSize) async {
+  Future<Chart> getSampleChart(Map<String, dynamic> jsonChart, int singularSize, dynamic type) async {
 
     //random between styles (for testing purposes only)
-    Random r = new Random();
-
+    // Random r = new Random();
     switch (this) {
       case ChartType.PieChart:
-        PieChartType type = r.nextObject(PieChartType.values);
+        // type = type as PieChartType;
+        // PieChartType type = r.nextObject(PieChartType.values);
         return PieChartGraph.fromJson(
           jsonChart,
           singularSize: singularSize,
@@ -37,7 +33,7 @@ extension ChartTypeExtension on ChartType {
           singularSize: singularSize,
         );
       case ChartType.LineChart:
-        LineChartType type = r.nextObject(LineChartType.values);
+        // LineChartType type = r.nextObject(LineChartType.values);
         return LineChartGraph.fromJson(
           jsonChart,
           singularSize: singularSize,

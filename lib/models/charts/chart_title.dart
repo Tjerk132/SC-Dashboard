@@ -27,7 +27,8 @@ class _ChartTitleState extends State<ChartTitle> {
           child: Text(
             widget.subTitle,
             style: TextStyle(
-              color: Color(0xff827daa),
+              color: Colors.black.withOpacity(0.9),
+              fontWeight: FontWeight.bold
               // fontSize: 12,
             ),
             textAlign: TextAlign.center,
@@ -41,12 +42,12 @@ class _ChartTitleState extends State<ChartTitle> {
           child: Text(
             widget.title,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               // fontSize: 24,
               fontWeight: FontWeight.bold,
               letterSpacing: 2,
             ),
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.center,
           ),
         ),
       ],

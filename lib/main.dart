@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_test_project/connection.dart';
 import 'package:flutter_test_project/context_navigator.dart';
 import 'package:flutter_test_project/dialogs/dialog_actions.dart';
-import 'package:flutter_test_project/views/browser/browser_view.dart';
+import 'package:flutter_test_project/views/browser/browser.dart';
 import 'package:flutter_test_project/views/todo_view.dart';
 
 import 'controllers/todo_view_controller.dart';
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
         leading: IconButton(
             icon: Icon(Icons.search),
-            onPressed: () => ContextNavigator.push(context, BrowserView())),
+            onPressed: () => ContextNavigator.push(context, Browser())),
       ),
       body: TodoView(controller: controller),
       floatingActionButton: FloatingActionButton.extended(

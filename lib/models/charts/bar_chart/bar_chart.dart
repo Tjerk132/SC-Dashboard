@@ -5,8 +5,11 @@ import 'package:flutter_test_project/models/charts/base_chart_data/basic_bar_cha
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/bar_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
+import 'package:flutter_test_project/models/theme_scheme.dart';
 
 class BarChartGraph extends Chart {
+  final String title;
+  final String subTitle;
   final int barCount;
   final List<double> barValues;
   final List<String> barTouchTooltipData;
@@ -15,6 +18,8 @@ class BarChartGraph extends Chart {
 
   BarChartGraph({
     int singularSize,
+    this.title,
+    this.subTitle,
     this.barCount = 7,
     this.barValues = const [],
     this.barTouchTooltipData = const [],
@@ -23,9 +28,12 @@ class BarChartGraph extends Chart {
         ),
         super(type: ChartType.BarChart);
 
-  factory BarChartGraph.fromJson(Map<String, dynamic> json, {@required int singularSize}) {
+  factory BarChartGraph.fromJson(Map<String, dynamic> json,
+      {@required int singularSize}) {
     return new BarChartGraph(
       singularSize: singularSize,
+      title: json["title"],
+      subTitle: json["subTitle"],
       barCount: json["barCount"] as int,
       barValues: (json["barValues"] as List).cast<double>(),
       barTouchTooltipData: (json["barTouchTooltipData"] as List).cast<String>(),
@@ -45,8 +53,7 @@ class BarChartGraphState extends State<BarChartGraph> {
           barTouchResponse.touchInput is! FlPanEnd &&
           barTouchResponse.touchInput is! FlLongPressEnd) {
         touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      }
-      else {
+      } else {
         touchedIndex = -1;
       }
     });
@@ -56,23 +63,20 @@ class BarChartGraphState extends State<BarChartGraph> {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      color: const Color(0xff81e5cd),
+      color: Colors.white,
       child: Stack(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                alignment: Alignment.topRight,
-                icon: Icon(
-                  Icons.play_arrow,
-                  color: const Color(0xff0f4a3c),
-                ),
-                onPressed: () => print('No onPress implemented'),
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.topRight,
+          //   child: IconButton(
+          //     alignment: Alignment.topRight,
+          //     icon: Icon(
+          //       Icons.play_arrow,
+          //       color: Colors.black.withOpacity(0.9),
+          //     ),
+          //     onPressed: () => print('No onPress implemented'),
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: ChartData(
@@ -87,9 +91,11 @@ class BarChartGraphState extends State<BarChartGraph> {
                   touchedIndex: touchedIndex,
                   singularSize: widget.data.singularSize,
                   rodCount: 1,
-                  rodBackgroundColor: const Color(0xff72d8bf),
+                  rodColor: ThemeScheme.accentColor,
+                  rodTouchedColor: ThemeScheme.barTouchedColor,
+                  rodBackgroundColor: ThemeScheme.accentColor.withOpacity(0.5),
                   titlesTextStyle: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     // fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -99,8 +105,8 @@ class BarChartGraphState extends State<BarChartGraph> {
                   toolTipBgColor: Colors.blueGrey,
                 ),
               ),
-              title: 'tijdslimiet records',
-              subTitle: 'Reactie',
+              title: widget.title,
+              subTitle: widget.subTitle,
             ),
           ),
         ],

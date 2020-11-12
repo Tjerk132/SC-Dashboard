@@ -5,6 +5,7 @@ import 'package:flutter_test_project/enums/pie_chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/pie_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/center_progress_indicator.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/indicators.dart';
+import 'package:flutter_test_project/models/theme_scheme.dart';
 import '../chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
@@ -12,6 +13,7 @@ import '../chart_data.dart';
 import '../base_chart_data/basic_pie_chart_data.dart';
 
 class PieChartGraph extends Chart {
+  final String title;
   final int pieCount;
   final List<double> values;
   final List<String> indicatorText;
@@ -24,15 +26,19 @@ class PieChartGraph extends Chart {
   PieChartGraph({
     int singularSize,
     PieChartType type,
+    this.title,
     this.pieCount = 3,
     this.values = const [],
     this.indicatorText = const [],
-    this.sectionColors = const [],
-  })  : data = PieChartAppearanceData(
+    List<Color> sectionColors,
+  })  : sectionColors = sectionColors.isEmpty
+          ? ThemeScheme.chartPalette
+          : sectionColors,
+        data = PieChartAppearanceData(
           type: type,
           singularSize: singularSize,
         ),
-        super(type: ChartType.PieChart) {}
+        super(type: ChartType.PieChart);
 
   factory PieChartGraph.fromJson(
     Map<String, dynamic> json, {
@@ -42,12 +48,13 @@ class PieChartGraph extends Chart {
     return new PieChartGraph(
       indicatorText: (json["indicatorText"] as List).cast<String>(),
       sectionColors: (json["sectionColors"] as List).castTo<Color>(
-        getValue: (value) => JsonColor(value),
+        getValue: (value) => HexColor.fromHex(value),
       ),
       values: (json["values"] as List).cast<double>(),
       pieCount: json["pieCount"] as int,
       singularSize: singularSize,
       type: type,
+      title: json["title"],
     );
   }
 
@@ -74,8 +81,8 @@ class PieChartGraphState extends State<PieChartGraph> {
     return AspectRatio(
       aspectRatio: 1.3,
       child: Card(
+        color: widget.data.backgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        color: Colors.white,
         child: Flex(
           direction: widget.data.axis,
           children: <Widget>[
@@ -90,7 +97,7 @@ class PieChartGraphState extends State<PieChartGraph> {
               indicatorText: widget.indicatorText,
               sectionColors: widget.sectionColors,
               touchedIndex: touchedIndex,
-              title: 'Reactiesnelheid doel',
+              title: widget.title,
             ),
             const SizedBox(
               height: 2,

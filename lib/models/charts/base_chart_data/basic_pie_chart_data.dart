@@ -43,7 +43,6 @@ class BasicPieChartData extends PieChartData {
     values = values ?? List.filled(pieCount, 100 / pieCount);
     touchedIndex = touchedIndex ?? -1;
     pieRadius = pieRadius ?? 60;
-
     BasePieChart base = BasePieChart();
 
     List<PieChartSectionData> sections = base.basePieGroups(

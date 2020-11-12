@@ -11,7 +11,10 @@ class VerticalTile extends StatefulWidget {
   final double portraitTileHeightRatio = 6.16;
   final double landscapeTileHeightRatio = 2.35;
 
-  const VerticalTile({this.chart});
+  const VerticalTile({
+    Key key,
+    this.chart,
+  }) : super(key: key);
 
   @override
   State<VerticalTile> createState() => _VerticalTileState();

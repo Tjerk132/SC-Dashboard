@@ -10,7 +10,7 @@ class Pie extends PieChartSectionData {
     String title,
     bool isTouched,
     double pieRadius,
-    double titlePositionPercentageOffset = 0.65,
+    double titlePositionPercentageOffset = 0.50,
   }) : super(
           color: color.withOpacity(isTouched ? 1 : 0.7),
           value: value,

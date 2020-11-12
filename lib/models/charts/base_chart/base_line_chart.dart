@@ -10,6 +10,7 @@ class BaseLineChart with BaseChart {
     Map<int, Color> colors,
     double lineWidth, {
     bool showBelowBarData = false,
+    List<Color> belowBarColors,
   }) {
     return List<Line>.generate(
       count,
@@ -21,14 +22,12 @@ class BaseLineChart with BaseChart {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
-            show: showBelowBarData,
-            //todo should be for purple only
-            colors: [
-              // const Color(0x00aa4cfc),
-              //todo only for stocks graph
-              ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a)).lerp(0.2).withOpacity(0.1),
-              ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a)).lerp(0.2).withOpacity(0.1),
-            ]),
+          show: showBelowBarData,
+          colors: belowBarColors ?? <Color>[
+            ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a)).lerp(0.2).withOpacity(0.1),
+            ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a)).lerp(0.2).withOpacity(0.1),
+          ],
+        ),
       ),
     );
   }
