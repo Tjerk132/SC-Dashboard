@@ -82,8 +82,8 @@ class DashboardLogic {
       }
       groups.add(g);
     }
-    groups.insert(0, TitleTileGroup('Afgelopen weken'));
-    groups.insert(4, TitleTileGroup('Afgelopen jaar'));
+    // groups.insert(0, TitleTileGroup('Afgelopen weken'));
+    // groups.insert(4, TitleTileGroup('Afgelopen jaar'));
     return groups;
   }
 

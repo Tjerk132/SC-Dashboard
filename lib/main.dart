@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_test_project/connection.dart';
@@ -30,7 +31,14 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Todo Project',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en'),
+        const Locale('nl')
+      ],
+      title: 'Flutter Dashboard Project',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -80,11 +88,11 @@ class _HomePageState extends State<HomePage> {
         message: textAlert,
         icon: Icons.wifi,
         actions: <DialogAction, Function()>{
-          DialogAction.LATER: () {
+          DialogAction.later: () {
             print('Tapped later');
             Navigator.of(context).pop(false);
           },
-          DialogAction.OKAY: () async {
+          DialogAction.okay: () async {
             print('Tapped okay');
             Navigator.of(context).pop(true);
           }

@@ -1,7 +1,7 @@
 enum DialogAction {
-  OKAY,
-  CANCEL,
-  LATER,
+  okay,
+  cancel,
+  later,
 }
 
 extension DialogActionExtension on DialogAction {
@@ -13,5 +13,5 @@ extension DialogActionExtension on DialogAction {
   String toShortString() => this.toString().split('.').last;
 
   /// set all characters after first char of [short] to lowercase
-  String formatString(String short) => short[0] + short.substring(1).toLowerCase();
+  String formatString(String short) => short[0].toUpperCase() + short.substring(1);
 }
