@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test_project/providers/time_filter_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_test_project/connection.dart';
@@ -21,6 +22,9 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => SlotMachineProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => TimeFilterProvider(),
+        )
       ],
       child: App(),
     ),
@@ -32,11 +36,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate
+        GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: [
         const Locale('en'),
-        const Locale('nl')
+        const Locale('nl'),
       ],
       title: 'Flutter Dashboard Project',
       theme: ThemeData(

@@ -3,10 +3,12 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_test_project/providers/time_filter_provider.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
-import 'package:flutter_test_project/views/dashboard/date_time_picker.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
+import 'package:flutter_test_project/views/dashboard/time_filter.dart';
+import 'package:provider/provider.dart';
 
 import 'clock/clock.dart';
 
@@ -20,27 +22,40 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard>
-    with SingleTickerProviderStateMixin {
+class _DashboardState extends State<Dashboard> {
   // final List<TileSize> _sizes = TileSize.createSizes(57).toList();
   DashboardLogic _logic;
-  TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(length: 3, vsync: this);
     //orig=10
     _logic = new DashboardLogic(10, widget.crossAxisCount);
+
+    setProviderListener();
+    //filter when loaded (initial period is today - 7days till today + 7days)
+    filterByDate(
+      DateTime.now().subtract(Duration(days: 7)),
+      DateTime.now().add(Duration(days: 7)),
+    );
   }
 
-  void tabChanged(int index) {
-    //todo implement method
+  void setProviderListener() {
+    TimeFilterProvider provider = context.read<TimeFilterProvider>();
+    provider.addListener(() {
+      DateTime start = provider.startDate;
+      DateTime end = provider.endDate;
+      filterByDate(start, end);
+    });
+  }
+
+  void filterByDate(DateTime start, DateTime end) {
+    print('received filter from $start till $end');
+    //todo filter graphs by given dates
   }
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData data = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
@@ -48,45 +63,12 @@ class _DashboardState extends State<Dashboard>
           Clock(
             textStyle: TextStyle(fontSize: 20),
           ),
-          IconButton(
-            iconSize: 30,
-            icon: Icon(Icons.account_circle_rounded),
-            onPressed: null,
+          Icon(
+            Icons.account_circle_rounded,
+            size: 30,
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          onTap: (index) => tabChanged(index),
-          labelStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
-          labelPadding: EdgeInsets.symmetric(
-            horizontal: data.orientation == Orientation.landscape ? 120 : 40,
-          ),
-          isScrollable: true,
-          tabs: <Tab>[
-            Tab(text: 'Laatste sessie'),
-            Tab(text: 'Laatste 7 dagen'),
-            Tab(
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 10.0),
-                    child: Text('Aangepast'),
-                  ),
-                  DateTimePicker(
-                    initialDate: DateTime.now().subtract(Duration(days: 7)),
-                  ),
-                  Text(' - '),
-                  DateTimePicker(
-                    initialDate: DateTime.now(),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        bottom: TimeFilter(appBarHeight: AppBar().preferredSize.height),
       ),
       body: FutureBuilder<List<TileGroup>>(
         future: _logic.groups(context),

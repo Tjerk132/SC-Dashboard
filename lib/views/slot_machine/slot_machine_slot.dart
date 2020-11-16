@@ -5,13 +5,11 @@ import '../../providers/slot_machine_provider.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 
 class SlotMachineSlot extends StatefulWidget {
-  const SlotMachineSlot({this.size, this.scrollable, this.offAxisFraction});
-
   final Size size;
-
   final bool scrollable;
-
   final double offAxisFraction;
+
+  const SlotMachineSlot({this.size, this.scrollable, this.offAxisFraction});
 
   @override
   _SlotMachineSlotState createState() => _SlotMachineSlotState();
@@ -19,11 +17,8 @@ class SlotMachineSlot extends StatefulWidget {
 
 class _SlotMachineSlotState extends State<SlotMachineSlot> {
   FixedExtentScrollController _scrollController;
-
   SlotMachine _slotMachine;
-
   List<int> items;
-
   int selectedIndex;
 
   @override

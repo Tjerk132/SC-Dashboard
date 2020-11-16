@@ -234,38 +234,38 @@ extension StringFormat on DateTime {
   }) {
     StringBuffer buffer = StringBuffer();
     if (withDate) {
-      String date = toCorrectDigits([this.day, this.month, this.year], endDivider: '-');
+      String date = writeAsUnit([this.day, this.month, this.year], endDivider: '-');
       buffer.write('$date ');
     }
     if (withWeekDay) {
-      String weekday = toCorrectDigits([this.weekday]);
+      String weekday = writeAsUnit([this.weekday]);
       buffer.write('$weekday ');
     }
     if (withTime) {
       if (withSeconds) {
         buffer.write(
-          toCorrectDigits([this.hour, this.minute, this.second], endDivider: ':'),
+          writeAsUnit([this.hour, this.minute, this.second], endDivider: ':'),
         );
       }
       else
         buffer.write(
-          toCorrectDigits([this.hour, this.minute], endDivider: ':'),
+          writeAsUnit([this.hour, this.minute], endDivider: ':'),
         );
     }
     if (withMicros || (withMillis && withMicros)) {
       buffer.write(
-        toCorrectDigits([this.millisecond, this.microsecond], startDivider: '.'),
+        writeAsUnit([this.millisecond, this.microsecond], startDivider: '.'),
       );
     }
     else if (withMillis) {
       buffer.write(
-        toCorrectDigits([this.millisecond], startDivider: '.'),
+        writeAsUnit([this.millisecond], startDivider: '.'),
       );
     }
     return buffer.toString();
   }
 
-  String toCorrectDigits(List<int> timeUnits, {String startDivider, String endDivider}) {
+  String writeAsUnit(List<int> timeUnits, {String startDivider, String endDivider}) {
     StringBuffer buffer = StringBuffer();
     for (int timeUnit in timeUnits) {
       if(startDivider != null) {

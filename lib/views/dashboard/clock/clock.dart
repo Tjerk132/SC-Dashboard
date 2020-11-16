@@ -44,9 +44,12 @@ class _ClockState extends State<Clock> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        _timeString,
-        style: widget.textStyle
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: Text(
+          _timeString,
+          style: widget.textStyle
+        ),
       ),
     );
   }
