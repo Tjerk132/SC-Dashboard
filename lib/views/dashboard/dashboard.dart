@@ -1,12 +1,12 @@
 import 'dart:core';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
-import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 import 'package:flutter_test_project/views/dashboard/time_filter.dart';
 import 'package:provider/provider.dart';
 
@@ -15,43 +15,42 @@ import 'clock/clock.dart';
 class Dashboard extends StatefulWidget {
   final int crossAxisCount = 8;
 
-  //orig=7 increase to add tiles or titles
-  final int tileCount = 7;
-
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  // final List<TileSize> _sizes = TileSize.createSizes(57).toList();
   DashboardLogic _logic;
+  Future<List<TileGroup>> _future;
 
   @override
   void initState() {
-    super.initState();
-    //orig=10
-    _logic = new DashboardLogic(10, widget.crossAxisCount);
+    _logic = new DashboardLogic(widget.crossAxisCount);
 
-    setProviderListener();
-    //filter when loaded (initial period is today - 7days till today + 7days)
-    filterByDate(
-      DateTime.now().subtract(Duration(days: 7)),
-      DateTime.now().add(Duration(days: 7)),
+    DateTime now = DateTime.now();
+    _future = _logic.groups(
+      context,
+      start: DateTime(now.year, now.month, now.day),
+      end: now,
     );
+    setProviderListener();
+    super.initState();
   }
 
   void setProviderListener() {
-    TimeFilterProvider provider = context.read<TimeFilterProvider>();
-    provider.addListener(() {
-      DateTime start = provider.startDate;
-      DateTime end = provider.endDate;
-      filterByDate(start, end);
+    context.read<TimeFilterProvider>().addListener(() {
+      TimeFilterProvider provider = context.read<TimeFilterProvider>();
+      // DateTime start = provider.startDate;
+      // DateTime end = provider.endDate;
+      // print('received filter $start to $end');
+      setState(() {
+        _future = _logic.groups(
+          context,
+          start: provider.startDate,
+          end: provider.endDate,
+        );
+      });
     });
-  }
-
-  void filterByDate(DateTime start, DateTime end) {
-    print('received filter from $start till $end');
-    //todo filter graphs by given dates
   }
 
   @override
@@ -71,36 +70,33 @@ class _DashboardState extends State<Dashboard> {
         bottom: TimeFilter(appBarHeight: AppBar().preferredSize.height),
       ),
       body: FutureBuilder<List<TileGroup>>(
-        future: _logic.groups(context),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<TileGroup>> snapshot) {
-          return StaggeredGridView.countBuilder(
-            physics: BouncingScrollPhysics(),
-            itemCount: widget.tileCount,
-            crossAxisCount: widget.crossAxisCount,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
-            itemBuilder: (BuildContext context, int index) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return TileShimmer(
-                    height: 600,
-                    imageShimmerRatio: 0.45,
-                    textShimmers: 2,
-                    titleShimmer: true,
-                  );
-                default:
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  return snapshot.data[index];
-              }
-            },
-            staggeredTileBuilder: (int index) => StaggeredTile.fit(
-                snapshot.hasData
-                    ? snapshot.data[index] is TitleTileGroup ? 8 : 4
-                    : 4),
-          );
+        future: _future,
+        builder: (BuildContext context, AsyncSnapshot<List<TileGroup>> snapshot) {
+          return snapshot.hasData
+              ? StaggeredGridView.countBuilder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: snapshot.data.length,
+                  crossAxisCount: widget.crossAxisCount,
+                  itemBuilder: (BuildContext context, int index) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return TileShimmer(
+                          imageShimmerRatio: 0.45,
+                          textShimmers: 1,
+                          titleShimmer: true,
+                        );
+                      default:
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        return snapshot.data[index];
+                    }
+                  },
+                  staggeredTileBuilder: (int index) => StaggeredTile.fit(4),
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
         },
       ),
     );

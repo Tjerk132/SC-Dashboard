@@ -11,16 +11,18 @@ class DateTimePicker extends StatefulWidget {
   final VoidCallback onFocus;
   final Function(DateTime) onSelected;
 
-  const DateTimePicker({
+  DateTimePicker({
     Key key,
-    this.initialDate,
-    this.width = 100,
+    @required this.initialDate,
+    this.width = 110,
     this.height = 30,
     this.backgroundColor = Colors.white,
     this.textStyle = const TextStyle(color: Colors.black),
     this.onFocus,
     this.onSelected,
-  }) : super(key: key);
+  }) : super(key: key) {
+    assert(initialDate != null);
+  }
 
   @override
   _DateTimePickerState createState() => _DateTimePickerState(this.initialDate);
@@ -31,7 +33,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
 
   DateTime selectedDate;
 
-  void _onSelected(BuildContext context) {
+  void _onSelect(BuildContext context) {
     if (widget.onFocus != null) {
       widget.onFocus();
     }
@@ -40,18 +42,19 @@ class _DateTimePickerState extends State<DateTimePicker> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
-        locale: Locale('nl', 'NL'));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+      locale: Locale('nl', 'NL'),
+    );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
-    }
-    if(widget.onSelected != null) {
-      widget.onSelected(selectedDate);
+      if (widget.onSelected != null) {
+        widget.onSelected(selectedDate);
+      }
     }
   }
 
@@ -63,7 +66,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       color: widget.backgroundColor,
       child: Center(
         child: GestureDetector(
-          onTap: () => _onSelected(context),
+          onTap: () => _onSelect(context),
           child: Text(
             selectedDate.formatToString(
               withDate: true,

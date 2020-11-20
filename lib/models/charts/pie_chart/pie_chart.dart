@@ -13,7 +13,7 @@ import '../chart_data.dart';
 import '../base_chart_data/basic_pie_chart_data.dart';
 
 class PieChartGraph extends Chart {
-  final String title;
+  // final String title;
   final int pieCount;
   final List<double> values;
   final List<String> indicatorText;
@@ -26,19 +26,23 @@ class PieChartGraph extends Chart {
   PieChartGraph({
     int singularSize,
     PieChartType type,
-    this.title,
+    String title,
+    DateTime date,
     this.pieCount = 3,
     this.values = const [],
     this.indicatorText = const [],
     List<Color> sectionColors,
-  })  : sectionColors = sectionColors.isEmpty
-          ? ThemeScheme.chartPalette
-          : sectionColors,
+  })  : sectionColors =
+            sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
         data = PieChartAppearanceData(
           type: type,
           singularSize: singularSize,
         ),
-        super(type: ChartType.PieChart);
+        super(
+          type: ChartType.PieChart,
+          title: title,
+          date: date,
+        );
 
   factory PieChartGraph.fromJson(
     Map<String, dynamic> json, {
@@ -46,15 +50,16 @@ class PieChartGraph extends Chart {
     @required PieChartType type,
   }) {
     return new PieChartGraph(
+      singularSize: singularSize,
+      date: DateTime.parse(json["date"]),
+      type: type,
+      title: json["title"],
       indicatorText: (json["indicatorText"] as List).cast<String>(),
       sectionColors: (json["sectionColors"] as List).castTo<Color>(
         getValue: (value) => HexColor.fromHex(value),
       ),
       values: (json["values"] as List).cast<double>(),
       pieCount: json["pieCount"] as int,
-      singularSize: singularSize,
-      type: type,
-      title: json["title"],
     );
   }
 
@@ -63,19 +68,6 @@ class PieChartGraph extends Chart {
 }
 
 class PieChartGraphState extends State<PieChartGraph> {
-  int touchedIndex;
-
-  void pieTouchCallback(PieTouchResponse pieTouchResponse) {
-    setState(() {
-      if (pieTouchResponse.touchInput is FlLongPressEnd ||
-          pieTouchResponse.touchInput is FlPanEnd) {
-        touchedIndex = -1;
-      } else {
-        touchedIndex = pieTouchResponse.touchedSectionIndex;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -96,7 +88,6 @@ class PieChartGraphState extends State<PieChartGraph> {
               pieCount: widget.pieCount,
               indicatorText: widget.indicatorText,
               sectionColors: widget.sectionColors,
-              touchedIndex: touchedIndex,
               title: widget.title,
             ),
             const SizedBox(
@@ -114,16 +105,11 @@ class PieChartGraphState extends State<PieChartGraph> {
                           pieCount: widget.pieCount,
                           sectionColors: widget.sectionColors,
                           values: widget.values,
-                          touchedIndex: touchedIndex,
                           pieRadius: widget.data.pieRadius,
                           fontSize: widget.data.fontSize,
                           showPieTitle: widget.data.showPieTitle,
                           sectionsSpace: widget.data.sectionSpace,
                           centerSpaceRadius: widget.data.centerSpaceRadius,
-                          pieTouchData: PieTouchData(
-                            touchCallback: (pieTouchResponse) =>
-                                pieTouchCallback(pieTouchResponse),
-                          ),
                           startDegreeOffset: 180,
                           borderData: FlBorderData(
                             show: false,

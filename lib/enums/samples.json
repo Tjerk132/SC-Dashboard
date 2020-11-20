@@ -1,5 +1,6 @@
 {
   "chart 0": {
+    "date": "2020-11-19 10:50:00",
     "type": "PieChart",
     "title": "Reactiesnelheid doel",
     "pieCount": 2,
@@ -17,6 +18,7 @@
     ]
   },
   "chart 1": {
+    "date": "2020-11-19 10:50:00",
     "type": "PieChart",
     "title": "",
     "pieCount": 2,
@@ -34,6 +36,7 @@
     ]
   },
   "chart 2": {
+    "date": "2020-11-19 10:50:00",
     "type": "BarChart",
     "title": "Gemiddelde per aantal rondes",
     "subTitle": "Parcours",
@@ -58,6 +61,7 @@
     ]
   },
   "chart 3": {
+    "date": "2020-11-20 10:50:00",
     "type": "LineChart",
     "title": "Tijdslimiet record",
     "subTitle": "Reactie",
@@ -76,10 +80,10 @@
       "3": "30",
       "4": "40"
     },
-    "mainDataColors": {
+    "colors": {
       "0": "#ff13d38e"
     },
-    "mainDataSpots": {
+    "spots": {
       "0": [
         [0.1, 0.1],
         [3, 0.5],
@@ -89,11 +93,10 @@
         [11, 2.3],
         [13, 2.5]
       ]
-    },
-    "otherDataColors": {},
-    "otherDataSpots": {}
+    }
   },
   "chart 4": {
+    "date": "2020-11-20 10:50:00",
     "type": "LineChart",
     "title": "Snelste ronde",
     "subTitle": "Parcours",
@@ -109,10 +112,10 @@
       "3": "15s",
       "4": "20s"
     },
-    "mainDataColors": {
+    "colors": {
       "0": "#ff13d38e"
     },
-    "mainDataSpots": {
+    "spots": {
       "0": [
         [0.1, 0.1],
         [2, 0.5],
@@ -122,11 +125,10 @@
         [10, 2.4],
         [12, 3]
       ]
-    },
-    "otherDataColors": {},
-    "otherDataSpots": {}
+    }
   },
   "chart 5": {
+    "date": "2020-11-20 10:50:00",
     "type": "BarChart",
     "title": "gemiddelde per afstand (1min)",
     "subTitle": "Reactie",
@@ -147,6 +149,7 @@
     ]
   },
   "chart 6": {
+    "date": "2020-11-20 10:50:00",
     "type": "PieChart",
     "title": "Gespeelde banen Parcours",
     "pieCount": 2,
@@ -164,6 +167,7 @@
     ]
   },
   "chart 7": {
+    "date": "2020-11-20 10:50:00",
     "type": "BarChart",
     "title": "records op tijdslimiet",
     "subTitle": "Reactie",
@@ -188,6 +192,7 @@
     ]
   },
   "chart 8": {
+    "date": "2020-11-20 10:50:00",
     "type": "LineChart",
     "title": "Records op tijds- & triggerlimiets",
     "subTitle": "Reactie",
@@ -206,12 +211,12 @@
       "3": "30",
       "4": "40"
     },
-    "mainDataColors": {
+    "colors": {
       "0": "#ff0293ee",
       "1": "#ff13d38e",
       "2": "#fff8b250"
     },
-    "mainDataSpots": {
+    "spots": {
       "0": [
         [0, 0],
         [3, 0.5],
@@ -239,11 +244,10 @@
         [11, 2.15],
         [13, 2.5]
       ]
-    },
-    "otherDataColors": {},
-    "otherDataSpots": {}
+    }
   },
   "chart 9": {
+    "date": "2020-11-17 10:50:00",
     "type": "LineChart",
     "title": "Laatst gespeelde spel",
     "subTitle": "Parcours",
@@ -259,10 +263,10 @@
       "3": "1.5m",
       "4": "2m"
     },
-    "mainDataColors": {
+    "colors": {
       "0": "#ff13d38e"
     },
-    "mainDataSpots": {
+    "spots": {
       "0": [
         [0.1, 0.1],
         [3, 1],
@@ -272,8 +276,6 @@
         [11, 3.1],
         [13, 3.3]
       ]
-    },
-    "otherDataColors": {},
-    "otherDataSpots": {}
+    }
   }
 }

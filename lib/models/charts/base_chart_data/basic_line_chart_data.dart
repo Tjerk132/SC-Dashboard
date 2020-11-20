@@ -38,7 +38,7 @@ class BasicLineChartData extends LineChartData {
     Map<int, String> bottomTitles,
     Map<int, String> leftTitles,
     Map<int, String> rightTitles,
-    TextStyle textStyle,
+    TextStyle titleTextStyle,
     bool showBelowBarData,
     List<Color> belowBarColors,
     double margin,
@@ -56,7 +56,7 @@ class BasicLineChartData extends LineChartData {
     spots = spots ?? const [];
     colors = colors ?? const [];
     lineWidth = lineWidth ?? 6.0;
-    textStyle = textStyle ?? TextStyle();
+    titleTextStyle = titleTextStyle ?? TextStyle();
 
     BaseLineChart base = BaseLineChart();
 
@@ -74,7 +74,7 @@ class BasicLineChartData extends LineChartData {
         base.baseTitleData(
           show: true,
           reservedSize: reservedSize,
-          textStyle: textStyle,
+          textStyle: titleTextStyle,
           margin: margin,
           topTitles: topTitles,
           bottomTitles: bottomTitles,

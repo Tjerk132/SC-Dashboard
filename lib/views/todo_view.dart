@@ -56,7 +56,6 @@ class TodoViewState extends State<TodoView> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -77,11 +76,12 @@ class TodoViewState extends State<TodoView> {
                         child: Text(
                           todo.title,
                           textAlign: TextAlign.center,
-                          style: new TextStyle(
-                              fontSize: 22.0,
-                              decoration: todo.completed
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none),
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            decoration: todo.completed
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
                         ),
                       ),
                     ),
@@ -99,13 +99,15 @@ class TodoViewState extends State<TodoView> {
               );
             },
           ),
-          Container(
-            padding: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-            child: TextField(
-              controller: _textEditController,
-              style: new TextStyle(fontSize: 22.0),
-              decoration: InputDecoration(hintText: 'Enter new todo'),
-              onSubmitted: (value) => addTodo(),
+          SafeArea(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+              child: TextField(
+                controller: _textEditController,
+                style: TextStyle(fontSize: 22.0),
+                decoration: InputDecoration(hintText: 'Enter new todo'),
+                onSubmitted: (value) => addTodo(),
+              ),
             ),
           ),
         ],

@@ -18,15 +18,3 @@ class LargeTileGroup extends TileGroup {
       : super.fromDimensions(charts,
             singularSize: 4, occupationSize: 4, horizontal: 1, vertical: 1);
 }
-
-class TitleTileGroup extends TileGroup {
-  TitleTileGroup(String title)
-      : super.fromDimensions(
-          null,
-          singularSize: 1,
-          occupationSize: 4,
-          horizontal: 4,
-          vertical: 1,
-          title: title,
-        );
-}

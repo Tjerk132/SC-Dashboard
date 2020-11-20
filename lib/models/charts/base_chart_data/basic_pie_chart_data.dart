@@ -27,7 +27,6 @@ class BasicPieChartData extends PieChartData {
     @required int pieCount,
     @required List<Color> sectionColors,
     @required List<double> values,
-    @required int touchedIndex,
     @required double pieRadius,
     double fontSize,
     bool showPieTitle,
@@ -41,14 +40,12 @@ class BasicPieChartData extends PieChartData {
     pieCount = pieCount ?? 3;
     sectionColors = sectionColors ?? const [];
     values = values ?? List.filled(pieCount, 100 / pieCount);
-    touchedIndex = touchedIndex ?? -1;
     pieRadius = pieRadius ?? 60;
     BasePieChart base = BasePieChart();
 
     List<PieChartSectionData> sections = base.basePieGroups(
       pieCount,
       sectionColors,
-      touchedIndex,
       pieRadius,
       values,
       showPieTitle: showPieTitle,

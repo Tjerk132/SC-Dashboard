@@ -5,45 +5,40 @@ import 'package:flutter_test_project/utility/utility.dart';
 import '../bar_chart/bar.dart';
 
 class BaseBarChart with BaseChart {
-
   BarTouchData baseTouchData(
-    List<String> barTouchTooltipData,
-    Function(BarTouchResponse) barTouchCallBack, {
+    List<String> barTouchTooltipData, {
     TextStyle toolTipStyle,
     Color tooltipBgColor,
   }) {
     return BarTouchData(
       touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: tooltipBgColor,
-          getTooltipItem: (group, groupIndex, rod, rodIndex) {
-            int x = group.x.toInt();
-            String tooltip = barTouchTooltipData[x];
-            return BarTooltipItem(
-              '$tooltip\n${rod.y - 1}',
-              toolTipStyle,
-            );
-          }),
-      touchCallback: (barTouchResponse) => barTouchCallBack(barTouchResponse),
+        tooltipBgColor: tooltipBgColor,
+        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+          int x = group.x.toInt();
+          String tooltip = barTouchTooltipData[x];
+          return BarTooltipItem(
+            '$tooltip\n${rod.y}',
+            toolTipStyle,
+          );
+        },
+      ),
     );
   }
 
   List<BarChartGroupData> baseBarGroups(
-      int count,
-      List<double> barValues,
-      int touchedIndex,
-      double barWidth,
-      int rodCount,
-      int singularSize, {
-        Color rodColor = Colors.yellowAccent,
-        Color rodTouchedColor = Colors.white,
-        Color backgroundColor,
-        BorderRadius rodBorderRadius,
-        bool showBackGround = true,
-      }) {
+    int count,
+    List<double> barValues,
+    double barWidth,
+    int rodCount,
+    int singularSize, {
+    Color rodColor = Colors.yellowAccent,
+    Color backgroundColor,
+    BorderRadius rodBorderRadius,
+    bool showBackGround = true,
+  }) {
     double width = singularSize + (barWidth / rodCount);
     List<Bar> bars = new List<Bar>();
     for (int i = 0; i < count; ++i) {
-      bool isTouched = i == touchedIndex;
       int x = i;
       double y = barValues.getOrElse(i, null);
       bars.add(
@@ -53,11 +48,11 @@ class BaseBarChart with BaseChart {
           width: width,
           barRods: List<BarChartRodData>.generate(
             rodCount,
-                (i) => createRod(
-              isTouched ? y + 1 : y,
+            (i) => createRod(
+              y,
               barValues.highest.roundToFactor(10).toDouble(),
               width: width,
-              color: isTouched ? rodTouchedColor : rodColor,
+              color: rodColor,
               backgroundColor: backgroundColor,
               borderRadius: rodBorderRadius,
               showBackGround: showBackGround,

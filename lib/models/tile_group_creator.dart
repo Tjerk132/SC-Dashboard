@@ -13,7 +13,7 @@ class TileGroupCreator {
       case 2:
         return MediumTileGroup(charts);
       case 3:
-        return TitleTileGroup('');
+        return null;
       case 4:
         return LargeTileGroup(charts);
       default:

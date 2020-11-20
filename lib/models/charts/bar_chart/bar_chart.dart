@@ -8,8 +8,6 @@ import 'package:flutter_test_project/models/charts/chart_data.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
 
 class BarChartGraph extends Chart {
-  final String title;
-  final String subTitle;
   final int barCount;
   final List<double> barValues;
   final List<String> barTouchTooltipData;
@@ -18,20 +16,27 @@ class BarChartGraph extends Chart {
 
   BarChartGraph({
     int singularSize,
-    this.title,
-    this.subTitle,
+    String title,
+    String subTitle,
+    DateTime date,
     this.barCount = 7,
     this.barValues = const [],
     this.barTouchTooltipData = const [],
   })  : data = BarChartAppearanceData(
           singularSize: singularSize,
         ),
-        super(type: ChartType.BarChart);
+        super(
+          type: ChartType.BarChart,
+          title: title,
+          subTitle: subTitle,
+          date: date,
+        );
 
   factory BarChartGraph.fromJson(Map<String, dynamic> json,
       {@required int singularSize}) {
     return new BarChartGraph(
       singularSize: singularSize,
+      date: DateTime.parse(json["date"]),
       title: json["title"],
       subTitle: json["subTitle"],
       barCount: json["barCount"] as int,
@@ -45,20 +50,6 @@ class BarChartGraph extends Chart {
 }
 
 class BarChartGraphState extends State<BarChartGraph> {
-  int touchedIndex;
-
-  void barTouchCallBack(BarTouchResponse barTouchResponse) {
-    setState(() {
-      if (barTouchResponse.spot != null &&
-          barTouchResponse.touchInput is! FlPanEnd &&
-          barTouchResponse.touchInput is! FlLongPressEnd) {
-        touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
-      } else {
-        touchedIndex = -1;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -82,17 +73,14 @@ class BarChartGraphState extends State<BarChartGraph> {
             child: ChartData(
               data: BarChart(
                 BasicBarChartData(
-                  barTouchCallBack: barTouchCallBack,
                   getBottomTitle: (String title) => title,
                   barTouchTooltipData: widget.barTouchTooltipData,
                   barValues: widget.barValues,
                   barWidth: widget.data.barWidth,
                   barCount: widget.barCount,
-                  touchedIndex: touchedIndex,
                   singularSize: widget.data.singularSize,
                   rodCount: 1,
                   rodColor: ThemeScheme.accentColor,
-                  rodTouchedColor: ThemeScheme.barTouchedColor,
                   rodBackgroundColor: ThemeScheme.accentColor.withOpacity(0.5),
                   titlesTextStyle: TextStyle(
                     color: Colors.black,

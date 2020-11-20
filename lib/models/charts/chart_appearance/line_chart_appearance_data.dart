@@ -10,29 +10,25 @@ class LineChartAppearanceData {
   Gradient backgroundGradient;
   Color backgroundColor;
 
-  double mainMinX;
-  double mainMaxX;
-  double mainMaxY;
-  double mainMinY;
+  double minX;
+  double maxX;
+  double maxY;
+  double minY;
 
-  double otherMinX;
-  double otherMaxX;
-  double otherMaxY;
-  double otherMinY;
 
   LineChartAppearanceData({
     @required this.type,
     int singularSize,
   }) {
-    mainMinX = 0;
-    mainMaxX = 14;
-    mainMaxY = 4;
-    mainMinY = 0;
-
-    otherMinX = 0;
-    otherMaxX = 14;
-    otherMaxY = 0;
-    otherMinY = 6;
+     minX = 0;
+     maxX = 14;
+     maxY = 4;
+     minY = 0;
+    //
+    // otherMinX = 0;
+    // otherMaxX = 14;
+    // otherMaxY = 0;
+    // otherMinY = 6;
     switch (this.type) {
       case LineChartType.sales:
         gridData = FlGridData(show: false);

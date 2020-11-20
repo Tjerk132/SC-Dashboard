@@ -3,19 +3,17 @@ import 'package:flutter_test_project/shimmering/skeleton.dart';
 import 'package:flutter_test_project/shimmering/text_shimmer.dart';
 
 class TileShimmer extends StatefulWidget {
-  final double height;
   final double imageShimmerRatio;
   final int textShimmers;
   final bool titleShimmer;
 
-  TileShimmer(
-      {this.height = 400,
-      this.imageShimmerRatio = 0.3,
-      this.titleShimmer = false,
-      this.textShimmers = 2}) {
+  TileShimmer({
+    this.imageShimmerRatio = 0.3,
+    this.titleShimmer = false,
+    this.textShimmers = 2,
+  }) {
     if (this.imageShimmerRatio < 0.0 || this.imageShimmerRatio > 1.0) {
-      throw new ArgumentError(
-          'variable imageShimmerRatio must be between 0.0 and 1.0');
+      throw new ArgumentError('imageShimmerRatio must be between 0.0 and 1.0');
     }
   }
 
@@ -28,26 +26,30 @@ class _TileShimmerState extends State<TileShimmer> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      height: widget.height,
       padding: EdgeInsets.all(4.0),
-      child: Wrap(
+      child: Column(
         children: <Widget>[
+          widget.titleShimmer
+              ? TextShimmer(
+            alignment: Alignment.centerLeft,
+            height: 35,
+            width: size.width * 0.4,
+          )
+              : SizedBox(),
           Skeleton(
-            height: widget.height * widget.imageShimmerRatio,
+            height: (size.height * 0.5) * widget.imageShimmerRatio,
             width: size.width,
           ),
           Center(
             child: Column(
               children: <Widget>[
-                widget.titleShimmer
-                    ? TextShimmer(
-                        height: 24,
-                        width: size.width * 0.2,
-                      )
-                    : SizedBox(),
                 ...List.generate(
                   widget.textShimmers,
-                  (index) => new TextShimmer(width: size.width * 0.4),
+                  (index) => TextShimmer(
+                    width: double.infinity,
+                    height: 90,
+                    alignment: Alignment.centerLeft,
+                  ),
                 ),
               ],
             ),
@@ -56,10 +58,6 @@ class _TileShimmerState extends State<TileShimmer> {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(3),
-          bottomRight: Radius.circular(3),
-        ),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),

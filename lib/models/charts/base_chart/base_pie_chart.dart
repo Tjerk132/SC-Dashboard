@@ -6,7 +6,6 @@ class BasePieChart with BaseChart {
   List<Pie> basePieGroups(
     int count,
     List<Color> sectionColors,
-    int touchedIndex,
     double pieRadius,
     List<double> values, {
     bool showPieTitle = true,
@@ -19,7 +18,6 @@ class BasePieChart with BaseChart {
         titleColor: showPieTitle ? Colors.white : sectionColors[i],
         fontSize: fontSize,
         color: sectionColors[i],
-        isTouched: i == touchedIndex,
         value: values[i],
         pieRadius: pieRadius,
       ),

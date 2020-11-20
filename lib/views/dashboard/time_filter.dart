@@ -23,16 +23,20 @@ class _TimeFilterState extends State<TimeFilter>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  /// initial dates for the dateTimePickers, these dates are adjusted with the
-  /// methods [setStartDate] and [setEndDate] called from the onSelected method
+  /// These dates are adjusted with the methods [setStartDate]
+  /// and [setEndDate] called from the onSelected method
   /// of [DateTimePicker]
-  DateTime startDate = DateTime.now().subtract(Duration(days: 7));
-  DateTime endDate = DateTime.now();
+  DateTime startDate;
+  DateTime endDate;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(length: 3, vsync: this);
+    // set the initial dates for the dateTimePickers
+    DateTime now = DateTime.now();
+    startDate = DateTime(now.year, now.month, now.day);
+    endDate = startDate.add(Duration(days: 7));
   }
 
   @override
@@ -41,41 +45,52 @@ class _TimeFilterState extends State<TimeFilter>
     super.dispose();
   }
 
-  void tabChanged(int index) {
+  void tabChanged(BuildContext context, int index) {
     DateTime now = DateTime.now();
-    //filter for last session (today)
-    if (index == 0) {
-      context.read<TimeFilterProvider>().onSelectedDate(
-        startDate: DateTime(now.year, now.month, now.day),
-        endDate: now,
-      );
-    }
-    //filter for last week
-    if (index == 1) {
-      context.read<TimeFilterProvider>().onSelectedDate(
-        startDate: now.subtract(Duration(days: 7)),
-        endDate: now,
-      );
-    }
-    //filter by given dates from DateTimePickers
-    if (index == 2) {
-      context.read<TimeFilterProvider>().onSelectedDate(
-        startDate: startDate,
-        endDate: endDate,
-      );
+    switch(index) {
+      case 0: {
+        //filter for last session (today)
+        context.read<TimeFilterProvider>().onSelectedDate(
+          context,
+          startDate: DateTime(now.year, now.month, now.day),
+          endDate: now,
+        );
+      }
+      break;
+      case 1: {
+        //filter for last week
+        context.read<TimeFilterProvider>().onSelectedDate(
+          context,
+          startDate: now.subtract(Duration(days: 7)),
+          endDate: now,
+        );
+      }
+      break;
+      case 2: {
+        //filter by given dates from DateTimePickers
+        context.read<TimeFilterProvider>().onSelectedDate(
+          context,
+          startDate: startDate,
+          // add 1 day to also count all activities of the last day
+          endDate: endDate.add(Duration(days: 1)),
+        );
+      }
+      break;
+      default: break;
     }
   }
 
   // set startDate for adjusted timespan from start DateTimePicker
-  void setStartDate(DateTime startDate) {
+  void setStartDate(BuildContext context, DateTime startDate) {
     this.startDate = startDate;
-    context.read<TimeFilterProvider>().onSelectedDate(startDate: startDate);
+    context.read<TimeFilterProvider>().onSelectedDate(context, startDate: this.startDate);
   }
 
   // set endDate for adjusted timespan from end DateTimePicker
-  void setEndDate(DateTime endDate) {
-    this.endDate = endDate;
-    context.read<TimeFilterProvider>().onSelectedDate(endDate: endDate);
+  void setEndDate(BuildContext context, DateTime endDate) {
+    // add 1 day to also count all activities of the last day
+    this.endDate = endDate.add(Duration(days: 1));
+    context.read<TimeFilterProvider>().onSelectedDate(context, endDate: this.endDate);
   }
 
   /// adjust selected tabIndex (for dateTimePickers)
@@ -88,13 +103,13 @@ class _TimeFilterState extends State<TimeFilter>
     MediaQueryData data = MediaQuery.of(context);
     return TabBar(
       controller: _tabController,
-      onTap: (index) => tabChanged(index),
+      onTap: (index) => tabChanged(context, index),
       labelStyle: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 18.0,
       ),
       labelPadding: EdgeInsets.symmetric(
-        horizontal: data.orientation == Orientation.landscape ? 120 : 40,
+        horizontal: data.orientation == Orientation.landscape ? 110 : 30,
       ),
       isScrollable: true,
       tabs: <Tab>[
@@ -104,20 +119,19 @@ class _TimeFilterState extends State<TimeFilter>
           child: Row(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(right: 9.0),
+                padding: EdgeInsets.only(right: 7.0),
                 child: Text('Aangepast'),
               ),
               DateTimePicker(
                 initialDate: startDate,
                 onFocus: () => setTabIndex(2),
-                onSelected: (DateTime selectedDate) =>
-                    setStartDate(selectedDate),
+                onSelected: (DateTime selectedDate) => setStartDate(context, selectedDate),
               ),
               Text(' - '),
               DateTimePicker(
                 initialDate: endDate,
                 onFocus: () => setTabIndex(2),
-                onSelected: (DateTime selectedDate) => setEndDate(selectedDate),
+                onSelected: (DateTime selectedDate) => setEndDate(context, selectedDate),
               ),
             ],
           ),

@@ -14,42 +14,32 @@ mixin BaseChart {
     Map<int, String> leftTitles,
     Map<int, String> rightTitles,
   }) {
-    bool showTop = topTitles != null;
-    bool showBottom = bottomTitles != null;
-    bool showLeft = leftTitles != null;
-    bool showRight = rightTitles != null;
-
-    final String Function(double) getTopTitles = createTitleFunction(topTitles);
-    final String Function(double) getBottomTitles = createTitleFunction(bottomTitles);
-    final String Function(double) getLeftTitles = createTitleFunction(leftTitles);
-    final String Function(double) getRightTitles = createTitleFunction(rightTitles);
-
     return FlTitlesData(
       show: show,
       topTitles: SideTitles(
-        showTitles: showTop,
+        showTitles: topTitles != null,
         textStyle: textStyle,
         margin: margin,
         reservedSize: reservedSize,
-        getTitles: getTopTitles,
+        getTitles: createTitleFunction(topTitles),
       ),
       bottomTitles: SideTitles(
-        showTitles: showBottom,
+        showTitles: bottomTitles != null,
         textStyle: textStyle,
         margin: margin,
-        getTitles: getBottomTitles,
+        getTitles: createTitleFunction(bottomTitles),
       ),
       leftTitles: SideTitles(
-        showTitles: showLeft,
+        showTitles: leftTitles != null,
         textStyle: textStyle,
         margin: margin,
-        getTitles: getLeftTitles,
+        getTitles: createTitleFunction(leftTitles),
       ),
       rightTitles: SideTitles(
-        showTitles: showRight,
+        showTitles: rightTitles != null,
         textStyle: textStyle,
         margin: margin,
-        getTitles: getRightTitles,
+        getTitles:  createTitleFunction(rightTitles),
       ),
     );
   }

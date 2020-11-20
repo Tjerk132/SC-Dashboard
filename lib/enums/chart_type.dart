@@ -10,32 +10,24 @@ enum ChartType {
 }
 
 extension ChartTypeExtension on ChartType {
-  Future<Chart> instance(Map<String, dynamic> jsonChart, int singularSize, dynamic type) async {
-    return getSampleChart(jsonChart, singularSize, type);
-  }
-
-  Future<Chart> getSampleChart(Map<String, dynamic> jsonChart, int singularSize, dynamic type) async {
-
-    //random between styles (for testing purposes only)
-    // Random r = new Random();
+  Future<Chart> instance(Map<String, dynamic> json, int singularSize, dynamic type) async {
     switch (this) {
       case ChartType.PieChart:
-        // type = type as PieChartType;
-        // PieChartType type = r.nextObject(PieChartType.values);
+      // PieChartType type = r.nextObject(PieChartType.values);
         return PieChartGraph.fromJson(
-          jsonChart,
+          json,
           singularSize: singularSize,
           type: type,
         );
       case ChartType.BarChart:
         return BarChartGraph.fromJson(
-          jsonChart,
+          json,
           singularSize: singularSize,
         );
       case ChartType.LineChart:
-        // LineChartType type = r.nextObject(LineChartType.values);
+      // LineChartType type = r.nextObject(LineChartType.values);
         return LineChartGraph.fromJson(
-          jsonChart,
+          json,
           singularSize: singularSize,
           type: type,
         );

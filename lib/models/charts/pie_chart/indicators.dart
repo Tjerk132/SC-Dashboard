@@ -7,7 +7,6 @@ class Indicators extends StatefulWidget {
   final int pieCount;
   final List<String> indicatorText;
   final List<Color> sectionColors;
-  final int touchedIndex;
   final PieChartType type;
   final double indicatorSize;
   final double fontSize;
@@ -19,7 +18,6 @@ class Indicators extends StatefulWidget {
     @required this.pieCount,
     @required this.indicatorText,
     @required this.sectionColors,
-    @required this.touchedIndex,
     @required this.type,
     this.indicatorSize,
     this.fontSize,
@@ -39,9 +37,7 @@ class _IndicatorsState extends State<Indicators> {
         color: widget.sectionColors[index],
         text: widget.indicatorText[index],
         shape: widget.shape,
-        size: widget.touchedIndex == index
-            ? widget.indicatorSize + 4
-            : widget.indicatorSize,
+        size: widget.indicatorSize,
         fontSize: widget.fontSize,
         textColor: Colors.black,
       ),

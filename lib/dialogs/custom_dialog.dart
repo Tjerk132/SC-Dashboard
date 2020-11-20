@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/dialogs/dialog_actions.dart';
 
 class CustomDialog extends StatelessWidget {
   final String title;
   final String message;
   final IconData icon;
-  final Map<DialogAction, Function()> actions;
+  final Map<String, Function()> actions;
 
   CustomDialog({
     Key key,
@@ -38,7 +37,7 @@ class CustomDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              child: Icon(icon, color: Colors.black),
+              child: Icon(icon, color: Colors.white),
             ),
             Container(
               padding: EdgeInsets.only(left: 10.0),
@@ -64,7 +63,7 @@ class CustomDialog extends StatelessWidget {
         Function() action = actions[key];
         return RaisedButton(
           textColor: Colors.black,
-          child: Text(key.type),
+          child: Text(key),
           onPressed: action,
         );
       }).toList(),

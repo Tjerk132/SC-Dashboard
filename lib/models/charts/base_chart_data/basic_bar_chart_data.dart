@@ -33,17 +33,14 @@ class BasicBarChartData extends BarChartData {
         );
 
   factory BasicBarChartData({
-    @required Function(BarTouchResponse) barTouchCallBack,
     @required String Function(String) getBottomTitle,
     @required List<String> barTouchTooltipData,
     @required List<double> barValues,
     @required double barWidth,
     @required int barCount,
-    @required int touchedIndex,
     @required int singularSize,
     int rodCount,
     Color rodColor,
-    Color rodTouchedColor,
     Color rodBackgroundColor,
     BorderRadius rodBorderRadius,
     TextStyle titlesTextStyle,
@@ -62,13 +59,11 @@ class BasicBarChartData extends BarChartData {
     Color toolTipBgColor,
     Color backgroundColor,
   }) {
-    barTouchCallBack = barTouchCallBack ?? (BarTouchResponse barTouchResponse) {};
     getBottomTitle = getBottomTitle ?? (String title) => title;
     barTouchTooltipData = barTouchTooltipData ?? const [];
     barValues = barValues ?? const [];
     barWidth = barWidth ?? 22;
     barCount = barCount ?? 5;
-    touchedIndex = touchedIndex ?? -1;
 
     rodCount = rodCount ?? 1;
     rodBorderRadius = rodBorderRadius ?? BorderRadius.circular(20);
@@ -81,7 +76,6 @@ class BasicBarChartData extends BarChartData {
     barTouchData = barTouchData ??
         base.baseTouchData(
           barTouchTooltipData,
-          barTouchCallBack,
           toolTipStyle: toolTipStyle,
           tooltipBgColor: toolTipBgColor,
         );
@@ -98,12 +92,10 @@ class BasicBarChartData extends BarChartData {
         base.baseBarGroups(
           barCount,
           barValues,
-          touchedIndex,
           barWidth,
           rodCount,
           singularSize,
           rodColor: rodColor,
-          rodTouchedColor: rodTouchedColor,
           backgroundColor: rodBackgroundColor,
           rodBorderRadius: rodBorderRadius,
         );

@@ -223,7 +223,7 @@ extension NumExtension on num {
   }
 }
 
-extension StringFormat on DateTime {
+extension DateTimeExtension on DateTime {
   String formatToString({
     bool withDate = false,
     bool withWeekDay = false,

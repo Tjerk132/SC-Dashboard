@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_test_project/connection.dart';
 import 'package:flutter_test_project/context_navigator.dart';
-import 'package:flutter_test_project/dialogs/dialog_actions.dart';
 import 'package:flutter_test_project/views/browser/browser.dart';
 import 'package:flutter_test_project/views/todo_view.dart';
 
@@ -44,6 +43,8 @@ class App extends StatelessWidget {
       ],
       title: 'Flutter Dashboard Project',
       theme: ThemeData(
+        // brightness: Brightness.dark,
+        // primaryColor: Color(0xff13d38e),
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -53,9 +54,12 @@ class App extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-
   final String title;
+
+  HomePage({
+    Key key,
+    this.title,
+  }) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -91,12 +95,12 @@ class _HomePageState extends State<HomePage> {
         title: "Internet",
         message: textAlert,
         icon: Icons.wifi,
-        actions: <DialogAction, Function()>{
-          DialogAction.later: () {
+        actions: <String, Function()>{
+          'later': () {
             print('Tapped later');
             Navigator.of(context).pop(false);
           },
-          DialogAction.okay: () async {
+          'oke': () async {
             print('Tapped okay');
             Navigator.of(context).pop(true);
           }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
-import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
-import '../title_tile.dart';
 import '../tile.dart';
 import '../vertical_tile.dart';
 
@@ -27,7 +25,6 @@ abstract class TileGroup extends StatefulWidget {
     @required this.singularSize,
     @required this.occupationSize,
     @required int size,
-    this.title = '',
   })  : horizontal = 4,
         vertical = size - (size ~/ 2);
 
@@ -41,7 +38,6 @@ abstract class TileGroup extends StatefulWidget {
     @required this.occupationSize,
     @required this.horizontal,
     @required this.vertical,
-    this.title = '',
   });
 
   // factory TileGroup.dimensionFactory(List<Chart> charts,
@@ -52,9 +48,6 @@ abstract class TileGroup extends StatefulWidget {
   factory TileGroup.singularSizeFactory(List<Chart> charts, int singularSize) {
     return TileGroupCreator().bySize(singularSize, charts);
   }
-
-  /// title for title tile groups todo refactor
-  final String title;
 
   /// the charts that will be displayed inside the group
   final List<Chart> charts;
@@ -75,6 +68,23 @@ abstract class TileGroup extends StatefulWidget {
 
   bool get alignVertically => horizontal != vertical;
 
+  DateTime get date {
+    if (charts.length == 1) {
+      return charts[0].date;
+    } else {
+      DateTime first, last = charts[0].date;
+      for (DateTime date in charts.map((chart) => chart.date)) {
+        if (date.isBefore(first)) {
+          first = date;
+        }
+        if (date.isAfter(last)) {
+          last = date;
+        }
+      }
+      return first.add(first.difference(last) ~/ 2);
+    }
+  }
+
   @override
   _TileGroupState createState() => _TileGroupState();
 }
@@ -83,18 +93,13 @@ class _TileGroupState extends State<TileGroup> {
   int chartIndex = 0;
 
   Widget getTile() {
-    if (widget is TitleTileGroup) {
-      return TitleTile(text: widget.title);
+    Chart chart = widget.charts[chartIndex];
+    chartIndex++;
+    if (widget.alignVertically) {
+      return VerticalTile(chart: chart);
     }
-    else {
-      Chart chart = widget.charts[chartIndex];
-      chartIndex++;
-      if (widget.alignVertically) {
-        return VerticalTile(chart: chart);
-      }
-      else
-        return Tile(chart: chart);
-    }
+    else
+      return Tile(chart: chart);
   }
 
   @override
