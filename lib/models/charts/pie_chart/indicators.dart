@@ -45,18 +45,10 @@ class _IndicatorsState extends State<Indicators> {
   }
 
   Padding title({
-    double left = 0,
-    double top = 0,
-    double right = 0,
-    double bottom = 0,
+    EdgeInsets insets = const EdgeInsets.all(0.0),
   }) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: left,
-        top: top,
-        right: right,
-        bottom: bottom,
-      ),
+      padding: insets,
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
@@ -77,7 +69,7 @@ class _IndicatorsState extends State<Indicators> {
       case PieChartType.divided:
         return Column(
           children: [
-            title(bottom: 15.0),
+            title(insets: EdgeInsets.only(bottom: 15.0)),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -101,8 +93,10 @@ class _IndicatorsState extends State<Indicators> {
         );
       case PieChartType.progression:
         return title(
-          left: 8.0,
-          top: 4.0,
+          insets: EdgeInsets.only(
+            left: 8.0,
+            top: 4.0,
+          ),
         );
       default:
         return SizedBox();

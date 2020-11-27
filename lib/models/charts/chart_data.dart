@@ -27,24 +27,21 @@ class _ChartDataState extends State<ChartData> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        widget.showTitle
-            ? ChartTitle(
-                title: widget.title,
-                subTitle: widget.subTitle,
-              )
-            : SizedBox(),
-        const SizedBox(
-          height: 2,
-        ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(2.0),
             child: widget.data,
           ),
         ),
-        const SizedBox(
-          height: 2,
-        ),
+        // const SizedBox(
+        //   height: 2,
+        // ),
+        widget.showTitle
+            ? ChartTitle(
+          title: widget.title,
+          subTitle: widget.subTitle,
+        )
+            : SizedBox(),
       ],
     );
   }

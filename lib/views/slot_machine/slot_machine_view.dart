@@ -26,7 +26,7 @@ class _SlotMachineState extends State<SlotMachine> {
               padding: const EdgeInsets.all(6.0),
               child: Text(
                 'Slot machine spinner',
-                style: TextStyle(fontSize: 40.0, color: Colors.white),
+                style: TextStyle(fontSize: 30.0, color: Colors.white),
               ),
             ),
             Column(

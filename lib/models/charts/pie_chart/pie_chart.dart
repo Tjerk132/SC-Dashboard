@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
@@ -6,62 +8,68 @@ import 'package:flutter_test_project/models/charts/chart_appearance/pie_chart_ap
 import 'package:flutter_test_project/models/charts/pie_chart/center_progress_indicator.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/indicators.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
-import '../chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
-
+import '../chart.dart';
 import '../chart_data.dart';
 import '../base_chart_data/basic_pie_chart_data.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'pie_chart.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+// ignore: must_be_immutable
 class PieChartGraph extends Chart {
-  // final String title;
   final int pieCount;
   final List<double> values;
   final List<String> indicatorText;
+  @JsonKey(fromJson: _colorsFromJson, toJson: _colorsToJson)
   final List<Color> sectionColors;
 
-  //determines the appearance of the chart (switch between the fl pie chart samples)
-  final PieChartAppearanceData data;
+  @JsonKey(ignore: true)
+  PieChartAppearanceData data;
 
-  @protected
+  static _colorsFromJson(List<dynamic> colors) {
+    return colors?.castTo<Color>(
+      getValue: (value) => HexColor.fromHex(value),
+    );
+  }
+
+  static _colorsToJson(List<Color> colors) {
+    return colors?.map((c) => c.toHex(leadingHashSign: true))?.toList();
+  }
+
   PieChartGraph({
-    int singularSize,
-    PieChartType type,
     String title,
     DateTime date,
     this.pieCount = 3,
     this.values = const [],
     this.indicatorText = const [],
     List<Color> sectionColors,
-  })  : sectionColors =
-            sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
-        data = PieChartAppearanceData(
-          type: type,
-          singularSize: singularSize,
-        ),
+  })  : sectionColors = sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
         super(
           type: ChartType.PieChart,
           title: title,
           date: date,
         );
 
-  factory PieChartGraph.fromJson(
-    Map<String, dynamic> json, {
-    @required int singularSize,
-    @required PieChartType type,
-  }) {
-    return new PieChartGraph(
-      singularSize: singularSize,
-      date: DateTime.parse(json["date"]),
+  void init(PieChartType type, int singularSize) {
+    this.data = PieChartAppearanceData(
       type: type,
-      title: json["title"],
-      indicatorText: (json["indicatorText"] as List).cast<String>(),
-      sectionColors: (json["sectionColors"] as List).castTo<Color>(
-        getValue: (value) => HexColor.fromHex(value),
-      ),
-      values: (json["values"] as List).cast<double>(),
-      pieCount: json["pieCount"] as int,
+      singularSize: singularSize,
     );
   }
+
+  factory PieChartGraph.fromJson(
+    Map<String, dynamic> json, {
+    PieChartType type,
+    int singularSize,
+  }) {
+    PieChartGraph graph = _$PieChartGraphFromJson(json);
+    graph.init(type, singularSize);
+    return graph;
+  }
+
+  String toJson() => jsonEncode(_$PieChartGraphToJson(this));
 
   @override
   State<PieChartGraph> createState() => PieChartGraphState();
@@ -78,9 +86,6 @@ class PieChartGraphState extends State<PieChartGraph> {
         child: Flex(
           direction: widget.data.axis,
           children: <Widget>[
-            const SizedBox(
-              height: 2,
-            ),
             Indicators(
               indicatorSize: widget.data.indicatorSize,
               fontSize: widget.data.fontSize,
@@ -90,13 +95,11 @@ class PieChartGraphState extends State<PieChartGraph> {
               sectionColors: widget.sectionColors,
               title: widget.title,
             ),
-            const SizedBox(
-              height: 2,
-            ),
             Expanded(
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Stack(
+                  alignment: Alignment.center,
                   children: <Widget>[
                     ChartData(
                       showTitle: false,
@@ -128,6 +131,13 @@ class PieChartGraphState extends State<PieChartGraph> {
                 ),
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
+            //   child: Align(
+            //     alignment: Alignment.bottomLeft,
+            //     child: Text('pie chart subTitle p[lacegdper'),
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -47,50 +47,50 @@ class _TimeFilterState extends State<TimeFilter>
 
   void tabChanged(BuildContext context, int index) {
     DateTime now = DateTime.now();
-    switch(index) {
-      case 0: {
-        //filter for last session (today)
-        context.read<TimeFilterProvider>().onSelectedDate(
-          context,
-          startDate: DateTime(now.year, now.month, now.day),
-          endDate: now,
-        );
-      }
-      break;
-      case 1: {
-        //filter for last week
-        context.read<TimeFilterProvider>().onSelectedDate(
-          context,
-          startDate: now.subtract(Duration(days: 7)),
-          endDate: now,
-        );
-      }
-      break;
-      case 2: {
-        //filter by given dates from DateTimePickers
-        context.read<TimeFilterProvider>().onSelectedDate(
-          context,
-          startDate: startDate,
-          // add 1 day to also count all activities of the last day
-          endDate: endDate.add(Duration(days: 1)),
-        );
-      }
-      break;
-      default: break;
+    if (index == 0) {
+      //filter for last session (today)
+      context.read<TimeFilterProvider>().onSelectedDate(
+        context,
+        startDate: DateTime(now.year, now.month, now.day),
+        endDate: now,
+      );
+    }
+    else if (index == 1) {
+      //filter for last week
+      context.read<TimeFilterProvider>().onSelectedDate(
+        context,
+        startDate: now.subtract(Duration(days: 7)),
+        endDate: now,
+      );
+    }
+    else if (index == 2) {
+      //filter by given dates from DateTimePickers
+      context.read<TimeFilterProvider>().onSelectedDate(
+        context,
+        startDate: startDate,
+        // add 1 day to also count all activities of the last day
+        endDate: endDate.add(Duration(days: 1)),
+      );
     }
   }
 
   // set startDate for adjusted timespan from start DateTimePicker
   void setStartDate(BuildContext context, DateTime startDate) {
     this.startDate = startDate;
-    context.read<TimeFilterProvider>().onSelectedDate(context, startDate: this.startDate);
+    context.read<TimeFilterProvider>().onSelectedDate(
+      context,
+      startDate: this.startDate,
+    );
   }
 
   // set endDate for adjusted timespan from end DateTimePicker
   void setEndDate(BuildContext context, DateTime endDate) {
     // add 1 day to also count all activities of the last day
     this.endDate = endDate.add(Duration(days: 1));
-    context.read<TimeFilterProvider>().onSelectedDate(context, endDate: this.endDate);
+    context.read<TimeFilterProvider>().onSelectedDate(
+      context,
+      endDate: this.endDate,
+    );
   }
 
   /// adjust selected tabIndex (for dateTimePickers)
@@ -125,13 +125,15 @@ class _TimeFilterState extends State<TimeFilter>
               DateTimePicker(
                 initialDate: startDate,
                 onFocus: () => setTabIndex(2),
-                onSelected: (DateTime selectedDate) => setStartDate(context, selectedDate),
+                onSelected: (DateTime selectedDate) =>
+                    setStartDate(context, selectedDate),
               ),
               Text(' - '),
               DateTimePicker(
                 initialDate: endDate,
                 onFocus: () => setTabIndex(2),
-                onSelected: (DateTime selectedDate) => setEndDate(context, selectedDate),
+                onSelected: (DateTime selectedDate) =>
+                    setEndDate(context, selectedDate),
               ),
             ],
           ),

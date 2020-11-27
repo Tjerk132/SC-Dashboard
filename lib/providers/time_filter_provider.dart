@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/dialogs/custom_dialog.dart';
 
 class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
-
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
 
   DateTime get startDate => _startDate;
+
   DateTime get endDate => _endDate;
 
-  void onSelectedDate(BuildContext context, {DateTime startDate, DateTime endDate}) {
+  void onSelectedDate(
+    BuildContext context, {
+    DateTime startDate,
+    DateTime endDate,
+  }) {
     startDate = startDate ?? _startDate;
     endDate = endDate ?? _endDate;
-    if(startDate.isAfter(endDate)) {
+    //if start is after end then end is always before start
+    if (startDate.isAfter(endDate)) {
       showDialog(
         context: context,
         child: CustomDialog(
@@ -40,6 +45,9 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    //tod add timeSpan property
+    properties.add(DiagnosticsProperty<DateTime>('startDate', _startDate,
+        description: 'filter startDate', defaultValue: DateTime.now()));
+    properties.add(DiagnosticsProperty<DateTime>('endDate', _endDate,
+        description: 'filter endDate', defaultValue: DateTime.now()));
   }
 }

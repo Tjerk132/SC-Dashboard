@@ -1,17 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/utility/utility.dart';
+import 'package:intl/intl.dart';
 
 class Clock extends StatefulWidget {
-
   final Duration updateInterval;
   final TextStyle textStyle;
-  Clock({
-    Key key,
-    this.updateInterval = const Duration(seconds: 1),
-    this.textStyle
-  }) : super(key: key);
+
+  Clock(
+      {Key key,
+      this.updateInterval = const Duration(seconds: 1),
+      this.textStyle})
+      : super(key: key);
 
   @override
   _ClockState createState() => _ClockState();
@@ -28,9 +27,9 @@ class _ClockState extends State<Clock> {
   }
 
   void _getCurrentTime() {
-    if(mounted) {
+    if (mounted) {
       setState(() {
-        _timeString = DateTime.now().formatToString(withSeconds: false);
+        _timeString = DateFormat('hh:mm').format(DateTime.now());
       });
     }
   }
@@ -46,10 +45,7 @@ class _ClockState extends State<Clock> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: Text(
-          _timeString,
-          style: widget.textStyle
-        ),
+        child: Text(_timeString, style: widget.textStyle),
       ),
     );
   }

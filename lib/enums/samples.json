@@ -1,6 +1,6 @@
 {
   "chart 0": {
-    "date": "2020-11-19 10:50:00",
+    "date": "2020-11-24 10:10:00",
     "type": "PieChart",
     "title": "Reactiesnelheid doel",
     "pieCount": 2,
@@ -18,7 +18,7 @@
     ]
   },
   "chart 1": {
-    "date": "2020-11-19 10:50:00",
+    "date": "2020-11-24 10:10:00",
     "type": "PieChart",
     "title": "",
     "pieCount": 2,
@@ -36,10 +36,10 @@
     ]
   },
   "chart 2": {
-    "date": "2020-11-19 10:50:00",
+    "date": "2020-11-24 10:10:00",
     "type": "BarChart",
-    "title": "Gemiddelde per aantal rondes",
-    "subTitle": "Parcours",
+    "title": "Parcours",
+    "subTitle": "Gemiddelde per aantal rondes",
     "barCount": 7,
     "barTouchTooltipData": [
       "1",
@@ -61,10 +61,10 @@
     ]
   },
   "chart 3": {
-    "date": "2020-11-20 10:50:00",
+    "date": "2020-11-26 10:10:00",
     "type": "LineChart",
-    "title": "Tijdslimiet record",
-    "subTitle": "Reactie",
+    "title": "Reactie",
+    "subTitle": "Tijdslimiet record",
     "lineCount": 1,
     "bottomTitles": {
       "0": "0s",
@@ -96,10 +96,10 @@
     }
   },
   "chart 4": {
-    "date": "2020-11-20 10:50:00",
+    "date": "2020-11-26 10:10:00",
     "type": "LineChart",
-    "title": "Snelste ronde",
-    "subTitle": "Parcours",
+    "title": "Parcours",
+    "subTitle": "Snelste ronde",
     "lineCount": 1,
     "bottomTitles": {
       "1": "Start",
@@ -128,10 +128,10 @@
     }
   },
   "chart 5": {
-    "date": "2020-11-20 10:50:00",
+    "date": "2020-11-26 10:10:00",
     "type": "BarChart",
-    "title": "gemiddelde per afstand (1min)",
-    "subTitle": "Reactie",
+    "title": "Reactie",
+    "subTitle": "gemiddelde per afstand (1min)",
     "barCount": 5,
     "barTouchTooltipData": [
       "10cm",
@@ -149,7 +149,7 @@
     ]
   },
   "chart 6": {
-    "date": "2020-11-20 10:50:00",
+    "date": "2020-11-26 10:10:00",
     "type": "PieChart",
     "title": "Gespeelde banen Parcours",
     "pieCount": 2,
@@ -167,10 +167,10 @@
     ]
   },
   "chart 7": {
-    "date": "2020-11-20 10:50:00",
+    "date": "2020-11-26 10:10:00",
     "type": "BarChart",
-    "title": "records op tijdslimiet",
-    "subTitle": "Reactie",
+    "title": "Reactie",
+    "subTitle": "records op tijdslimiet",
     "barCount": 7,
     "barTouchTooltipData": [
       "5s",
@@ -192,10 +192,10 @@
     ]
   },
   "chart 8": {
-    "date": "2020-11-20 10:50:00",
+    "date": "2020-11-26 10:10:00",
     "type": "LineChart",
-    "title": "Records op tijds- & triggerlimiets",
-    "subTitle": "Reactie",
+    "title": "Reactie",
+    "subTitle": "Records op tijds- & triggerlimiets",
     "lineCount": 3,
     "bottomTitles": {
       "0": "0s",
@@ -247,10 +247,10 @@
     }
   },
   "chart 9": {
-    "date": "2020-11-17 10:50:00",
+    "date": "2020-11-23 10:10:00",
     "type": "LineChart",
-    "title": "Laatst gespeelde spel",
-    "subTitle": "Parcours",
+    "title": "Parcours",
+    "subTitle": "Laatst gespeelde spel",
     "lineCount": 1,
     "bottomTitles": {
       "1": "Start",

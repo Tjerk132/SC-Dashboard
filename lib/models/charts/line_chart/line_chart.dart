@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
@@ -5,11 +7,16 @@ import 'package:flutter_test_project/enums/line_chart_type.dart';
 import 'package:flutter_test_project/models/charts/base_chart_data/basic_line_chart_data.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/line_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
-import 'package:flutter_test_project/models/charts/line_chart/line_spots.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
 import '../chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
+import 'line_spots.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'line_chart.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+// ignore: must_be_immutable
 class LineChartGraph extends Chart {
   final double lineWidth;
   final int lineCount;
@@ -19,15 +26,46 @@ class LineChartGraph extends Chart {
   final Map<int, String> leftTitles;
   final Map<int, String> rightTitles;
 
+  @JsonKey(fromJson: _spotsFromJson, toJson: _spotsToJson)
   final Map<int, List<FlSpot>> spots;
+  @JsonKey(fromJson: _colorsFromJson, toJson: _colorsToJson)
   final Map<int, Color> colors;
 
-  final LineChartAppearanceData data;
+  @JsonKey(ignore: true)
+  LineChartAppearanceData data;
 
-  @protected
+  static _spotsFromJson(Map<String, dynamic> spots) {
+    return spots?.castTo<int, List<FlSpot>>(
+      getValue: (value) => LineSpots.fromJson(value)?.spots,
+    );
+  }
+
+  static _spotsToJson(Map<int, List<FlSpot>> spots) {
+    return spots?.map(
+      (k, e) => MapEntry(
+        k.toString(),
+        e.map((e) => [e.x, e.y]).toList(),
+      ),
+    );
+  }
+
+  static _colorsFromJson(Map<String, dynamic> colors) {
+    return colors?.castTo<int, Color>(
+      getValue: (value) => HexColor.fromHex(value),
+    );
+  }
+
+  static _colorsToJson(Map<int, Color> colors) {
+    return colors?.map(
+      (k, e) => MapEntry(
+        k.toString(),
+        e.toHex(leadingHashSign: true),
+      ),
+    );
+  }
+
   LineChartGraph({
     int singularSize,
-    LineChartType type,
     String title,
     String subTitle,
     DateTime date,
@@ -40,10 +78,6 @@ class LineChartGraph extends Chart {
     this.spots = const {},
     Map<int, Color> colors,
   })  : colors = colors.isEmpty ? ThemeScheme.chartPalette.asMap() : colors,
-        data = LineChartAppearanceData(
-          type: type,
-          singularSize: singularSize,
-        ),
         super(
           type: ChartType.LineChart,
           title: title,
@@ -51,30 +85,24 @@ class LineChartGraph extends Chart {
           date: date,
         );
 
-  factory LineChartGraph.fromJson(
-    Map<String, dynamic> json, {
-    @required int singularSize,
-    @required LineChartType type,
-  }) {
-    return new LineChartGraph(
-      singularSize: singularSize,
-      date: DateTime.parse(json["date"]),
+  void init(int singularSize, LineChartType type) {
+    this.data = LineChartAppearanceData(
       type: type,
-      title: json["title"],
-      subTitle: json["subTitle"],
-      lineCount: json["lineCount"] as int,
-      topTitles: (json["topTitles"] as Map).castTo<int, String>(),
-      bottomTitles: (json["bottomTitles"] as Map).castTo<int, String>(),
-      leftTitles: (json["leftTitles"] as Map).castTo<int, String>(),
-      rightTitles: (json["rightTitles"] as Map).castTo<int, String>(),
-      spots: (json["spots"] as Map).castTo<int, List<FlSpot>>(
-        getValue: (value) => LineSpots.fromJson(value).spots,
-      ),
-      colors: (json["colors"] as Map).castTo<int, Color>(
-        getValue: (value) => HexColor.fromHex(value),
-      ),
+      singularSize: singularSize,
     );
   }
+
+  factory LineChartGraph.fromJson(
+    Map<String, dynamic> json, {
+    int singularSize,
+    LineChartType type,
+  }) {
+    LineChartGraph graph = _$LineChartGraphFromJson(json);
+    graph.init(singularSize, type);
+    return graph;
+  }
+
+  String toJson() => jsonEncode(_$LineChartGraphToJson(this));
 
   @override
   State<LineChartGraph> createState() => LineChartGraphState();
@@ -84,22 +112,19 @@ class LineChartGraphState extends State<LineChartGraph> {
   // bool isShowingMainData = true;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    MediaQueryData mediaQuery = MediaQuery.of(context);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: AspectRatio(
-        aspectRatio: 1.23,
+        aspectRatio: 1.13,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(18)),
             gradient: widget.data.backgroundGradient,
           ),
           child: Stack(
+            alignment: Alignment.center,
             children: <Widget>[
               //for stocks only
               AspectRatio(
@@ -110,46 +135,44 @@ class LineChartGraphState extends State<LineChartGraph> {
                       Radius.circular(18),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ChartData(
-                      data: LineChart(
-                        BasicLineChartData(
-                          lineTouchData: LineTouchData(
-                            enabled: false,
-                          ),
-                          gridData: FlGridData(
-                            show: false,
-                          ),
-                          reservedSize: 22,
-                          margin: 8,
-                          topTitles: widget.topTitles,
-                          bottomTitles: widget.bottomTitles,
-                          leftTitles: widget.leftTitles,
-                          rightTitles: widget.rightTitles,
-                          minX: widget.data.minX,
-                          maxX: widget.data.maxX,
-                          maxY: widget.data.maxY,
-                          minY: widget.data.minY,
-                          lineCount: widget.lineCount,
-                          spots: widget.spots,
-                          colors: widget.colors,
-                          lineWidth: widget.lineWidth,
-                          borderData: FlBorderData(
-                            show: true,
-                            border: Border(
-                              bottom: BorderSide(color: Colors.black, width: 2),
-                              left: BorderSide(color: Colors.black, width: 2),
-                              right: BorderSide(color: Colors.transparent),
-                              top: BorderSide(color: Colors.transparent),
-                            ),
-                          ),
-                          titleTextStyle: widget.data.textStyle,
+                  child: ChartData(
+                    data: LineChart(
+                      BasicLineChartData(
+                        lineTouchData: LineTouchData(
+                          enabled: false,
                         ),
+                        gridData: FlGridData(
+                          show: false,
+                        ),
+                        reservedSize: 22,
+                        margin: 8,
+                        topTitles: widget.topTitles,
+                        bottomTitles: widget.bottomTitles,
+                        leftTitles: widget.leftTitles,
+                        rightTitles: widget.rightTitles,
+                        minX: widget.data.minX,
+                        maxX: widget.data.maxX,
+                        maxY: widget.data.maxY,
+                        minY: widget.data.minY,
+                        lineCount: widget.lineCount,
+                        spots: widget.spots,
+                        colors: widget.colors,
+                        // widget.colors,
+                        lineWidth: widget.lineWidth,
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black, width: 2),
+                            left: BorderSide(color: Colors.black, width: 2),
+                            right: BorderSide(color: Colors.transparent),
+                            top: BorderSide(color: Colors.transparent),
+                          ),
+                        ),
+                        titleTextStyle: widget.data.textStyle,
                       ),
-                      title: widget.title,
-                      subTitle: widget.subTitle,
                     ),
+                    title: widget.title,
+                    subTitle: widget.subTitle,
                   ),
                 ),
               ),

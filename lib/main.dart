@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_test_project/connection.dart';
@@ -15,6 +16,7 @@ import 'providers/slot_machine_provider.dart';
 import 'dialogs/custom_dialog.dart';
 
 void main() {
+  Intl.defaultLocale = 'nl';
   runApp(
     MultiProvider(
       providers: [
@@ -36,6 +38,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: [
         const Locale('en'),

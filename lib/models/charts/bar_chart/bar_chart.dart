@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/chart_type.dart';
@@ -6,44 +8,50 @@ import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/bar_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/chart_data.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'bar_chart.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+// ignore: must_be_immutable
 class BarChartGraph extends Chart {
   final int barCount;
   final List<double> barValues;
   final List<String> barTouchTooltipData;
 
-  final BarChartAppearanceData data;
+  @JsonKey(ignore: true)
+  BarChartAppearanceData data;
 
   BarChartGraph({
-    int singularSize,
     String title,
     String subTitle,
     DateTime date,
     this.barCount = 7,
     this.barValues = const [],
     this.barTouchTooltipData = const [],
-  })  : data = BarChartAppearanceData(
-          singularSize: singularSize,
-        ),
-        super(
+  }) : super(
           type: ChartType.BarChart,
           title: title,
           subTitle: subTitle,
           date: date,
         );
 
-  factory BarChartGraph.fromJson(Map<String, dynamic> json,
-      {@required int singularSize}) {
-    return new BarChartGraph(
+  void init(int singularSize) {
+    this.data = BarChartAppearanceData(
       singularSize: singularSize,
-      date: DateTime.parse(json["date"]),
-      title: json["title"],
-      subTitle: json["subTitle"],
-      barCount: json["barCount"] as int,
-      barValues: (json["barValues"] as List).cast<double>(),
-      barTouchTooltipData: (json["barTouchTooltipData"] as List).cast<String>(),
     );
   }
+
+  factory BarChartGraph.fromJson(
+    Map<String, dynamic> json, {
+    int singularSize,
+  }) {
+    BarChartGraph graph = _$BarChartGraphFromJson(json);
+    graph.init(singularSize);
+    return graph;
+  }
+
+  String toJson() => jsonEncode(_$BarChartGraphToJson(this));
 
   @override
   State<BarChartGraph> createState() => BarChartGraphState();
@@ -56,6 +64,7 @@ class BarChartGraphState extends State<BarChartGraph> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: Colors.white,
       child: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
           // Align(
           //   alignment: Alignment.topRight,

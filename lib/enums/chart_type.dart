@@ -10,6 +10,7 @@ enum ChartType {
 }
 
 extension ChartTypeExtension on ChartType {
+
   Future<Chart> instance(Map<String, dynamic> json, int singularSize, dynamic type) async {
     switch (this) {
       case ChartType.PieChart:

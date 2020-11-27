@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_test_project/utility/utility.dart';
+import 'package:intl/intl.dart';
 
 class DateTimePicker extends StatefulWidget {
   final DateTime initialDate;
@@ -46,7 +46,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       initialDate: selectedDate,
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101),
-      locale: Locale('nl', 'NL'),
+      locale: Locale(Intl.defaultLocale),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -68,11 +68,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
         child: GestureDetector(
           onTap: () => _onSelect(context),
           child: Text(
-            selectedDate.formatToString(
-              withDate: true,
-              withTime: false,
-              withSeconds: false,
-            ),
+            DateFormat.yMd().format(selectedDate),
             style: widget.textStyle,
           ),
         ),

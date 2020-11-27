@@ -5,7 +5,7 @@ import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/enums/line_chart_type.dart';
 import 'package:flutter_test_project/enums/pie_chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/data/image_dao.dart';
+// import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 
@@ -29,11 +29,12 @@ class DashboardLogic {
 
   int occupied = 0;
   List<TileGroup> _groups;
-  ImageDao dao;
+
+  // ImageDao dao;
 
   DashboardLogic(this.crossAxisCount) {
     this._groups = new List<TileGroup>();
-    this.dao = new ImageDao();
+    // this.dao = new ImageDao();
   }
 
   TileGroup createTile(List<Chart> charts, int singularSize) {
@@ -54,13 +55,14 @@ class DashboardLogic {
       //load all charts for the local file
       String jsonCharts = await DefaultAssetBundle.of(context)
           .loadString('lib/enums/samples.json');
+      //todo compute decode & parse (under 50ms)
       Map<String, dynamic> charts = json.decode(jsonCharts);
       await getTileGroups(charts);
     }
     return filterGroupsByDate(start, end);
   }
 
-  getTileGroups(Map<String, dynamic> charts) async {
+  Future<void> getTileGroups(Map<String, dynamic> charts) async {
     for (int i = 0; i < charts.length;) {
       int singularSize = singularSizes.elementAt(_groups.length);
       TileGroup g;
@@ -79,7 +81,11 @@ class DashboardLogic {
     }
   }
 
-  Future<TileGroup> createSmallGroup(Map<String, dynamic> jsonCharts, int singularSize, int currentIndex) async {
+  Future<TileGroup> createSmallGroup(
+    Map<String, dynamic> jsonCharts,
+    int singularSize,
+    int currentIndex,
+  ) async {
     TileGroup g;
     List<Chart> charts = new List<Chart>();
     for (int j = 0; j < 4; ++j) {
@@ -91,9 +97,15 @@ class DashboardLogic {
     return g;
   }
 
-  Future<Chart> getChartByIndex(Map<String, dynamic> jsonCharts, int index, int singularSize, dynamic chartType) async {
-    dynamic chart = jsonCharts['chart $index'];
-    ChartType type = ChartType.values.firstWhere((e) => e.toString().split('.').last == chart['type']);
+  Future<Chart> getChartByIndex(
+    Map<String, dynamic> jsonCharts,
+    int index,
+    int singularSize,
+    dynamic chartType,
+  ) async {
+    Map<String, dynamic> chart = jsonCharts['chart $index'];
+    ChartType type = ChartType.values.firstWhere((e) =>
+       e.toString().split('.').last == chart['type']);
     return await type.instance(chart, singularSize, chartType);
   }
 
@@ -108,6 +120,6 @@ class DashboardLogic {
         .toList();
   }
 
-  // Future<List<NetworkImage>> getImages(Map<int, int> sizes) async =>
-  //     await dao.getImages(sizes);
+// Future<List<NetworkImage>> getImages(Map<int, int> sizes) async =>
+//     await dao.getImages(sizes);
 }

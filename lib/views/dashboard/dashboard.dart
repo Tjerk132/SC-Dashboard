@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/device_type.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
@@ -13,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'clock/clock.dart';
 
 class Dashboard extends StatefulWidget {
-  final int crossAxisCount = 8;
+  final int crossAxisCount = DeviceType().isPhone ? 4 : 8;
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -22,6 +23,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   DashboardLogic _logic;
   Future<List<TileGroup>> _future;
+  TimeFilterProvider provider;
 
   @override
   void initState() {
@@ -33,24 +35,33 @@ class _DashboardState extends State<Dashboard> {
       start: DateTime(now.year, now.month, now.day),
       end: now,
     );
+    provider = context.read<TimeFilterProvider>();
     setProviderListener();
     super.initState();
   }
 
-  void setProviderListener() {
-    context.read<TimeFilterProvider>().addListener(() {
-      TimeFilterProvider provider = context.read<TimeFilterProvider>();
-      // DateTime start = provider.startDate;
-      // DateTime end = provider.endDate;
-      // print('received filter $start to $end');
-      setState(() {
-        _future = _logic.groups(
-          context,
-          start: provider.startDate,
-          end: provider.endDate,
-        );
-      });
+  @override
+  void dispose() {
+    provider?.removeListener(providerCallback);
+    super.dispose();
+  }
+
+  void providerCallback() {
+    provider?.addListener(() {
+      if(this.mounted) {
+        setState(() {
+          _future = _logic.groups(
+            context,
+            start: provider.startDate,
+            end: provider.endDate,
+          );
+        });
+      }
     });
+  }
+
+  void setProviderListener() {
+    provider.addListener(providerCallback);
   }
 
   @override

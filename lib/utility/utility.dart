@@ -28,7 +28,7 @@ extension DefaultMap<K, V> on Map<K, V> {
     getKey = getKey ?? (key) => int.tryParse(key as String) as K;
     getValue = getValue ?? (value) => value as T;
 
-    return this.map(
+    return this?.map(
       (key, value) => MapEntry<K, T>(getKey(key), getValue(value)),
     );
   }
@@ -223,6 +223,7 @@ extension NumExtension on num {
   }
 }
 
+// workaround for package intl;
 extension DateTimeExtension on DateTime {
   String formatToString({
     bool withDate = false,

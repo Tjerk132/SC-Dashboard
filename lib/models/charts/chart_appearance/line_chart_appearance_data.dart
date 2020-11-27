@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/device_type.dart';
 import 'package:flutter_test_project/enums/line_chart_type.dart';
 
 class LineChartAppearanceData {
@@ -15,15 +16,14 @@ class LineChartAppearanceData {
   double maxY;
   double minY;
 
-
   LineChartAppearanceData({
     @required this.type,
     int singularSize,
   }) {
-     minX = 0;
-     maxX = 14;
-     maxY = 4;
-     minY = 0;
+    minX = 0;
+    maxX = 14;
+    maxY = 4;
+    minY = 0;
     //
     // otherMinX = 0;
     // otherMaxX = 14;
@@ -90,10 +90,29 @@ class LineChartAppearanceData {
       default:
         break;
     }
-    if (singularSize == 2) {
+    bool isPhone = DeviceType().isPhone;
+
+    if(isPhone && singularSize == 4) {
+      this.aspectRatio = 1;//4
+      return;
+    }
+    //is verticalTile and phone
+    if (singularSize == 2 && isPhone) {
       this.aspectRatio = 2;
+      return;
+    }
+    //only is phone
+    else if (isPhone) {
+      this.aspectRatio = 1;
+      return;
+    }
+    //is verticalTile but not phone
+    else if (singularSize == 2) {
+      this.aspectRatio = 2;
+      return;
     }
     else
       aspectRatio = 1;
+    return;
   }
 }

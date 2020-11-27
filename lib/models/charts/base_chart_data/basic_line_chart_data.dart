@@ -8,6 +8,7 @@ import 'package:flutter_test_project/models/charts/base_chart/base_line_chart.da
 class BasicLineChartData extends LineChartData {
   @protected
   BasicLineChartData._({
+    List<ShowingTooltipIndicators> showingTooltipIndicators,
     List<LineChartBarData> lineBarsData,
     LineTouchData lineTouchData,
     FlGridData gridData,
@@ -18,6 +19,7 @@ class BasicLineChartData extends LineChartData {
     double minY,
     double maxY,
   }) : super(
+          showingTooltipIndicators: showingTooltipIndicators,
           lineBarsData: lineBarsData,
           lineTouchData: lineTouchData,
           gridData: gridData,
@@ -47,6 +49,7 @@ class BasicLineChartData extends LineChartData {
     FlTitlesData titlesData,
     double reservedSize,
     FlBorderData borderData,
+    List<ShowingTooltipIndicators> showingTooltipIndicators,
     double minX,
     double maxX,
     double minY,
@@ -82,6 +85,8 @@ class BasicLineChartData extends LineChartData {
           rightTitles: rightTitles,
         );
     borderData = borderData ?? FlBorderData(show: false);
+    //todo now shows only first line
+    showingTooltipIndicators = showingTooltipIndicators ?? base.tooltipIndicators(spots[0], colors[0]);
 
     return BasicLineChartData._(
       lineBarsData: lineBarsData,
@@ -89,6 +94,7 @@ class BasicLineChartData extends LineChartData {
       gridData: gridData,
       titlesData: titlesData,
       borderData: borderData,
+      showingTooltipIndicators: showingTooltipIndicators,
       minX: minX,
       maxX: maxX,
       minY: minY,

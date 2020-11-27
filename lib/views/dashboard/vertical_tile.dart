@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/device_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/views/dashboard/tile.dart';
 
@@ -7,11 +8,12 @@ import 'package:flutter_test_project/views/dashboard/tile.dart';
 /// and [landscapeTileHeightRatio] that give the ratio to which
 /// a 2x1 tile matches the height of a 1x1 tile.
 class VerticalTile extends StatefulWidget {
-  final Chart chart;
-  final double portraitTileHeightRatio = 6.16;
-  final double landscapeTileHeightRatio = 2.35;
 
-  const VerticalTile({
+  final Chart chart;
+  final double portraitTileHeightRatio = DeviceType().isPhone ? 3.0 : 6.16;
+  final double landscapeTileHeightRatio = DeviceType().isPhone ? 1.5 : 2.35;
+
+  VerticalTile({
     Key key,
     this.chart,
   }) : super(key: key);
