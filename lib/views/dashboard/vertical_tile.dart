@@ -9,13 +9,13 @@ import 'package:flutter_test_project/views/dashboard/tile.dart';
 /// a 2x1 tile matches the height of a 1x1 tile.
 class VerticalTile extends StatefulWidget {
 
-  final Chart chart;
+  final Widget child;
   final double portraitTileHeightRatio = DeviceType().isPhone ? 3.0 : 6.16;
   final double landscapeTileHeightRatio = DeviceType().isPhone ? 1.5 : 2.35;
 
   VerticalTile({
     Key key,
-    this.chart,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _VerticalTileState extends State<VerticalTile> {
             : data.size.height / widget.portraitTileHeightRatio,
         maxWidth: data.size.width,
       ),
-      child: Tile(chart: widget.chart),
+      child: Tile(child: widget.child),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
 
+import '../text_tile.dart';
 import '../tile.dart';
 import '../vertical_tile.dart';
 
@@ -12,16 +13,16 @@ import '../vertical_tile.dart';
 /// Example:
 /// ```dart
 /// class SmallTileGroup extends TileGroup {
-///   SmallTileGroup(Widget object)
-///       : super.fromDimensions(object, horizontal: 2, vertical: 2);
+///   SmallTileGroup(Widget child)
+///       : super.fromDimensions(child, horizontal: 2, vertical: 2);
 /// }
 /// ```
 /// and require the parameters [horizontal], [vertical]
-/// and [charts]. [charts] is what will be the type of graph
-/// displayed inside the TileGroup and has to be of type [Chart].
+/// and [children]. [children] is what will be displayed
+/// inside the TileGroup and has to be of type [Widget].
 abstract class TileGroup extends StatefulWidget {
   TileGroup.fromSize(
-    this.charts, {
+    this.children, {
     @required this.singularSize,
     @required this.occupationSize,
     @required int size,
@@ -33,7 +34,7 @@ abstract class TileGroup extends StatefulWidget {
   // }
 
   TileGroup.fromDimensions(
-    this.charts, {
+    this.children, {
     @required this.singularSize,
     @required this.occupationSize,
     @required this.horizontal,
@@ -45,12 +46,12 @@ abstract class TileGroup extends StatefulWidget {
   //   return TileGroupCreator().bySize(horizontal * vertical, charts);
   // }
 
-  factory TileGroup.singularSizeFactory(List<Chart> charts, int singularSize) {
-    return TileGroupCreator().bySize(singularSize, charts);
+  factory TileGroup.singularSizeFactory(List<Widget> children, int singularSize) {
+    return TileGroupCreator().bySize(singularSize, children);
   }
 
-  /// the charts that will be displayed inside the group
-  final List<Chart> charts;
+  /// the children that will be displayed inside the group
+  final List<Widget> children;
 
   /// represents the size of one element in this group
   final int singularSize;
@@ -69,20 +70,21 @@ abstract class TileGroup extends StatefulWidget {
   bool get alignVertically => horizontal != vertical;
 
   DateTime get date {
-    if (charts.length == 1) {
-      return charts[0].date;
-    } else {
-      DateTime first, last = charts[0].date;
-      for (DateTime date in charts.map((chart) => chart.date)) {
-        if (date.isBefore(first)) {
-          first = date;
-        }
-        if (date.isAfter(last)) {
-          last = date;
-        }
-      }
-      return first.add(first.difference(last) ~/ 2);
-    }
+    return (children[0] as Chart).date;
+    // if (children.length == 1) {
+    //   return children[0].date;
+    // } else {
+    //   DateTime first, last = children[0].date;
+    //   for (DateTime date in children.map((chart) => chart.date)) {
+    //     if (date.isBefore(first)) {
+    //       first = date;
+    //     }
+    //     if (date.isAfter(last)) {
+    //       last = date;
+    //     }
+    //   }
+    //   return first.add(first.difference(last) ~/ 2);
+    // }
   }
 
   @override
@@ -93,13 +95,13 @@ class _TileGroupState extends State<TileGroup> {
   int chartIndex = 0;
 
   Widget getTile() {
-    Chart chart = widget.charts[chartIndex];
+    Widget child = widget.children.elementAt(chartIndex);
     chartIndex++;
     if (widget.alignVertically) {
-      return VerticalTile(chart: chart);
+      return VerticalTile(child: child);
     }
     else
-      return Tile(chart: chart);
+      return Tile(child: child);
   }
 
   @override
@@ -108,7 +110,6 @@ class _TileGroupState extends State<TileGroup> {
       children: List.generate(
         widget.vertical,
         (index) => Row(
-          // mainAxisSize: MainAxisSize.max,
           children: List.generate(
             widget.alignVertically ? 1 : widget.horizontal,
             (index) => Expanded(

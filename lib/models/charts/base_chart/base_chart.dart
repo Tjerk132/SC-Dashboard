@@ -4,7 +4,7 @@ import 'package:flutter_test_project/utility/utility.dart';
 
 mixin BaseChart {
 
-  FlTitlesData baseTitleData({
+  FlTitlesData titleData({
     bool show,
     TextStyle textStyle,
     double margin = 0,

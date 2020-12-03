@@ -4,7 +4,6 @@ import 'package:flutter_test_project/models/charts/pie_chart/pie.dart';
 
 class BasePieChart with BaseChart {
   List<Pie> basePieGroups(
-    int count,
     List<Color> sectionColors,
     double pieRadius,
     List<double> values, {
@@ -12,7 +11,7 @@ class BasePieChart with BaseChart {
     double fontSize = 16,
   }) {
     return List<Pie>.generate(
-      count,
+      values.length,
       (i) => Pie(
         title: showPieTitle ? '${values[i].toStringAsFixed(1)}%' : '',
         titleColor: showPieTitle ? Colors.white : sectionColors[i],

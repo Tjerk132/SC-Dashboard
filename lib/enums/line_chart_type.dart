@@ -1,4 +1,0 @@
-enum LineChartType {
-  sales,
-  stocks,
-}

@@ -1,39 +1,43 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test_project/models/charts/bar_chart/bar_chart.dart';
-import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/line_chart/line_chart.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/pie_chart.dart';
+import 'package:flutter_test_project/models/charts/text_chart/text_chart.dart';
 
-enum ChartType {
+enum TileGroupType {
   LineChart,
   BarChart,
   PieChart,
+  Text,
 }
 
-extension ChartTypeExtension on ChartType {
-
-  Future<Chart> instance(Map<String, dynamic> json, int singularSize, dynamic type) async {
+extension ChartTypeExtension on TileGroupType {
+  Future<Widget> instance(
+    Map<String, dynamic> json,
+    int singularSize,
+    dynamic type,
+  ) async {
     switch (this) {
-      case ChartType.PieChart:
-      // PieChartType type = r.nextObject(PieChartType.values);
+      case TileGroupType.PieChart:
         return PieChartGraph.fromJson(
           json,
           singularSize: singularSize,
           type: type,
         );
-      case ChartType.BarChart:
+      case TileGroupType.BarChart:
         return BarChartGraph.fromJson(
           json,
           singularSize: singularSize,
         );
-      case ChartType.LineChart:
-      // LineChartType type = r.nextObject(LineChartType.values);
+      case TileGroupType.LineChart:
         return LineChartGraph.fromJson(
           json,
           singularSize: singularSize,
-          type: type,
         );
-      //barWidth: (singularSize * 16.0) / singularSize);
-      //singularSize * 3.0
+      case TileGroupType.Text:
+        return TextChart.fromJson(
+          json,
+        );
       default:
         return null;
     }

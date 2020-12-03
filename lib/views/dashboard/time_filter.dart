@@ -51,25 +51,25 @@ class _TimeFilterState extends State<TimeFilter>
       //filter for last session (today)
       context.read<TimeFilterProvider>().onSelectedDate(
         context,
-        startDate: DateTime(now.year, now.month, now.day),
-        endDate: now,
+        start: DateTime(now.year, now.month, now.day),
+        end: now,
       );
     }
     else if (index == 1) {
       //filter for last week
       context.read<TimeFilterProvider>().onSelectedDate(
         context,
-        startDate: now.subtract(Duration(days: 7)),
-        endDate: now,
+        start: now.subtract(Duration(days: 7)),
+        end: now,
       );
     }
     else if (index == 2) {
       //filter by given dates from DateTimePickers
       context.read<TimeFilterProvider>().onSelectedDate(
         context,
-        startDate: startDate,
+        start: startDate,
         // add 1 day to also count all activities of the last day
-        endDate: endDate.add(Duration(days: 1)),
+        end: endDate.add(Duration(days: 1)),
       );
     }
   }
@@ -79,7 +79,7 @@ class _TimeFilterState extends State<TimeFilter>
     this.startDate = startDate;
     context.read<TimeFilterProvider>().onSelectedDate(
       context,
-      startDate: this.startDate,
+      start: this.startDate,
     );
   }
 
@@ -89,7 +89,7 @@ class _TimeFilterState extends State<TimeFilter>
     this.endDate = endDate.add(Duration(days: 1));
     context.read<TimeFilterProvider>().onSelectedDate(
       context,
-      endDate: this.endDate,
+      end: this.endDate,
     );
   }
 

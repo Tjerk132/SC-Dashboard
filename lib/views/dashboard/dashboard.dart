@@ -29,14 +29,15 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     _logic = new DashboardLogic(widget.crossAxisCount);
 
+    provider = context.read<TimeFilterProvider>();
+    provider.addListener(providerCallback);
+
     DateTime now = DateTime.now();
     _future = _logic.groups(
       context,
       start: DateTime(now.year, now.month, now.day),
       end: now,
     );
-    provider = context.read<TimeFilterProvider>();
-    setProviderListener();
     super.initState();
   }
 
@@ -47,21 +48,18 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void providerCallback() {
-    provider?.addListener(() {
-      if(this.mounted) {
+    provider.addListener(() {
+      //todo only gets executed after 1st callback
+      if (this.mounted) {
         setState(() {
           _future = _logic.groups(
             context,
-            start: provider.startDate,
-            end: provider.endDate,
+            start: provider.start,
+            end: provider.end,
           );
         });
       }
     });
-  }
-
-  void setProviderListener() {
-    provider.addListener(providerCallback);
   }
 
   @override
@@ -83,31 +81,27 @@ class _DashboardState extends State<Dashboard> {
       body: FutureBuilder<List<TileGroup>>(
         future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<TileGroup>> snapshot) {
-          return snapshot.hasData
-              ? StaggeredGridView.countBuilder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: snapshot.data.length,
-                  crossAxisCount: widget.crossAxisCount,
-                  itemBuilder: (BuildContext context, int index) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return TileShimmer(
-                          imageShimmerRatio: 0.45,
-                          textShimmers: 1,
-                          titleShimmer: true,
-                        );
-                      default:
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-                        return snapshot.data[index];
-                    }
-                  },
-                  staggeredTileBuilder: (int index) => StaggeredTile.fit(4),
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                );
+          return StaggeredGridView.countBuilder(
+            physics: BouncingScrollPhysics(),
+            itemCount: snapshot.hasData ? snapshot.data.length : 8,
+            crossAxisCount: widget.crossAxisCount,
+            itemBuilder: (BuildContext context, int index) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return TileShimmer(
+                    imageShimmerRatio: 0.45,
+                    textShimmers: 1,
+                    titleShimmer: true,
+                  );
+                default:
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  return snapshot.data[index];
+              }
+            },
+            staggeredTileBuilder: (int index) => StaggeredTile.fit(4),
+          );
         },
       ),
     );

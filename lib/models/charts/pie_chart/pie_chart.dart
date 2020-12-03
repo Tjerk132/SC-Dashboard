@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/enums/chart_type.dart';
+import 'package:flutter_test_project/enums/tile_group_type.dart';
 import 'package:flutter_test_project/enums/pie_chart_type.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/pie_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/center_progress_indicator.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_test_project/models/charts/pie_chart/indicators.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import '../chart.dart';
-import '../chart_data.dart';
+import '../chart_components/chart_data.dart';
 import '../base_chart_data/basic_pie_chart_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -19,7 +19,6 @@ part 'pie_chart.g.dart';
 @JsonSerializable(explicitToJson: true)
 // ignore: must_be_immutable
 class PieChartGraph extends Chart {
-  final int pieCount;
   final List<double> values;
   final List<String> indicatorText;
   @JsonKey(fromJson: _colorsFromJson, toJson: _colorsToJson)
@@ -35,19 +34,19 @@ class PieChartGraph extends Chart {
   }
 
   static _colorsToJson(List<Color> colors) {
-    return colors?.map((c) => c.toHex(leadingHashSign: true))?.toList();
+    return colors?.map((c) => c.toHex())?.toList();
   }
 
   PieChartGraph({
     String title,
     DateTime date,
-    this.pieCount = 3,
     this.values = const [],
     this.indicatorText = const [],
     List<Color> sectionColors,
-  })  : sectionColors = sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
+  })  : sectionColors =
+            sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
         super(
-          type: ChartType.PieChart,
+          type: TileGroupType.PieChart,
           title: title,
           date: date,
         );
@@ -80,66 +79,53 @@ class PieChartGraphState extends State<PieChartGraph> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.3,
-      child: Card(
-        color: widget.data.backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Flex(
-          direction: widget.data.axis,
-          children: <Widget>[
-            Indicators(
-              indicatorSize: widget.data.indicatorSize,
-              fontSize: widget.data.fontSize,
-              type: widget.data.type,
-              pieCount: widget.pieCount,
-              indicatorText: widget.indicatorText,
-              sectionColors: widget.sectionColors,
-              title: widget.title,
-            ),
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    ChartData(
-                      showTitle: false,
-                      data: PieChart(
-                        BasicPieChartData(
-                          pieCount: widget.pieCount,
-                          sectionColors: widget.sectionColors,
-                          values: widget.values,
-                          pieRadius: widget.data.pieRadius,
-                          fontSize: widget.data.fontSize,
-                          showPieTitle: widget.data.showPieTitle,
-                          sectionsSpace: widget.data.sectionSpace,
-                          centerSpaceRadius: widget.data.centerSpaceRadius,
-                          startDegreeOffset: 180,
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
+      child: Flex(
+        direction: widget.data.axis,
+        children: <Widget>[
+          Indicators(
+            indicatorSize: widget.data.indicatorSize,
+            fontSize: widget.data.fontSize,
+            type: widget.data.type,
+            indicatorText: widget.indicatorText,
+            sectionColors: widget.sectionColors,
+            title: widget.title,
+          ),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  ChartData(
+                    showTitle: false,
+                    data: PieChart(
+                      BasicPieChartData(
+                        sectionColors: widget.sectionColors,
+                        values: widget.values,
+                        pieRadius: widget.data.pieRadius,
+                        fontSize: widget.data.fontSize,
+                        showPieTitle: widget.data.showPieTitle,
+                        sectionsSpace: widget.data.sectionSpace,
+                        centerSpaceRadius: widget.data.centerSpaceRadius,
+                        startDegreeOffset: 180,
+                        borderData: FlBorderData(
+                          show: false,
                         ),
                       ),
                     ),
-                    widget.data.centerProgressIndicator
-                        ? CenterProgressIndicator(
-                            value: widget.values[0],
-                            fontSize: widget.data.fontSize * 2,
-                            color: widget.sectionColors[0],
-                          )
-                        : SizedBox(),
-                  ],
-                ),
+                  ),
+                  widget.data.centerProgressIndicator
+                      ? CenterProgressIndicator(
+                          value: widget.values[0],
+                          fontSize: widget.data.fontSize * 2,
+                          color: widget.sectionColors[0],
+                        )
+                      : SizedBox(),
+                ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
-            //   child: Align(
-            //     alignment: Alignment.bottomLeft,
-            //     child: Text('pie chart subTitle p[lacegdper'),
-            //   ),
-            // ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

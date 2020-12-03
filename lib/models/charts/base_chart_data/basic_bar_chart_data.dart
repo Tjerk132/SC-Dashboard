@@ -37,7 +37,6 @@ class BasicBarChartData extends BarChartData {
     @required List<String> barTouchTooltipData,
     @required List<double> barValues,
     @required double barWidth,
-    @required int barCount,
     @required int singularSize,
     int rodCount,
     Color rodColor,
@@ -63,7 +62,6 @@ class BasicBarChartData extends BarChartData {
     barTouchTooltipData = barTouchTooltipData ?? const [];
     barValues = barValues ?? const [];
     barWidth = barWidth ?? 22;
-    barCount = barCount ?? 5;
 
     rodCount = rodCount ?? 1;
     rodBorderRadius = rodBorderRadius ?? BorderRadius.circular(20);
@@ -74,14 +72,14 @@ class BasicBarChartData extends BarChartData {
     BaseBarChart base = BaseBarChart();
 
     barTouchData = barTouchData ??
-        base.baseTouchData(
+        base.touchData(
           barTouchTooltipData,
           toolTipStyle: toolTipStyle,
           tooltipBgColor: toolTipBgColor,
         );
 
     titlesData = titlesData ??
-        base.baseTitleData(
+        base.titleData(
           show: true,
           textStyle: titlesTextStyle,
           bottomTitles: barTouchTooltipData.asMap(),
@@ -89,8 +87,7 @@ class BasicBarChartData extends BarChartData {
 
     borderData = borderData ?? FlBorderData(show: false);
     barGroups = barGroups ??
-        base.baseBarGroups(
-          barCount,
+        base.barGroups(
           barValues,
           barWidth,
           rodCount,

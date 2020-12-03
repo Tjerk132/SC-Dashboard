@@ -32,11 +32,11 @@ class _ChartTitleState extends State<ChartTitle> {
             textAlign: TextAlign.left,
           ),
         ),
-        const SizedBox(
+        SizedBox(
           height: 2,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10.0, bottom: 2.0),
+          padding: EdgeInsets.only(left: 10.0, bottom: 2.0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(

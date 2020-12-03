@@ -5,7 +5,7 @@ import 'package:flutter_test_project/utility/utility.dart';
 import '../bar_chart/bar.dart';
 
 class BaseBarChart with BaseChart {
-  BarTouchData baseTouchData(
+  BarTouchData touchData(
     List<String> barTouchTooltipData, {
     TextStyle toolTipStyle,
     Color tooltipBgColor,
@@ -13,11 +13,13 @@ class BaseBarChart with BaseChart {
     return BarTouchData(
       touchTooltipData: BarTouchTooltipData(
         tooltipBgColor: tooltipBgColor,
+        fitInsideVertically: true,
         getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          int x = group.x.toInt();
-          String tooltip = barTouchTooltipData[x];
+          // int x = group.x.toInt();
+          // String tooltip = barTouchTooltipData[x];
           return BarTooltipItem(
-            '$tooltip\n${rod.y}',
+            //'$tooltip\n${rod.y}'
+            rod.y.toString(),
             toolTipStyle,
           );
         },
@@ -25,8 +27,7 @@ class BaseBarChart with BaseChart {
     );
   }
 
-  List<BarChartGroupData> baseBarGroups(
-    int count,
+  List<BarChartGroupData> barGroups(
     List<double> barValues,
     double barWidth,
     int rodCount,
@@ -38,7 +39,7 @@ class BaseBarChart with BaseChart {
   }) {
     double width = singularSize + (barWidth / rodCount);
     List<Bar> bars = new List<Bar>();
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < barValues.length; ++i) {
       int x = i;
       double y = barValues.getOrElse(i, null);
       bars.add(

@@ -1,23 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
-
-import 'charts/chart.dart';
 
 class TileGroupCreator {
 
 
-  TileGroup bySize(int size, List<Chart> charts) {
+  TileGroup bySize(int size, List<Widget> children) {
     switch (size) {
       case 1:
-        return SmallTileGroup(charts);
+        return SmallTileGroup(children);
       case 2:
-        return MediumTileGroup(charts);
+        return MediumTileGroup(children);
       case 3:
         return null;
       case 4:
-        return LargeTileGroup(charts);
+        return LargeTileGroup(children);
       default:
-        return SmallTileGroup(charts);
+        return SmallTileGroup(children);
     }
   }
 }

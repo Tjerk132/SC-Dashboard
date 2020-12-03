@@ -25,6 +25,7 @@ class BasicLineChartData extends LineChartData {
           gridData: gridData,
           titlesData: titlesData,
           borderData: borderData,
+          clipData: FlClipData.all(),
           minX: minX,
           maxX: maxX,
           minY: minY,
@@ -32,10 +33,10 @@ class BasicLineChartData extends LineChartData {
         );
 
   factory BasicLineChartData({
-    @required int lineCount,
     @required Map<int, List<FlSpot>> spots,
     @required Map<int, Color> colors,
     @required double lineWidth,
+    Color showingIndicatorsColor = Colors.black,
     Map<int, String> topTitles,
     Map<int, String> bottomTitles,
     Map<int, String> leftTitles,
@@ -55,7 +56,6 @@ class BasicLineChartData extends LineChartData {
     double minY,
     double maxY,
   }) {
-    lineCount = lineCount ?? 3;
     spots = spots ?? const [];
     colors = colors ?? const [];
     lineWidth = lineWidth ?? 6.0;
@@ -63,8 +63,7 @@ class BasicLineChartData extends LineChartData {
 
     BaseLineChart base = BaseLineChart();
 
-    List<LineChartBarData> lineBarsData = base.baseLineGroups(
-      lineCount,
+    List<LineChartBarData> lineBarsData = base.lineGroups(
       spots,
       colors,
       lineWidth,
@@ -72,9 +71,12 @@ class BasicLineChartData extends LineChartData {
       belowBarColors: belowBarColors,
     );
 
+    //todo now shows only first line
+    lineTouchData = lineTouchData ?? base.lineTouchData(showingIndicatorsColor);
+
     gridData = gridData ?? FlGridData(show: false);
     titlesData = titlesData ??
-        base.baseTitleData(
+        base.titleData(
           show: true,
           reservedSize: reservedSize,
           textStyle: titleTextStyle,
@@ -84,9 +86,9 @@ class BasicLineChartData extends LineChartData {
           leftTitles: leftTitles,
           rightTitles: rightTitles,
         );
+
     borderData = borderData ?? FlBorderData(show: false);
-    //todo now shows only first line
-    showingTooltipIndicators = showingTooltipIndicators ?? base.tooltipIndicators(spots[0], colors[0]);
+    showingTooltipIndicators = showingTooltipIndicators ?? base.tooltipIndicators(spots);
 
     return BasicLineChartData._(
       lineBarsData: lineBarsData,

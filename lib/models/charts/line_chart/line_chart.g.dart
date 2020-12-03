@@ -12,7 +12,6 @@ LineChartGraph _$LineChartGraphFromJson(Map<String, dynamic> json) {
     subTitle: json['subTitle'] as String,
     date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
     lineWidth: (json['lineWidth'] as num)?.toDouble(),
-    lineCount: json['lineCount'] as int,
     topTitles: (json['topTitles'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(int.parse(k), e as String),
     ),
@@ -37,7 +36,6 @@ Map<String, dynamic> _$LineChartGraphToJson(LineChartGraph instance) =>
       'subTitle': instance.subTitle,
       'date': instance.date?.toIso8601String(),
       'lineWidth': instance.lineWidth,
-      'lineCount': instance.lineCount,
       'topTitles': instance.topTitles?.map((k, e) => MapEntry(k.toString(), e)),
       'bottomTitles':
           instance.bottomTitles?.map((k, e) => MapEntry(k.toString(), e)),

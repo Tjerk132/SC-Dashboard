@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/chart_title.dart';
+
+import 'chart_title.dart';
 
 class ChartData extends StatefulWidget {
   final ImplicitlyAnimatedWidget data;

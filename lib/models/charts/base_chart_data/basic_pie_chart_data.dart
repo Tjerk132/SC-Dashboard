@@ -24,7 +24,6 @@ class BasicPieChartData extends PieChartData {
         );
 
   factory BasicPieChartData({
-    @required int pieCount,
     @required List<Color> sectionColors,
     @required List<double> values,
     @required double pieRadius,
@@ -37,14 +36,12 @@ class BasicPieChartData extends PieChartData {
     PieTouchData pieTouchData,
     FlBorderData borderData,
   }) {
-    pieCount = pieCount ?? 3;
     sectionColors = sectionColors ?? const [];
-    values = values ?? List.filled(pieCount, 100 / pieCount);
+    values = values ?? List.filled(sectionColors.length, 100 / sectionColors.length);
     pieRadius = pieRadius ?? 60;
     BasePieChart base = BasePieChart();
 
     List<PieChartSectionData> sections = base.basePieGroups(
-      pieCount,
       sectionColors,
       pieRadius,
       values,

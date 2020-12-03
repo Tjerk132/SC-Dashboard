@@ -13,7 +13,6 @@ class PieChartAppearanceData {
   double centerSpaceRadius;
   bool showPieTitle;
   bool centerProgressIndicator;
-  Color backgroundColor;
   double indicatorSize;
   double fontSize;
 
@@ -21,7 +20,6 @@ class PieChartAppearanceData {
     @required this.type,
     int singularSize,
   }) {
-    this.backgroundColor = Colors.white;
     double factor = 6.5;
     switch (this.type) {
       case PieChartType.donut:
