@@ -7,7 +7,6 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
   DateTime _end = DateTime.now();
 
   DateTime get start => _start;
-
   DateTime get end => _end;
 
   void onSelectedDate(

@@ -39,7 +39,8 @@ extension DefaultList<E> on List<E> {
   E getOrElse(int key, E defaultValue) {
     if (this.asMap().containsKey(key)) {
       return this[key];
-    } else {
+    }
+    else {
       return defaultValue;
     }
   }
@@ -176,11 +177,12 @@ extension ObjectExtension on Object {
       return oProperty;
   }
 
-  Object orElse(Object defaultValue) {
+  Object orElse(Object orElse) {
     if (this != null) {
       return this;
-    } else
-      return defaultValue;
+    }
+    else
+      return orElse;
   }
 }
 

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_test_project/connection.dart';
 import 'package:flutter_test_project/context_navigator.dart';
 import 'package:flutter_test_project/views/browser/browser.dart';
-import 'package:flutter_test_project/views/todo_view.dart';
+import 'package:flutter_test_project/views/todos.dart';
 
 import 'controllers/todo_view_controller.dart';
 import 'providers/slot_machine_provider.dart';
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.search),
             onPressed: () => ContextNavigator.push(context, Browser())),
       ),
-      body: TodoView(controller: controller),
+      body: Todos(controller: controller),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => controller.addTodo(),
         label: Text('Add todo'),

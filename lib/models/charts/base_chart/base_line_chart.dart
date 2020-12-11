@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/base_chart/base_chart.dart';
-import 'package:flutter_test_project/models/charts/line_chart/line.dart';
 
 class BaseLineChart with BaseChart {
   List<LineChartBarData> lineGroups(
@@ -11,9 +10,9 @@ class BaseLineChart with BaseChart {
     bool showBelowBarData = false,
     List<Color> belowBarColors,
   }) {
-    return List<Line>.generate(
+    return List<LineChartBarData>.generate(
       spots.length,
-      (i) => Line(
+      (i) => LineChartBarData(
         spots: spots[i],
         isCurved: true,
         colors: [colors[i]],

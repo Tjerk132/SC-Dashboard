@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class Sizing {
@@ -11,18 +9,12 @@ class Sizing {
     double _multiplier = multiplier != null && multiplier > 0 ? multiplier : 1;
     return reverse == null || !reverse
         ? (mediaQuery.orientation == Orientation.portrait
-        ? mediaQuery.size.width / divider
-        : mediaQuery.size.width /
-        divider /
-        landscapeRatio *
-        _multiplier)
+          ? mediaQuery.size.width / divider
+          : mediaQuery.size.width / divider / landscapeRatio * _multiplier)
         .roundToDouble()
         : (mediaQuery.orientation == Orientation.portrait
-        ? mediaQuery.size.height /
-        divider /
-        landscapeRatio *
-        _multiplier
-        : mediaQuery.size.height / divider)
+          ? mediaQuery.size.height / divider / landscapeRatio * _multiplier
+          : mediaQuery.size.height / divider)
         .roundToDouble();
   }
 

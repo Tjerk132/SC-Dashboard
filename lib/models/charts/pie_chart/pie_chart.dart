@@ -39,16 +39,14 @@ class PieChartGraph extends Chart {
 
   PieChartGraph({
     String title,
-    DateTime date,
     this.values = const [],
     this.indicatorText = const [],
     List<Color> sectionColors,
   })  : sectionColors =
             sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
         super(
-          type: TileGroupType.PieChart,
+          type: ChartType.PieChart,
           title: title,
-          date: date,
         );
 
   void init(PieChartType type, int singularSize) {

@@ -10,7 +10,6 @@ BarChartGraph _$BarChartGraphFromJson(Map<String, dynamic> json) {
   return BarChartGraph(
     title: json['title'] as String,
     subTitle: json['subTitle'] as String,
-    date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
     barValues: (json['barValues'] as List)
         ?.map((e) => (e as num)?.toDouble())
         ?.toList(),
@@ -24,7 +23,6 @@ Map<String, dynamic> _$BarChartGraphToJson(BarChartGraph instance) =>
     <String, dynamic>{
       'title': instance.title,
       'subTitle': instance.subTitle,
-      'date': instance.date?.toIso8601String(),
       'barValues': instance.barValues,
       'barTouchTooltipData': instance.barTouchTooltipData,
     };

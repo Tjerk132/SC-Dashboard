@@ -14,11 +14,9 @@ class TextChart extends Chart {
   TextChart({
     String title,
     this.content,
-    DateTime date,
   }) : super(
-          type: TileGroupType.Text,
+          type: ChartType.Text,
           title: title,
-          date: date,
         );
 
   factory TextChart.fromJson(Map<String, dynamic> json) =>
@@ -34,18 +32,16 @@ class _TextChartState extends State<TextChart> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
           widget.title,
           style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
         ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            widget.content,
-            style: TextStyle(fontSize: 20.0),
-          ),
-        )
+        Text(
+          widget.content,
+          style: TextStyle(fontSize: 20.0),
+        ),
       ],
     );
   }

@@ -1,277 +1,105 @@
 {
   "0": {
-    "date": "2020-12-03T10:10:00",
-    "type": "PieChart",
-    "title": "Reactiesnelheid doel",
-    "values": [
-      62.20,
-      37.80
-    ],
-    "indicatorText": [
-      "Momenteel",
-      "Goal"
-    ],
-    "sectionColors": [
-      "#ff13d38e",
-      "#ffd9d9d9"
-    ]
+    "date": "2020-12-09T10:10:00",
+    "0": {
+      "type": "LineChart",
+      "title": "Reactie",
+      "subTitle": "Geraakte clips/sec",
+      "bottomTitles": {
+        "0": "0",
+        "3": "5",
+        "6": "10",
+        "9": "15",
+        "12": "20"
+      },
+      "leftTitles": {
+        "0": "0s",
+        "1": "5s",
+        "2": "10s",
+        "3": "15s",
+        "4": "20s",
+        "5": "25s",
+        "6": "30s"
+      },
+      "colors": {
+        "0": "#ff13d38e"
+      },
+      "spots": {
+        "0": [
+          [0, 0],
+          [3, 0.5],
+          [5, 1.2],
+          [7, 1.8],
+          [9, 2.1],
+          [11, 2.3],
+          [13, 2.5]
+        ]
+      }
+    },
+    "1" : {
+      "type": "Text",
+      "title": "Aantal geraakte clips",
+      "content": "25"
+    },
+    "2" : {
+      "type": "Text",
+      "title": "Gemiddelde tijd",
+      "content": "3 seconden"
+    },
+    "3" : {
+      "type": "Text",
+      "title": "Highscore",
+      "content": "2.1 seconden"
+    }
   },
   "1": {
-    "date": "2020-12-03T10:10:00",
-    "type": "PieChart",
-    "title": "",
-    "values": [
-      62.20,
-      37.80
-    ],
-    "indicatorText": [
-      "Reactie",
-      "Parcours"
-    ],
-    "sectionColors": [
-      "#ff13d38e",
-      "#fff8b250"
-    ]
-  },
-  "2": {
-    "date": "2020-12-03T10:10:00",
-    "type": "BarChart",
-    "title": "Parcours",
-    "subTitle": "Gemiddelde per aantal rondes",
-    "barTouchTooltipData": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7"
-    ],
-    "barValues": [
-      11.1,
-      12.9,
-      13.8,
-      15.2,
-      16.0,
-      16.4,
-      17.6
-    ]
-  },
-  "3": {
-    "date": "2020-12-02T10:10:00",
-    "type": "LineChart",
-    "title": "Reactie",
-    "subTitle": "Tijdslimiet record",
-    "bottomTitles": {
-      "0": "0s",
-      "3": "30s",
-      "6": "1m",
-      "9": "1.5m",
-      "12": "2m"
+    "date": "2020-12-08T10:10:00",
+    "0": {
+      "type": "LineChart",
+      "title": "Parcours",
+      "subTitle": "Afstand per sec",
+      "bottomTitles": {
+        "0": "Start",
+        "12": "Eind"
+      },
+      "leftTitles": {
+        "0": "0s",
+        "1": "5s",
+        "2": "10s",
+        "3": "15s",
+        "4": "20s",
+        "5": "25s",
+        "6": "30s"
+      },
+      "colors": {
+        "0": "#ff13d38e"
+      },
+      "spots": {
+        "0": [
+          [0, 0],
+          [3, 0.5],
+          [5, 1.2],
+          [7, 1.8],
+          [9, 2.1],
+          [11, 2.3],
+          [13, 2.5]
+        ]
+      }
     },
-    "leftTitles": {
-      "0": "0",
-      "1": "10",
-      "2": "20",
-      "3": "30",
-      "4": "40"
+    "1" : {
+      "type": "Text",
+      "title": "Snelste ronde",
+      "content": "25 seconden"
     },
-    "colors": {
-      "0": "#ff13d38e"
+    "2" : {
+      "type": "Text",
+      "title": "Gemiddelde tijd",
+      "content": "29 seconden"
     },
-    "spots": {
-      "0": [
-        [0, 0],
-        [3, 0.5],
-        [5, 1.2],
-        [7, 1.8],
-        [9, 2.1],
-        [11, 2.3],
-        [13, 2.5]
-      ]
+    "3" : {
+      "type": "Text",
+      "title": "Totaal aantal rondes",
+      "content": "12"
     }
-  },
-  "4": {
-    "date": "2020-12-02T10:10:00",
-    "type": "LineChart",
-    "title": "Parcours",
-    "subTitle": "Snelste ronde",
-    "bottomTitles": {
-      "1": "Start",
-      "12": "Eind"
-    },
-    "leftTitles": {
-      "0": "0s",
-      "1": "5s",
-      "2": "10s",
-      "3": "15s",
-      "4": "20s"
-    },
-    "colors": {
-      "0": "#ff13d38e"
-    },
-    "spots": {
-      "0": [
-        [0, 0],
-        [2, 0.5],
-        [4, 0.8],
-        [6, 1.2],
-        [8, 1.7],
-        [10, 2.4],
-        [12, 3]
-      ]
-    }
-  },
-  "5": {
-    "date": "2020-12-02T10:10:00",
-    "type": "BarChart",
-    "title": "Reactie",
-    "subTitle": "gemiddelde per afstand (1min)",
-    "barTouchTooltipData": [
-      "10cm",
-      "20cm",
-      "30cm",
-      "40cm",
-      "50cm"
-    ],
-    "barValues": [
-      7.0,
-      7.4,
-      8.2,
-      8.1,
-      8.4
-    ]
-  },
-  "6": {
-    "date": "2020-12-02T10:10:00",
-    "type": "PieChart",
-    "title": "Gespeelde banen Parcours",
-    "values": [
-      69.80,
-      30.20
-    ],
-    "indicatorText": [
-      "1 baan",
-      "2 banen"
-    ],
-    "sectionColors": [
-      "#ff13d38e",
-      "#fff8b250"
-    ]
-  },
-  "7": {
-    "date": "2020-12-02T10:10:00",
-    "type": "BarChart",
-    "title": "Reactie",
-    "subTitle": "records op tijdslimiet",
-    "barTouchTooltipData": [
-      "5s",
-      "15s",
-      "20s",
-      "40s",
-      "50s",
-      "1m",
-      "5m"
-    ],
-    "barValues": [
-      2.0,
-      3.0,
-      4.0,
-      5.0,
-      6.0,
-      7.0,
-      7.0
-    ]
-  },
-  "8": {
-    "date": "2020-12-02T10:10:00",
-    "type": "LineChart",
-    "title": "Reactie",
-    "subTitle": "Records op tijds- & triggerlimiets",
-    "bottomTitles": {
-      "0": "0s",
-      "3": "30s",
-      "6": "1m",
-      "9": "1.5m",
-      "12": "2m"
-    },
-    "leftTitles": {
-      "0": "0",
-      "1": "10",
-      "2": "20",
-      "3": "30",
-      "4": "40"
-    },
-    "colors": {
-      "0": "#ff0293ee",
-      "1": "#ff13d38e",
-      "2": "#fff8b250"
-    },
-    "spots": {
-      "0": [
-        [0, 0],
-        [3, 0.5],
-        [5, 0.9],
-        [7, 1.4],
-        [9, 2.4],
-        [11, 2.6],
-        [13, 2.8]
-      ],
-      "1": [
-        [0, 0],
-        [3, 1.2],
-        [5, 1.6],
-        [7, 1.8],
-        [9, 1.8],
-        [11, 1.9],
-        [13, 2.1]
-      ],
-      "2": [
-        [0, 0],
-        [3, 0.7],
-        [5, 1.25],
-        [7, 1.7],
-        [9, 2.0],
-        [11, 2.15],
-        [13, 2.5]
-      ]
-    }
-  },
-  "9": {
-    "date": "2020-12-02T10:10:00",
-    "type": "LineChart",
-    "title": "Parcours",
-    "subTitle": "Laatst gespeelde spel",
-    "bottomTitles": {
-      "1": "Start",
-      "13": "Eind"
-    },
-    "leftTitles": {
-      "0": "0s",
-      "1": "30s",
-      "2": "1m",
-      "3": "1.5m",
-      "4": "2m"
-    },
-    "colors": {
-      "0": "#ff13d38e"
-    },
-    "spots": {
-      "0": [
-        [0, 0],
-        [3, 1],
-        [6, 1.7],
-        [8, 2.2],
-        [9, 2.5],
-        [11, 3.1],
-        [13, 3.3]
-      ]
-    }
-  },
-  "10": {
-    "date": "2020-12-02T10:10:00",
-    "type": "Text",
-    "title": "Parcours texttile",
-    "content": "text content lorum ipsum lorum ipsum lorum ipsum lorum ipsum "
   }
 }

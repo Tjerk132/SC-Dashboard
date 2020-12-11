@@ -1,13 +1,16 @@
 import 'dart:core';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test_project/device_type.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_test_project/models/session/session.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
 import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
-import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 import 'package:flutter_test_project/views/dashboard/time_filter.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +25,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   DashboardLogic _logic;
-  Future<List<TileGroup>> _future;
+  Future<List<Session>> _future;
   TimeFilterProvider provider;
 
   @override
@@ -35,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
     DateTime now = DateTime.now();
     _future = _logic.groups(
       context,
-      start: DateTime(now.year, now.month, now.day),
+      start: now.subtract(Duration(days: 7)),
       end: now,
     );
     super.initState();
@@ -48,18 +51,15 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void providerCallback() {
-    provider.addListener(() {
-      //todo only gets executed after 1st callback
-      if (this.mounted) {
-        setState(() {
-          _future = _logic.groups(
-            context,
-            start: provider.start,
-            end: provider.end,
-          );
-        });
-      }
-    });
+    if (this.mounted) {
+      setState(() {
+        _future = _logic.groups(
+          context,
+          start: provider.start,
+          end: provider.end,
+        );
+      });
+    }
   }
 
   @override
@@ -78,29 +78,51 @@ class _DashboardState extends State<Dashboard> {
         ],
         bottom: TimeFilter(appBarHeight: AppBar().preferredSize.height),
       ),
-      body: FutureBuilder<List<TileGroup>>(
+      body: FutureBuilder<List<Session>>(
         future: _future,
-        builder: (BuildContext context, AsyncSnapshot<List<TileGroup>> snapshot) {
-          return StaggeredGridView.countBuilder(
-            physics: BouncingScrollPhysics(),
-            itemCount: snapshot.hasData ? snapshot.data.length : 8,
-            crossAxisCount: widget.crossAxisCount,
-            itemBuilder: (BuildContext context, int index) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return TileShimmer(
-                    imageShimmerRatio: 0.45,
-                    textShimmers: 1,
-                    titleShimmer: true,
-                  );
-                default:
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  return snapshot.data[index];
-              }
-            },
-            staggeredTileBuilder: (int index) => StaggeredTile.fit(4),
+        builder: (BuildContext context, AsyncSnapshot<List<Session>> snapshot) {
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: snapshot.hasData
+                  ? snapshot.data
+                      .map((session) {
+                        return <Widget>[
+                          session.title,
+                          StaggeredGridView.countBuilder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            crossAxisCount: widget.crossAxisCount,
+                            itemCount: session.groups.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return session.groups[index];
+                            },
+                            staggeredTileBuilder: (int index) =>
+                                StaggeredTile.fit(
+                                    session.groups[index] is TitleTileGroup
+                                        ? widget.crossAxisCount
+                                        : widget.crossAxisCount ~/ 2),
+                          )
+                        ];
+                      })
+                      .reduce((value, element) => [...value, ...element])
+                      .toList()
+                  : <Widget>[
+                GridView.count(
+                  physics: ScrollPhysics(),
+                  crossAxisCount: widget.crossAxisCount ~/ 4,
+                  shrinkWrap: true,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 2,
+                  children: List<TileShimmer>.generate(
+                    6,
+                    (index) => TileShimmer(
+                      size: [1,4][Random().nextInt(2)],
+                    ),
+                  ),
+                )
+              ],
+            ),
           );
         },
       ),

@@ -2,28 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/device_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/views/dashboard/tile.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
-/// the purpose of this class in to align 2x1 tiles in the grid
+/// the purpose of this class in to align 2x1 and [TitleTileGroup] tiles in the grid
 /// correctly. this is achieved with the two ratio's [portraitTileHeightRatio]
-/// and [landscapeTileHeightRatio] that give the ratio to which
-/// a 2x1 tile matches the height of a 1x1 tile.
-class VerticalTile extends StatefulWidget {
-
+/// and [landscapeTileHeightRatio] that give the ratio to which the
+/// current tile will be scaled to.
+class ConstrainedTile extends StatefulWidget {
   final Widget child;
-  final double portraitTileHeightRatio = DeviceType().isPhone ? 3.0 : 6.16;
-  final double landscapeTileHeightRatio = DeviceType().isPhone ? 1.5 : 2.35;
+  final double portraitTileHeightRatio;
+  final double landscapeTileHeightRatio;
 
-  VerticalTile({
+  ConstrainedTile({
     Key key,
     this.child,
+    this.portraitTileHeightRatio,
+    this.landscapeTileHeightRatio
   }) : super(key: key);
 
   @override
-  State<VerticalTile> createState() => _VerticalTileState();
+  State<ConstrainedTile> createState() => _ConstrainedTileState();
 }
 
-class _VerticalTileState extends State<VerticalTile> {
-  // todo: now only works for even fits (necessary for uneven?)
+class _ConstrainedTileState extends State<ConstrainedTile> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData data = MediaQuery.of(context);

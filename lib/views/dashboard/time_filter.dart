@@ -33,6 +33,7 @@ class _TimeFilterState extends State<TimeFilter>
   void initState() {
     super.initState();
     _tabController = new TabController(length: 3, vsync: this);
+    this.setTabIndex(1);
     // set the initial dates for the dateTimePickers
     DateTime now = DateTime.now();
     startDate = DateTime(now.year, now.month, now.day);

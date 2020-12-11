@@ -6,11 +6,11 @@ class Clock extends StatefulWidget {
   final Duration updateInterval;
   final TextStyle textStyle;
 
-  Clock(
-      {Key key,
-      this.updateInterval = const Duration(seconds: 1),
-      this.textStyle})
-      : super(key: key);
+  Clock({
+    Key key,
+    this.updateInterval = const Duration(seconds: 1),
+    this.textStyle,
+  }) : super(key: key);
 
   @override
   _ClockState createState() => _ClockState();

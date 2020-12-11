@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test_project/context_navigator.dart';
-import 'package:flutter_test_project/views/browser/top_links_view.dart';
+import 'package:flutter_test_project/views/browser/top_links.dart';
 import 'package:flutter_test_project/views/compute_test.dart';
 import 'package:flutter_test_project/views/dashboard/dashboard.dart';
 import 'package:flutter_test_project/views/slot_machine/slot_machine_view.dart';
 
-import 'link_highlights_view.dart';
+import 'link_highlights.dart';
 
 class Browser extends StatefulWidget {
 
@@ -44,8 +44,7 @@ class BrowserState extends State<Browser> {
           child: Column(
             children: <Widget>[
               Container(
-                padding:
-                    new EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 child: TextField(
                   controller: _textEditingController,
                   onSubmitted: (value) => null,

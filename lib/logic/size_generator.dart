@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter_test_project/enums/tile_group_type.dart';
+
 class SizeGenerator {
   final List<int> availableSizes = [1, 2, 4];
   List<int> sizes;
@@ -8,6 +10,15 @@ class SizeGenerator {
   SizeGenerator() {
     this.sizes = new List<int>();
     this.r = new Random();
+  }
+
+  int nextSize(ChartType type, int index, int remaining) {
+    //todo check if refactor is necessary
+    if (type == ChartType.Text) {
+      return 2;
+    }
+    else
+      return calculateNextSize(index, remaining);
   }
 
   int calculateNextSize(int index, int remaining) {

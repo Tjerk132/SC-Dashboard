@@ -6,7 +6,7 @@ import 'package:flutter_test_project/enums/tile_group_type.dart';
 import 'package:flutter_test_project/models/charts/base_chart_data/basic_bar_chart_data.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/bar_chart_appearance_data.dart';
-import 'file:///C:/Users/Tjerk_2/Desktop/Flutter-TestApp/lib/models/charts/chart_components/chart_data.dart';
+import 'package:flutter_test_project/models/charts/chart_components/chart_data.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -24,14 +24,12 @@ class BarChartGraph extends Chart {
   BarChartGraph({
     String title,
     String subTitle,
-    DateTime date,
     this.barValues = const [],
     this.barTouchTooltipData = const [],
   }) : super(
-          type: TileGroupType.BarChart,
+          type: ChartType.BarChart,
           title: title,
           subTitle: subTitle,
-          date: date,
         );
 
   void init(int singularSize) {
@@ -59,48 +57,37 @@ class BarChartGraphState extends State<BarChartGraph> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          // Align(
-          //   alignment: Alignment.topRight,
-          //   child: IconButton(
-          //     alignment: Alignment.topRight,
-          //     icon: Icon(
-          //       Icons.play_arrow,
-          //       color: Colors.black.withOpacity(0.9),
-          //     ),
-          //     onPressed: () => print('No onPress implemented'),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: ChartData(
-              data: BarChart(
-                BasicBarChartData(
-                  getBottomTitle: (String title) => title,
-                  barTouchTooltipData: widget.barTouchTooltipData,
-                  barValues: widget.barValues,
-                  barWidth: widget.data.barWidth,
-                  singularSize: widget.data.singularSize,
-                  rodCount: 1,
-                  rodColor: ThemeScheme.accentColor,
-                  rodBackgroundColor: ThemeScheme.accentColor.withOpacity(0.5),
-                  titlesTextStyle: TextStyle(
-                    color: Colors.black,
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  toolTipStyle: TextStyle(
-                    color: Colors.yellow,
-                  ),
-                  toolTipBgColor: Colors.blueGrey,
+      alignment: Alignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ChartData(
+            data: BarChart(
+              BasicBarChartData(
+                getBottomTitle: (String title) => title,
+                barTouchTooltipData: widget.barTouchTooltipData,
+                barValues: widget.barValues,
+                barWidth: widget.data.barWidth,
+                singularSize: widget.data.singularSize,
+                rodCount: 1,
+                rodColor: ThemeScheme.accentColor,
+                rodBackgroundColor: ThemeScheme.accentColor.withOpacity(0.5),
+                titlesTextStyle: TextStyle(
+                  color: Colors.black,
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
+                toolTipStyle: TextStyle(
+                  color: Colors.yellow,
+                ),
+                toolTipBgColor: Colors.blueGrey,
               ),
-              title: widget.title,
-              subTitle: widget.subTitle,
             ),
+            title: widget.title,
+            subTitle: widget.subTitle,
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 }

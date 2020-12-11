@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/tile_group_type.dart';
 import 'package:flutter_test_project/models/charts/base_chart_data/basic_line_chart_data.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/line_chart_appearance_data.dart';
-import 'file:///C:/Users/Tjerk_2/Desktop/Flutter-TestApp/lib/models/charts/chart_components/chart_data.dart';
+import 'package:flutter_test_project/models/charts/chart_components/chart_data.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
 import '../chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
@@ -65,7 +65,6 @@ class LineChartGraph extends Chart {
   LineChartGraph({
     String title,
     String subTitle,
-    DateTime date,
     this.lineWidth = 8,
     this.topTitles = const {},
     this.bottomTitles = const {},
@@ -75,10 +74,9 @@ class LineChartGraph extends Chart {
     Map<int, Color> colors,
   })  : colors = colors.isEmpty ? ThemeScheme.chartPalette.asMap() : colors,
         super(
-          type: TileGroupType.LineChart,
+          type: ChartType.LineChart,
           title: title,
           subTitle: subTitle,
-          date: date,
         );
 
   void init(int singularSize) {
@@ -103,11 +101,8 @@ class LineChartGraph extends Chart {
 }
 
 class LineChartGraphState extends State<LineChartGraph> {
-  // bool isShowingMainData = true;
-
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
     return AspectRatio(
       aspectRatio: 1.13,
       child: Container(
@@ -166,22 +161,6 @@ class LineChartGraphState extends State<LineChartGraph> {
                 ),
               ),
             ),
-            // Align(
-            //   alignment: Alignment.topLeft,
-            //   child: IconButton(
-            //     alignment: Alignment.topLeft,
-            //     icon: Icon(
-            //       Icons.refresh,
-            //       color:
-            //           Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
-            //     ),
-            //     onPressed: () {
-            //       setState(() {
-            //         isShowingMainData = !isShowingMainData;
-            //       });
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),

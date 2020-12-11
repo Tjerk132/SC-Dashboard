@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/enums/tile_group_type.dart';
-import 'package:flutter_test_project/enums/pie_chart_type.dart';
+// import 'package:flutter_test_project/enums/pie_chart_type.dart';
 import 'package:flutter_test_project/logic/size_generator.dart';
-import 'package:flutter_test_project/models/charts/chart.dart';
-
+import 'package:flutter_test_project/models/session/session.dart';
 // import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
@@ -15,130 +12,122 @@ class DashboardLogic {
   Logger logger = new Logger(name: DashboardLogic, timedPrinting: true);
 
   final int crossAxisCount;
-  SizeGenerator sizeGenerator;
-  final List<dynamic> types = [
-    PieChartType.progression,
-    PieChartType.donut,
-    null, null, null, null,
-    PieChartType.divided,
-    null, null, null, null
-  ];
 
-  //todo remove (unused)
+  // final List<dynamic> types = [
+  //   PieChartType.progression,
+  //   PieChartType.donut,
+  //   null, null, null, null,
+  //   PieChartType.divided,
+  //   null, null, null, null
+  // ];
+
   int occupied = 0;
-  List<TileGroup> _groups;
+  List<Session> _sessions;
+  SizeGenerator sizeGenerator;
 
   // ImageDao dao;
 
   DashboardLogic(this.crossAxisCount) {
-    this._groups = new List<TileGroup>();
+    this._sessions = new List<Session>();
     this.sizeGenerator = new SizeGenerator();
     // this.dao = new ImageDao();
   }
 
-  Future<List<TileGroup>> groups(
+  Future<List<Session>> groups(
     BuildContext context, {
     @required DateTime start,
     @required DateTime end,
   }) async {
     //only fetch graphs if they are not already fetched before
-    if (_groups.isEmpty) {
+    if (_sessions.isEmpty) {
       //load all charts for the local file
-      String jsonCharts = await DefaultAssetBundle.of(context).loadString('lib/enums/samples.json');
-      Map<String, dynamic> charts = await compute(decodeCharts, jsonCharts);
-      await getTileGroups(charts);
-    }
-    List<TileGroup> groups = filterGroupsByDate(start, end);
-    int remaining = checkGroupAlignment(groups);
-    // tiles do not align completely
-    if(remaining != 0) {
-      //insert image todo put smartclips image?
-      groups.add(TileGroup.singularSizeFactory([Image.asset('lib/assets/youtube.jpg')], remaining));
-    }
-    return groups;
-  }
+      String jsonData = await DefaultAssetBundle.of(context).loadString('lib/enums/samples.json');
+      Map<String, dynamic> sessions = await compute(decodeCharts, jsonData);
+      for (int i = 0; i < sessions.length; ++i) {
+        Map<String, dynamic> sessionData = sessions['$i'];
 
-  Future<void> getTileGroups(Map<String, dynamic> charts) async {
-    for (int i = 0; i < charts.length;) {
-      int remaining = charts.length - i;
-      int singularSize = sizeGenerator.calculateNextSize(_groups.length, remaining);
+        Session session = new Session(sessionData['date']);
+        await session.retrieveGroups(sessionData, this.sizeGenerator);
 
-      TileGroup g;
-      //only small tileGroup can have multiple charts
-      if (singularSize == 1) {
-        g = await createSmallGroup(charts, singularSize, i);
-        i += 4;
-      }
-      else {
-        dynamic type = types[i];
-        Chart chart = await getGroupTypeByIndex(charts, i, singularSize, type);
-        g = createTile([chart], singularSize);
-        i++;
-      }
-      _groups.add(g);
-    }
-  }
-
-  Future<TileGroup> createSmallGroup(
-    Map<String, dynamic> jsonCharts,
-    int singularSize,
-    int currentIndex,
-  ) async {
-    List<Chart> charts = new List<Chart>();
-    for (int j = 0; j < 4; ++j) {
-      int index = currentIndex + j;
-      if (index < jsonCharts.length) {
-        dynamic type = types[index];
-        charts.add(
-            await getGroupTypeByIndex(jsonCharts, index, singularSize, type));
+        occupied += session.occupied;
+        _sessions.add(session);
       }
     }
-    return createTile(charts, singularSize);
+    List<Session> sessions = filterSessionsByDate(start, end);
+    sessions.forEach((session) => alignSessionGroups(session));
+    return sessions;
   }
 
-  Future<Widget> getGroupTypeByIndex(
-    Map<String, dynamic> jsonCharts,
-    int index,
-    int singularSize,
-    dynamic chartType,
-  ) async {
-    Map<String, dynamic> chart = jsonCharts['$index'];
-    TileGroupType type = TileGroupType.values.firstWhere((e) => e.toString().split('.').last == chart['type']);
-    return await type.instance(chart, singularSize, chartType);
-  }
+  // Future<void> getTileGroups(Map<String, dynamic> charts) async {
+  //   for (int i = 0; i < charts.length;) {
+  //     int remaining = charts.length - i;
+  //     int singularSize =
+  //         sizeGenerator.calculateNextSize(_groups.length, remaining);
+  //
+  //     TileGroup g;
+  //     //only small tileGroup can have multiple charts
+  //     if (singularSize == 1) {
+  //       g = await createSmallGroup(charts, singularSize, i);
+  //       i += 4;
+  //     } else {
+  //       dynamic type = types[i];
+  //       Chart chart = await jsonToChart(charts, singularSize, type);
+  //       g = createTile([chart], singularSize);
+  //       i++;
+  //     }
+  //     _groups.add(g);
+  //   }
+  // }
 
-  TileGroup createTile(List<Chart> charts, int singularSize) {
-    TileGroup group = TileGroup.singularSizeFactory(charts, singularSize);
-    occupied += group.occupationSize;
-    return group;
-  }
+  // Future<TileGroup> createSmallGroup(
+  //   Map<String, dynamic> jsonCharts,
+  //   int singularSize,
+  //   int currentIndex,
+  // ) async {
+  //   List<Chart> charts = new List<Chart>();
+  //   for (int j = 0; j < 4; ++j) {
+  //     int index = currentIndex + j;
+  //     if (index < jsonCharts.length) {
+  //       dynamic type = types[index];
+  //       charts.add(
+  //           await jsonToChart(jsonCharts, singularSize, type));
+  //     }
+  //   }
+  //   return createTile(charts, singularSize);
+  // }
 
-  List<TileGroup> filterGroupsByDate(
+  List<Session> filterSessionsByDate(
     DateTime start,
     DateTime end,
   ) {
-    return List<TileGroup>.of(_groups)
-      .where((group) =>
-        group.date.isAfter(start) &&
-        group.date.isBefore(end))
-      .toList();
+    return List<Session>.of(_sessions)
+        .where((session) =>
+            session.date.isAfter(start) && session.date.isBefore(end))
+        .toList();
   }
 
-  int checkGroupAlignment(List<TileGroup> groups) {
+  Session alignSessionGroups(Session session) {
     //only works for an even crossAxisCount
-    int filteredGroupsOccupied = groups.map((group) => group.occupationSize).reduce((a, b) => a + b);
-    int remaining = filteredGroupsOccupied % (crossAxisCount ~/ 2);
-    // print('${filteredGroupsOccupied ~/ 4} isOdd? ${(filteredGroupsOccupied ~/ 4).isOdd}');
-    // there is no space left to fill up a tile but the tiles do not align in the bottom
-    // so create a large tile to align
-    if(remaining == 0 && (filteredGroupsOccupied ~/ (crossAxisCount / 2)).isOdd) {
-      return 4;
+    int remaining = session.occupied % (crossAxisCount ~/ 2);
+
+    /// if [cantFillUpButCanAlign] is true then there is no space left to fill up a 4x4 tile
+    /// but the tiles do not align in the bottom.
+    /// if [cantFillUpButCanAlign] is false then the last tile can be filled up with a size
+    /// of [remaining]
+    bool cantFillUpButCanAlign =
+        (remaining == 0 && (session.occupied ~/ (crossAxisCount / 2)).isOdd);
+    int size = cantFillUpButCanAlign ? 4 : remaining;
+
+    // tiles do not align completely so insert a tile to align with the size of [remaining]
+    if (size != 0) {
+      //insert image todo put smartclips image?
+      session.groups.add(TileGroup.singularSizeFactory(
+          [Image.asset('lib/assets/youtube.jpg')], remaining));
     }
-    //else return the remaining space
-    return remaining;
+    return session;
   }
 
-// Future<List<NetworkImage>> getImages(Map<int, int> sizes) async =>
+// Future<List<NetworkImage>> getImages(List<Size> sizes) async =>
 //     await dao.getImages(sizes);
 }
 

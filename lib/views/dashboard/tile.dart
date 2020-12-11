@@ -18,15 +18,12 @@ class _TileState extends State<Tile> {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       clipBehavior: Clip.antiAlias,
 //      elevation: 4,
       child: AspectRatio(
-        aspectRatio: 1.0,
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: widget.child,
-        )
+        aspectRatio: 0.8,
+        child: widget.child,
       ),
     );
   }

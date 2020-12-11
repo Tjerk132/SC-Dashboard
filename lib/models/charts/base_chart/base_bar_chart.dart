@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/base_chart/base_chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
-import '../bar_chart/bar.dart';
 
 class BaseBarChart with BaseChart {
   BarTouchData touchData(
@@ -38,15 +37,13 @@ class BaseBarChart with BaseChart {
     bool showBackGround = true,
   }) {
     double width = singularSize + (barWidth / rodCount);
-    List<Bar> bars = new List<Bar>();
+    List<BarChartGroupData> bars = new List<BarChartGroupData>();
     for (int i = 0; i < barValues.length; ++i) {
       int x = i;
       double y = barValues.getOrElse(i, null);
       bars.add(
-        new Bar(
-          x,
-          y,
-          width: width,
+        new BarChartGroupData(
+          x: x,
           barRods: List<BarChartRodData>.generate(
             rodCount,
             (i) => createRod(

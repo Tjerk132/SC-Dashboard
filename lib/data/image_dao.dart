@@ -29,14 +29,14 @@
 //   bool dividableToIsolates = true;
 //
 //   /// Retrieve the images with the given list of [sizes],
-//   /// if the length of [tileSizes] is higher than [minimalToCompute]
+//   /// if the length of [Sizes] is higher than [minimalToCompute]
 //   /// [isolateCount] isolates will be spawned to compute the dividable images.
 //   ///
 //   /// If [unevenItemCount] is true of if [dividableToIsolates] is false then
 //   /// the non dividable images will be retrieved on the main thread.
-//   Future<List<NetworkImage>> getImages(List<TileSize> tileSizes) async {
+//   Future<List<NetworkImage>> getImages(List<Size> Sizes) async {
 //
-//     List<TileSize> sizes = new List<TileSize>.from(tileSizes);
+//     List<Size> sizes = new List<Size>.from(Sizes);
 //
 //     isolateCount = calculateIsolateCount(sizes.length);
 //
@@ -51,8 +51,8 @@
 //         images.addAll(retrieveNonDividableItems(sizes));
 //       }
 //       // let isolates compute images
-//       Map<int, List<TileSize>> subLists = divideList(sizes, isolateCount);
-//       for (List<TileSize> sizes in subLists.values) {
+//       Map<int, List<Size>> subLists = divideList(sizes, isolateCount);
+//       for (List<Size> sizes in subLists.values) {
 //         List<NetworkImage> isolateImages = await compute(retrieveImages, sizes);
 //         images.addAll(isolateImages);
 //       }
@@ -83,10 +83,10 @@
 //   }
 //
 //   /// Divide the given [sizes] list into subLists with a length of [divideIn]
-//   Map<int, List<TileSize>> divideList(List<TileSize> sizes, int divideIn) {
+//   Map<int, List<Size>> divideList(List<Size> sizes, int divideIn) {
 //     int totalLength = sizes.length;
 //     int subListLength = (totalLength / divideIn).round();
-//     Map<int, List<TileSize>> subLists = Map<int, List<TileSize>>();
+//     Map<int, List<Size>> subLists = Map<int, List<Size>>();
 //
 //     for(int i = 0; i < totalLength; i += subListLength) {
 //       int end = i + subListLength;
@@ -96,13 +96,13 @@
 //   }
 //
 //   /// Retrieve the non dividable items from [sizes] on the main thread
-//   List<NetworkImage> retrieveNonDividableItems(List<TileSize> sizes) {
+//   List<NetworkImage> retrieveNonDividableItems(List<Size> sizes) {
 //     int dividableByIsolates = divideTo * isolateCount;
 //
 //     int start = dividableByIsolates - 1;
 //     int end = sizes.indexOf(sizes.last);
 //     // create sublist of not dividable sizes
-//     List<TileSize> indivisibleByIsolates = sizes.sublist(start, end);
+//     List<Size> indivisibleByIsolates = sizes.sublist(start, end);
 //     // remove sublist from main sizes list
 //     sizes.removeRange(start, end);
 //     return retrieveImages(indivisibleByIsolates);
@@ -112,11 +112,11 @@
 // /// Retrieve images of type [NetworkImage] with the given [sizes] list
 // /// Note: this method needs to be placed outside of class [ImageDao] to allow
 // /// isolates to compute their list
-// List<NetworkImage> retrieveImages(List<TileSize> sizes) {
+// List<NetworkImage> retrieveImages(List<Size> sizes) {
 //
 //   List<NetworkImage> images = new List<NetworkImage>();
 //
-//   for (TileSize size in sizes) {
+//   for (Size size in sizes) {
 //     NetworkImage image = createImage(
 //         'https://picsum.photos/${size.width}/${size.height}/');
 //     images.add(image);

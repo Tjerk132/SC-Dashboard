@@ -4,24 +4,24 @@ import 'package:flutter_test_project/data/todo_dao.dart';
 
 import '../models/todo.dart';
 
-TextEditingController _textEditController = new TextEditingController();
-
-class TodoView extends StatefulWidget {
-  TodoView({Key key, this.controller}) : super(key: key);
+class Todos extends StatefulWidget {
+  Todos({Key key, this.controller}) : super(key: key);
 
   final TodoViewController controller;
 
   @override
-  State<TodoView> createState() => TodoViewState(controller: controller);
+  State<Todos> createState() => TodosState(controller: controller);
 }
 
-class TodoViewState extends State<TodoView> {
+class TodosState extends State<Todos> {
   List<Todo> todos;
   TodoDao dao;
 
+  TextEditingController _textEditController = new TextEditingController();
+
   final TodoViewController controller;
 
-  TodoViewState({this.controller}) {
+  TodosState({this.controller}) {
     todos = new List<Todo>();
     dao = new TodoDao();
     this.controller.addTodo = addTodo;
