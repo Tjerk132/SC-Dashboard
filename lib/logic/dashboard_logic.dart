@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_test_project/enums/pie_chart_type.dart';
-import 'package:flutter_test_project/logic/size_generator.dart';
 import 'package:flutter_test_project/models/session/session.dart';
 // import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
@@ -23,13 +22,10 @@ class DashboardLogic {
 
   int occupied = 0;
   List<Session> _sessions;
-  SizeGenerator sizeGenerator;
-
   // ImageDao dao;
 
   DashboardLogic(this.crossAxisCount) {
     this._sessions = new List<Session>();
-    this.sizeGenerator = new SizeGenerator();
     // this.dao = new ImageDao();
   }
 
@@ -38,24 +34,27 @@ class DashboardLogic {
     @required DateTime start,
     @required DateTime end,
   }) async {
-    //only fetch graphs if they are not already fetched before
+    //only fetch data if it is not already fetched before
     if (_sessions.isEmpty) {
       //load all charts for the local file
       String jsonData = await DefaultAssetBundle.of(context).loadString('lib/enums/samples.json');
       Map<String, dynamic> sessions = await compute(decodeCharts, jsonData);
-      for (int i = 0; i < sessions.length; ++i) {
-        Map<String, dynamic> sessionData = sessions['$i'];
-
-        Session session = new Session(sessionData['date']);
-        await session.retrieveGroups(sessionData, this.sizeGenerator);
-
-        occupied += session.occupied;
-        _sessions.add(session);
-      }
+      await this.retrieveSessions(sessions);
     }
-    List<Session> sessions = filterSessionsByDate(start, end);
-    sessions.forEach((session) => alignSessionGroups(session));
+    List<Session> sessions = this.filterSessionsByDate(start, end);
+    sessions.forEach((session) => this.alignSessionGroups(session));
     return sessions;
+  }
+
+  Future<void> retrieveSessions(Map<String, dynamic> sessions) async {
+    for (int i = 0; i < sessions.length; ++i) {
+      Map<String, dynamic> sessionData = sessions['$i'];
+      Session session = new Session(sessionData['date']);
+      await session.retrieveGroups(sessionData);
+
+      occupied += session.occupied;
+      _sessions.add(session);
+    }
   }
 
   // Future<void> getTileGroups(Map<String, dynamic> charts) async {
@@ -110,19 +109,17 @@ class DashboardLogic {
     //only works for an even crossAxisCount
     int remaining = session.occupied % (crossAxisCount ~/ 2);
 
-    /// if [cantFillUpButCanAlign] is true then there is no space left to fill up a 4x4 tile
+    /// if [cantFillUpButCanAlign] is true then there is no space left to fill up the last tile
     /// but the tiles do not align in the bottom.
     /// if [cantFillUpButCanAlign] is false then the last tile can be filled up with a size
     /// of [remaining]
-    bool cantFillUpButCanAlign =
-        (remaining == 0 && (session.occupied ~/ (crossAxisCount / 2)).isOdd);
-    int size = cantFillUpButCanAlign ? 4 : remaining;
+    bool cantFillUpButCanAlign = (remaining == 0 && (session.occupied ~/ (crossAxisCount / 2)).isOdd);
+    int size = cantFillUpButCanAlign ? 0 : remaining;
 
     // tiles do not align completely so insert a tile to align with the size of [remaining]
     if (size != 0) {
-      //insert image todo put smartclips image?
-      session.groups.add(TileGroup.singularSizeFactory(
-          [Image.asset('lib/assets/youtube.jpg')], remaining));
+      session.addGroup(TileGroup.singularSizeFactory(
+          [Image.asset('lib/assets/smart-clips.png')], size));
     }
     return session;
   }

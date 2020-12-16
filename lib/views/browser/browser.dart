@@ -5,7 +5,7 @@ import 'package:flutter_test_project/context_navigator.dart';
 import 'package:flutter_test_project/views/browser/top_links.dart';
 import 'package:flutter_test_project/views/compute_test.dart';
 import 'package:flutter_test_project/views/dashboard/dashboard.dart';
-import 'package:flutter_test_project/views/slot_machine/slot_machine_view.dart';
+import 'package:flutter_test_project/views/slot_machine/slot_machine.dart';
 
 import 'link_highlights.dart';
 

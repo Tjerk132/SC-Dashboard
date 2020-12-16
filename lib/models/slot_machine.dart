@@ -70,12 +70,15 @@ class SlotMachine {
 }
 
 class SlotMachineSpin {
-  SlotMachineSpin(
-      {@required this.toIndex, @required int duration, @required this.curve}) {
-    this.duration = new Duration(milliseconds: duration);
-  }
-
   int toIndex;
   Duration duration;
   Curve curve;
+
+  SlotMachineSpin({
+    @required this.toIndex,
+    @required int duration,
+    @required this.curve,
+  }) {
+    this.duration = new Duration(milliseconds: duration);
+  }
 }

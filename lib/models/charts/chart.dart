@@ -6,6 +6,7 @@ abstract class Chart extends StatefulWidget {
   final String title;
   final String subTitle;
 
+  @mustCallSuper
   Chart({
     Key key,
     this.type,

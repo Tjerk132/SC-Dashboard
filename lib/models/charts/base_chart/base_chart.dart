@@ -27,18 +27,21 @@ mixin BaseChart {
         showTitles: bottomTitles != null,
         textStyle: textStyle,
         margin: margin,
+        reservedSize: reservedSize,
         getTitles: createTitleFunction(bottomTitles),
       ),
       leftTitles: SideTitles(
         showTitles: leftTitles != null,
         textStyle: textStyle,
         margin: margin,
+        reservedSize: reservedSize,
         getTitles: createTitleFunction(leftTitles),
       ),
       rightTitles: SideTitles(
         showTitles: rightTitles != null,
         textStyle: textStyle,
         margin: margin,
+        reservedSize: reservedSize,
         getTitles:  createTitleFunction(rightTitles),
       ),
     );

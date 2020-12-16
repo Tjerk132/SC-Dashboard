@@ -68,6 +68,7 @@ flutter:
   assets:
     - lib/assets/youtube.jpg
     - lib/assets/placeholder.jpg
+    - lib/assets/smart-clips.png
     - lib/enums/samples.json
   #- images/a_dot_ham.jpeg
 

@@ -14,6 +14,7 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
     DateTime start,
     DateTime end,
   }) {
+    print('received filter for start=$start & end=$end');
     start = start ?? _start;
     end = end ?? _end;
     //if start is after end then end is always before start

@@ -104,18 +104,13 @@ class BaseLineChart with BaseChart {
       touchTooltipData: LineTouchTooltipData(
         tooltipBgColor: Colors.transparent,
         tooltipBottomMargin: 1,
-        // tooltipRoundedRadius: 10,
-        // fitInsideHorizontally: true,
-        // fitInsideVertically: true,
         getTooltipItems: (List<LineBarSpot> touchedSpots) {
           return touchedSpots
               .map(
                 (spot) => LineTooltipItem(
                   (spot.y).toStringAsFixed(1),
-                  TextStyle(
-                    color: color,
-                  ),
-                ),
+                  TextStyle(color: color),
+                )
               )
               .toList();
         },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/enums/time_filter_type.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
 
 import 'date_time_picker.dart';
@@ -6,11 +7,15 @@ import 'package:provider/provider.dart';
 
 class TimeFilter extends StatefulWidget implements PreferredSizeWidget {
   final double appBarHeight;
+  final TimeFilterType initialFilterType;
 
   TimeFilter({
     Key key,
     this.appBarHeight,
-  }) : super(key: key);
+    @required this.initialFilterType,
+  }) : super(key: key) {
+    assert(initialFilterType != null);
+  }
 
   @override
   _TimeFilterState createState() => _TimeFilterState();
@@ -22,6 +27,7 @@ class TimeFilter extends StatefulWidget implements PreferredSizeWidget {
 class _TimeFilterState extends State<TimeFilter>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  TimeFilterType filterType;
 
   /// These dates are adjusted with the methods [setStartDate]
   /// and [setEndDate] called from the onSelected method
@@ -32,12 +38,14 @@ class _TimeFilterState extends State<TimeFilter>
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(length: 3, vsync: this);
-    this.setTabIndex(1);
+    _tabController = new TabController(
+      length: TimeFilterType.values.length,
+      vsync: this,
+    );
+    this.setTabIndex(widget.initialFilterType.index);
     // set the initial dates for the dateTimePickers
-    DateTime now = DateTime.now();
-    startDate = DateTime(now.year, now.month, now.day);
-    endDate = startDate.add(Duration(days: 7));
+    startDate = widget.initialFilterType.start;
+    endDate = widget.initialFilterType.end;
   }
 
   @override
@@ -46,50 +54,34 @@ class _TimeFilterState extends State<TimeFilter>
     super.dispose();
   }
 
-  void tabChanged(BuildContext context, int index) {
-    DateTime now = DateTime.now();
-    if (index == 0) {
-      //filter for last session (today)
-      context.read<TimeFilterProvider>().onSelectedDate(
-        context,
-        start: DateTime(now.year, now.month, now.day),
-        end: now,
-      );
+  void tabChanged(int index) {
+    this.filterType = TimeFilterType.values.firstWhere((type) => type.index == index);
+    // Adjusted filter has non constant values and gets updated with
+    // the methods [setStartDate] and [setEndDate]
+    if (this.filterType != TimeFilterType.Adjusted) {
+      this.startDate = filterType.start;
+      this.endDate = filterType.end;
     }
-    else if (index == 1) {
-      //filter for last week
-      context.read<TimeFilterProvider>().onSelectedDate(
-        context,
-        start: now.subtract(Duration(days: 7)),
-        end: now,
-      );
-    }
-    else if (index == 2) {
-      //filter by given dates from DateTimePickers
-      context.read<TimeFilterProvider>().onSelectedDate(
-        context,
-        start: startDate,
-        // add 1 day to also count all activities of the last day
-        end: endDate.add(Duration(days: 1)),
-      );
-    }
+    this.readContext();
   }
 
   // set startDate for adjusted timespan from start DateTimePicker
-  void setStartDate(BuildContext context, DateTime startDate) {
+  void setStartDate(DateTime startDate) {
     this.startDate = startDate;
-    context.read<TimeFilterProvider>().onSelectedDate(
-      context,
-      start: this.startDate,
-    );
+    this.readContext();
   }
 
   // set endDate for adjusted timespan from end DateTimePicker
-  void setEndDate(BuildContext context, DateTime endDate) {
+  void setEndDate(DateTime endDate) {
     // add 1 day to also count all activities of the last day
     this.endDate = endDate.add(Duration(days: 1));
+    this.readContext();
+  }
+
+  void readContext() {
     context.read<TimeFilterProvider>().onSelectedDate(
       context,
+      start: this.startDate,
       end: this.endDate,
     );
   }
@@ -104,7 +96,7 @@ class _TimeFilterState extends State<TimeFilter>
     MediaQueryData data = MediaQuery.of(context);
     return TabBar(
       controller: _tabController,
-      onTap: (index) => tabChanged(context, index),
+      onTap: (index) => tabChanged(index),
       labelStyle: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 18.0,
@@ -126,15 +118,13 @@ class _TimeFilterState extends State<TimeFilter>
               DateTimePicker(
                 initialDate: startDate,
                 onFocus: () => setTabIndex(2),
-                onSelected: (DateTime selectedDate) =>
-                    setStartDate(context, selectedDate),
+                onSelected: (DateTime selected) => setStartDate(selected),
               ),
               Text(' - '),
               DateTimePicker(
                 initialDate: endDate,
                 onFocus: () => setTabIndex(2),
-                onSelected: (DateTime selectedDate) =>
-                    setEndDate(context, selectedDate),
+                onSelected: (DateTime selected) => setEndDate(selected),
               ),
             ],
           ),

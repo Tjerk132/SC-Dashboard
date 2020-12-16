@@ -9,7 +9,11 @@ class SlotMachineSlot extends StatefulWidget {
   final bool scrollable;
   final double offAxisFraction;
 
-  const SlotMachineSlot({this.size, this.scrollable, this.offAxisFraction});
+  const SlotMachineSlot({
+    this.size,
+    this.scrollable,
+    this.offAxisFraction,
+  });
 
   @override
   _SlotMachineSlotState createState() => _SlotMachineSlotState();

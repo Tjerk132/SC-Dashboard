@@ -67,7 +67,7 @@ class _SlotMachineState extends State<SlotMachine> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 RaisedButton(
                   onPressed: () => context.read<SlotMachineProvider>().onSpin(),
                   textColor: Colors.white,

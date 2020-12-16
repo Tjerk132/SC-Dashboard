@@ -14,7 +14,9 @@ class ChartData extends StatefulWidget {
     this.showTitle = true,
     this.title = '',
     this.subTitle = '',
-  }) : super(key: key);
+  }) : super(key: key) {
+    assert(data != null);
+  }
 
   @override
   State<ChartData> createState() => _ChartDataState();
@@ -34,14 +36,11 @@ class _ChartDataState extends State<ChartData> {
             child: widget.data,
           ),
         ),
-        // const SizedBox(
-        //   height: 2,
-        // ),
         widget.showTitle
             ? ChartTitle(
-          title: widget.title,
-          subTitle: widget.subTitle,
-        )
+                title: widget.title,
+                subTitle: widget.subTitle,
+              )
             : SizedBox(),
       ],
     );

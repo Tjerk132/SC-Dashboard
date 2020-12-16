@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/models/charts/chart.dart';
 
 class Tile extends StatefulWidget {
   const Tile({
