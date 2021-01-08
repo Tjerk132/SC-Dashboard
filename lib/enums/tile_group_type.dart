@@ -12,11 +12,11 @@ enum ChartType {
 }
 
 extension ChartTypeExtension on ChartType {
-  Future<Widget> instance(
+  Widget instance(
     Map<String, dynamic> json,
     int singularSize,
     dynamic type,
-  ) async {
+  ) {
     switch (this) {
       case ChartType.PieChart:
         return PieChartGraph.fromJson(

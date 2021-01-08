@@ -22,6 +22,7 @@ class DashboardLogic {
 
   int occupied = 0;
   List<Session> _sessions;
+
   // ImageDao dao;
 
   DashboardLogic(this.crossAxisCount) {
@@ -29,72 +30,56 @@ class DashboardLogic {
     // this.dao = new ImageDao();
   }
 
-  Future<List<Session>> groups(
+  Future<List<Session>> lastSession(BuildContext context) async {
+    //only fetch data if it is not already fetched before
+    if (_sessions.isEmpty) {
+      await fetchSessions(context);
+    }
+    List<Session> sessions = sortByNew(
+      List<Session>.of(_sessions)
+    );
+    Session lastSession = sessions.last;
+    this.alignSessionGroups(lastSession);
+    return <Session>[lastSession];
+  }
+
+  Future<List<Session>> sessions(
     BuildContext context, {
     @required DateTime start,
     @required DateTime end,
   }) async {
     //only fetch data if it is not already fetched before
     if (_sessions.isEmpty) {
-      //load all charts for the local file
-      String jsonData = await DefaultAssetBundle.of(context).loadString('lib/enums/samples.json');
-      Map<String, dynamic> sessions = await compute(decodeCharts, jsonData);
-      await this.retrieveSessions(sessions);
+      await fetchSessions(context);
     }
-    List<Session> sessions = this.filterSessionsByDate(start, end);
+    List<Session> sessions = sortByNew(
+      this.filterSessionsByDate(start, end)
+    );
+    // print(sessions.length);
     sessions.forEach((session) => this.alignSessionGroups(session));
     return sessions;
   }
 
-  Future<void> retrieveSessions(Map<String, dynamic> sessions) async {
+  Future<void> fetchSessions(BuildContext context) async {
+    //load all charts for the local file
+    String jsonData = await DefaultAssetBundle.of(context)
+        .loadString('lib/enums/samples.json');
+    Map<String, dynamic> sessions = await compute(decodeCharts, jsonData);
+    this.assignSessionData(sessions);
+  }
+
+  void assignSessionData(Map<String, dynamic> sessions) {
     for (int i = 0; i < sessions.length; ++i) {
       Map<String, dynamic> sessionData = sessions['$i'];
       Session session = new Session(sessionData['date']);
-      await session.retrieveGroups(sessionData);
+      session.retrieveGroups(sessionData);
 
       occupied += session.occupied;
       _sessions.add(session);
     }
   }
 
-  // Future<void> getTileGroups(Map<String, dynamic> charts) async {
-  //   for (int i = 0; i < charts.length;) {
-  //     int remaining = charts.length - i;
-  //     int singularSize =
-  //         sizeGenerator.calculateNextSize(_groups.length, remaining);
-  //
-  //     TileGroup g;
-  //     //only small tileGroup can have multiple charts
-  //     if (singularSize == 1) {
-  //       g = await createSmallGroup(charts, singularSize, i);
-  //       i += 4;
-  //     } else {
-  //       dynamic type = types[i];
-  //       Chart chart = await jsonToChart(charts, singularSize, type);
-  //       g = createTile([chart], singularSize);
-  //       i++;
-  //     }
-  //     _groups.add(g);
-  //   }
-  // }
-
-  // Future<TileGroup> createSmallGroup(
-  //   Map<String, dynamic> jsonCharts,
-  //   int singularSize,
-  //   int currentIndex,
-  // ) async {
-  //   List<Chart> charts = new List<Chart>();
-  //   for (int j = 0; j < 4; ++j) {
-  //     int index = currentIndex + j;
-  //     if (index < jsonCharts.length) {
-  //       dynamic type = types[index];
-  //       charts.add(
-  //           await jsonToChart(jsonCharts, singularSize, type));
-  //     }
-  //   }
-  //   return createTile(charts, singularSize);
-  // }
-
+  /// returns the [_sessions] filtered by [start] and [end]
   List<Session> filterSessionsByDate(
     DateTime start,
     DateTime end,
@@ -105,22 +90,31 @@ class DashboardLogic {
         .toList();
   }
 
+  List<Session> sortByNew(List<Session> sessions) {
+    sessions.sort((a, b) => a.date.compareTo(b.date));
+    // reverse sessions to display by new
+    return sessions.reversed.toList();
+  }
+
   Session alignSessionGroups(Session session) {
+    if(session.isAligned) {
+      return session;
+    }
     //only works for an even crossAxisCount
     int remaining = session.occupied % (crossAxisCount ~/ 2);
-
-    /// if [cantFillUpButCanAlign] is true then there is no space left to fill up the last tile
-    /// but the tiles do not align in the bottom.
-    /// if [cantFillUpButCanAlign] is false then the last tile can be filled up with a size
-    /// of [remaining]
-    bool cantFillUpButCanAlign = (remaining == 0 && (session.occupied ~/ (crossAxisCount / 2)).isOdd);
-    int size = cantFillUpButCanAlign ? 0 : remaining;
-
-    // tiles do not align completely so insert a tile to align with the size of [remaining]
-    if (size != 0) {
-      session.addGroup(TileGroup.singularSizeFactory(
-          [Image.asset('lib/assets/smart-clips.png')], size));
+    //groups can't be filled up but bottom could be not aligned.
+    if(remaining == 0) {
+      //check for bottom alignment
+      if(session.groups.length.isOdd) {
+        remaining = 4;
+      }
     }
+    // tiles do not align completely so insert a tile to align with the size of [remaining]
+    if (remaining != 0) {
+      session.addGroup(TileGroup.singularSizeFactory(
+          [Image.asset('lib/assets/smart-clips.png')], remaining));
+    }
+    session.isAligned = true;
     return session;
   }
 

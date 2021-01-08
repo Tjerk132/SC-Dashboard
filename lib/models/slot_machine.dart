@@ -59,12 +59,12 @@ class SlotMachine {
   /// to the power of the outcome of [multiplyByRandomPower]
   List<int> generateNumbers(int count) {
     return new List.generate(
-        count, (i) => multiplyByRandomPower(r.intMaxMin(9), 5));
+        count, (i) => multiplyByRandomPower(r.nextInt(9) + 1, 5));
   }
 
   /// return the given [number] to the power of a random wih max [maxPower]
   multiplyByRandomPower(int number, int maxPower) {
-    int tenthFactor = r.intMaxMin(maxPower);
+    int tenthFactor = r.nextInt(maxPower) + 1;
     return pow(10, tenthFactor) * number;
   }
 }

@@ -9,7 +9,6 @@ import 'package:flutter_test_project/models/charts/chart_components/chart_data.d
 import 'package:flutter_test_project/models/theme_scheme.dart';
 import '../chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
-import 'line_spots.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'line_chart.g.dart';
@@ -34,7 +33,15 @@ class LineChartGraph extends Chart {
 
   static _spotsFromJson(Map<String, dynamic> spots) {
     return spots?.castTo<int, List<FlSpot>>(
-      getValue: (value) => LineSpots.fromJson(value)?.spots,
+      // the to be converted array looks like: [ [1,1], [2,1.5] etc. ]
+      getValue: (value) {
+        List<FlSpot> spots = new List<FlSpot>();
+        for (List<dynamic> spotCoordinates in value) {
+          List<double> doubleCoordinates = spotCoordinates.map<double>((e) => e.toDouble()).toList();
+          spots.add(FlSpot(doubleCoordinates[0], doubleCoordinates[1]));
+        }
+        return spots;
+      }
     );
   }
 

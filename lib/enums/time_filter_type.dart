@@ -1,16 +1,16 @@
 enum TimeFilterType {
-  LastSession,
-  LastWeek,
-  Adjusted,
+  lastSession,
+  lastWeek,
+  adjusted,
 }
 
-/// the initial dates (start and end) of [TimeFilterType.Adjusted]
-/// are the same as [TimeFilterType.LastWeek]
+/// the initial dates (start and end) of [TimeFilterType.adjusted]
+/// are the same as [TimeFilterType.lastWeek]
 extension TimeFilterExtension on TimeFilterType {
 
   DateTime get start {
     DateTime now = DateTime.now();
-    if (this == TimeFilterType.LastSession) {
+    if (this == TimeFilterType.lastSession) {
       return DateTime(now.year, now.month, now.day);
     }
     else

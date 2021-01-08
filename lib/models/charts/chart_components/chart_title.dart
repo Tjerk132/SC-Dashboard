@@ -17,11 +17,11 @@ class ChartTitle extends StatefulWidget {
 class _ChartTitleState extends State<ChartTitle> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: <Widget>[
+          Text(
             widget.title,
             style: TextStyle(
               color: Colors.black,
@@ -31,14 +31,11 @@ class _ChartTitleState extends State<ChartTitle> {
             ),
             textAlign: TextAlign.left,
           ),
-        ),
-        SizedBox(
-          height: 2,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 10.0, bottom: 2.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
+          SizedBox(
+            height: 2,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15.0, bottom: 2.0),
             child: Text(
               widget.subTitle,
               style: TextStyle(
@@ -49,8 +46,8 @@ class _ChartTitleState extends State<ChartTitle> {
               textAlign: TextAlign.left,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

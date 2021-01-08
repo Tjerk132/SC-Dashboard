@@ -7,14 +7,14 @@ import 'package:provider/provider.dart';
 
 class TimeFilter extends StatefulWidget implements PreferredSizeWidget {
   final double appBarHeight;
-  final TimeFilterType initialFilterType;
+  final TimeFilterType initialFilter;
 
   TimeFilter({
     Key key,
     this.appBarHeight,
-    @required this.initialFilterType,
+    @required this.initialFilter,
   }) : super(key: key) {
-    assert(initialFilterType != null);
+    assert(initialFilter != null);
   }
 
   @override
@@ -32,20 +32,20 @@ class _TimeFilterState extends State<TimeFilter>
   /// These dates are adjusted with the methods [setStartDate]
   /// and [setEndDate] called from the onSelected method
   /// of [DateTimePicker]
-  DateTime startDate;
-  DateTime endDate;
+  DateTime start;
+  DateTime end;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(
+      initialIndex: widget.initialFilter.index,
       length: TimeFilterType.values.length,
       vsync: this,
     );
-    this.setTabIndex(widget.initialFilterType.index);
     // set the initial dates for the dateTimePickers
-    startDate = widget.initialFilterType.start;
-    endDate = widget.initialFilterType.end;
+    start = widget.initialFilter.start;
+    end = widget.initialFilter.end;
   }
 
   @override
@@ -58,35 +58,37 @@ class _TimeFilterState extends State<TimeFilter>
     this.filterType = TimeFilterType.values.firstWhere((type) => type.index == index);
     // Adjusted filter has non constant values and gets updated with
     // the methods [setStartDate] and [setEndDate]
-    if (this.filterType != TimeFilterType.Adjusted) {
-      this.startDate = filterType.start;
-      this.endDate = filterType.end;
+    if(this.filterType == TimeFilterType.adjusted) {
+      this.readContext(start, end);
     }
-    this.readContext();
+    else {
+      this.readContext(this.filterType.start, this.filterType.end);
+    }
   }
 
   // set startDate for adjusted timespan from start DateTimePicker
   void setStartDate(DateTime startDate) {
-    this.startDate = startDate;
-    this.readContext();
+    this.start = startDate;
+    this.readContext(this.start, this.end);
   }
 
   // set endDate for adjusted timespan from end DateTimePicker
   void setEndDate(DateTime endDate) {
     // add 1 day to also count all activities of the last day
-    this.endDate = endDate.add(Duration(days: 1));
-    this.readContext();
+    this.end = endDate.add(Duration(days: 1));
+    this.readContext(this.start, this.end);
   }
 
-  void readContext() {
+  void readContext(DateTime start, DateTime end) {
     context.read<TimeFilterProvider>().onSelectedDate(
       context,
-      start: this.startDate,
-      end: this.endDate,
+      this.filterType,
+      start: start,
+      end: end,
     );
   }
 
-  /// adjust selected tabIndex (for dateTimePickers)
+  /// adjust selected tabIndex when dateTimePicker is focused
   void setTabIndex(int index) {
     _tabController.animateTo(index);
   }
@@ -116,13 +118,13 @@ class _TimeFilterState extends State<TimeFilter>
                 child: Text('Aangepast'),
               ),
               DateTimePicker(
-                initialDate: startDate,
+                initialDate: widget.initialFilter.start,
                 onFocus: () => setTabIndex(2),
                 onSelected: (DateTime selected) => setStartDate(selected),
               ),
               Text(' - '),
               DateTimePicker(
-                initialDate: endDate,
+                initialDate: widget.initialFilter.end,
                 onFocus: () => setTabIndex(2),
                 onSelected: (DateTime selected) => setEndDate(selected),
               ),

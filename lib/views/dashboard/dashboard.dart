@@ -7,6 +7,7 @@ import 'package:flutter_test_project/enums/time_filter_type.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_test_project/models/session/session.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
+import 'package:flutter_test_project/sizing.dart';
 import 'package:flutter_test_project/views/dashboard/session_grid.dart';
 import 'package:flutter_test_project/views/dashboard/shimmer_grid.dart';
 import 'package:flutter_test_project/views/dashboard/time_filter.dart';
@@ -23,9 +24,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   DashboardLogic _logic;
-  Future<List<Session>> _future;
   TimeFilterProvider provider;
-  final TimeFilterType initialFilterType = TimeFilterType.LastWeek;
+  Future<List<Session>> _future;
+  final TimeFilterType initialFilter = TimeFilterType.lastWeek;
 
   @override
   void initState() {
@@ -34,11 +35,7 @@ class _DashboardState extends State<Dashboard> {
     provider = context.read<TimeFilterProvider>();
     provider.addListener(providerCallback);
 
-    _future = _logic.groups(
-      context,
-      start: initialFilterType.start,
-      end: initialFilterType.end,
-    );
+    _future = this.getFuture(byProvider: false);
     super.initState();
   }
 
@@ -51,17 +48,27 @@ class _DashboardState extends State<Dashboard> {
   void providerCallback() {
     if (this.mounted) {
       setState(() {
-        _future = _logic.groups(
-          context,
-          start: provider.start,
-          end: provider.end,
-        );
+        _future = this.getFuture();
       });
+    }
+  }
+
+  Future<List<Session>> getFuture({bool byProvider = true}) {
+    if ((byProvider ? provider.type : initialFilter) == TimeFilterType.lastSession) {
+      return _logic.lastSession(context);
+    }
+    else {
+      return _logic.sessions(
+        context,
+        start: byProvider ? provider.start : initialFilter.start,
+        end: byProvider ? provider.end : initialFilter.end,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mediaQuery = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
@@ -76,45 +83,47 @@ class _DashboardState extends State<Dashboard> {
         ],
         bottom: TimeFilter(
           appBarHeight: AppBar().preferredSize.height,
-          initialFilterType: initialFilterType,
+          initialFilter: initialFilter,
         ),
       ),
       body: FutureBuilder<List<Session>>(
         future: _future,
         builder: (BuildContext context, AsyncSnapshot<List<Session>> snapshot) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: snapshot.hasData
-                    ? snapshot.data.length > 0
-                        ? snapshot.data
-                            .map(
-                              (session) {
-                                return <Widget>[
-                                  session.title,
-                                  SessionGrid(
-                                    session: session,
-                                    crossAxisCount: widget.crossAxisCount,
-                                  ),
-                                ];
-                              },
-                            )
-                            .reduce((value, element) => [...value, ...element])
-                            .toList()
-                        : <Widget>[
-                            Text(
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: snapshot.hasData
+                  ? snapshot.data.length > 0
+                      ? snapshot.data
+                          .map(
+                            (session) {
+                              return <Widget>[
+                                session.title,
+                                SessionGrid(
+                                  session: session,
+                                  crossAxisCount: widget.crossAxisCount,
+                                ),
+                              ];
+                            },
+                          )
+                          .reduce((value, element) => [...value, ...element])
+                          .toList()
+                      : <Widget>[
+                          SizedBox(height: Sizing.getSize(mediaQuery, 2)),
+                          Align(
+                            child: Text(
                               'Er zijn geen sessies gevonden voor de gekozen filter',
                               style: TextStyle(fontSize: 20),
                             ),
-                          ]
-                    : <Widget>[
-                        ShimmerGrid(
-                          count: 6,
-                          crossAxisCount: widget.crossAxisCount ~/ 4,
-                        ),
-                      ],
-              ),
+                          ),
+                        ]
+                  : <Widget>[
+                      ShimmerGrid(
+                        count: 6,
+                        crossAxisCount: widget.crossAxisCount ~/ 4,
+                        availableSizes: <int>[1, 4],
+                      ),
+                    ],
             ),
           );
         },

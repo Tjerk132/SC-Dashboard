@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/charts/base_chart/base_chart.dart';
+import 'package:flutter_test_project/utility/utility.dart';
 
 class BaseLineChart with BaseChart {
   List<LineChartBarData> lineGroups(
@@ -98,7 +99,9 @@ class BaseLineChart with BaseChart {
     );
   }
 
-  LineTouchData lineTouchData(Color color) {
+  LineTouchData lineTouchData({
+    Color color = Colors.black,
+  }) {
     return LineTouchData(
       enabled: false,
       touchTooltipData: LineTouchTooltipData(
@@ -106,12 +109,10 @@ class BaseLineChart with BaseChart {
         tooltipBottomMargin: 1,
         getTooltipItems: (List<LineBarSpot> touchedSpots) {
           return touchedSpots
-              .map(
-                (spot) => LineTooltipItem(
-                  (spot.y).toStringAsFixed(1),
-                  TextStyle(color: color),
-                )
-              )
+              .map((spot) => LineTooltipItem(
+                    (spot.y).toStringAsFixed(1),
+                    TextStyle(color: color),
+                  ))
               .toList();
         },
       ),

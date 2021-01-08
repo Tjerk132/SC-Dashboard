@@ -52,9 +52,9 @@ class _DateTimePickerState extends State<DateTimePicker> {
       setState(() {
         selectedDate = picked;
       });
-      if (widget.onSelected != null) {
-        widget.onSelected(selectedDate);
-      }
+    }
+    if (widget.onSelected != null) {
+      widget.onSelected(selectedDate);
     }
   }
 

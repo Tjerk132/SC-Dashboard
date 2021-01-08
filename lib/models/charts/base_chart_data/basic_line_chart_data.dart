@@ -36,7 +36,7 @@ class BasicLineChartData extends LineChartData {
     @required Map<int, List<FlSpot>> spots,
     @required Map<int, Color> colors,
     @required double lineWidth,
-    Color showingIndicatorsColor = Colors.black,
+    Color showingIndicatorsColor,
     Map<int, String> topTitles,
     Map<int, String> bottomTitles,
     Map<int, String> leftTitles,
@@ -72,7 +72,7 @@ class BasicLineChartData extends LineChartData {
     );
 
     //todo now shows only first line
-    lineTouchData = lineTouchData ?? base.lineTouchData(showingIndicatorsColor);
+    lineTouchData = lineTouchData ?? base.lineTouchData(color: showingIndicatorsColor);
 
     gridData = gridData ?? FlGridData(show: false);
     titlesData = titlesData ??

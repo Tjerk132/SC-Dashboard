@@ -48,7 +48,6 @@ abstract class TileGroup extends StatefulWidget {
   /// represents the number of columns that can fit within the current tile group
   final int vertical;
 
-
   int get tileCount => horizontal * vertical;
 
   bool get alignVertically => horizontal != vertical;
@@ -61,14 +60,13 @@ class _TileGroupState extends State<TileGroup> {
   int index = 0;
 
   Widget getTile() {
-    // if (index > (widget.children.length - 1)) {
-    //   return SizedBox();
-    // }
-    // else {
-                                  //index
-      Widget child = widget.children[0];
-    //   index++;
-    //   //todo scale for phone (with DeviceType)
+    if (index > (widget.children.length - 1)) {
+      return SizedBox();
+    }
+    else {
+      Widget child = widget.children[index];
+      index++;
+      //todo scale for phone (with DeviceType)
       if (widget is MediumTileGroup) {
         return ConstrainedTile(
           child: child,
@@ -85,6 +83,7 @@ class _TileGroupState extends State<TileGroup> {
       }
       else
         return Tile(child: child);
+    }
   }
 
   @override

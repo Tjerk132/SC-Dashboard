@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_test_project/models/session/session.dart';
 
-import 'tile_components/tile_groups.dart';
-
 class SessionGrid extends StatefulWidget {
   final Session session;
   final int crossAxisCount;
@@ -28,10 +26,7 @@ class _SessionGridState extends State<SessionGrid> {
       itemCount: widget.session.groups.length,
       itemBuilder: (BuildContext context, int index) =>
           widget.session.groups[index],
-      staggeredTileBuilder: (int index) => StaggeredTile.fit(
-          widget.session.groups[index] is TitleTileGroup
-              ? widget.crossAxisCount
-              : widget.crossAxisCount ~/ 2),
+      staggeredTileBuilder: (int index) => StaggeredTile.fit(widget.crossAxisCount ~/ 2),
     );
   }
 }

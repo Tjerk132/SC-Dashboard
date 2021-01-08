@@ -58,7 +58,7 @@ class PieChartGraph extends Chart {
 
   factory PieChartGraph.fromJson(
     Map<String, dynamic> json, {
-    PieChartType type,
+    PieChartType type = PieChartType.divided,
     int singularSize,
   }) {
     PieChartGraph graph = _$PieChartGraphFromJson(json);
@@ -115,8 +115,11 @@ class PieChartGraphState extends State<PieChartGraph> {
                   widget.data.centerProgressIndicator
                       ? CenterProgressIndicator(
                           value: widget.values[0],
-                          fontSize: widget.data.fontSize * 2,
-                          color: widget.sectionColors[0],
+                          style: TextStyle(
+                            fontSize: widget.data.fontSize * 2,
+                            color: widget.sectionColors[0],
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       : SizedBox(),
                 ],

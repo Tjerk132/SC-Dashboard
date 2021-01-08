@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:flutter_test_project/enums/tile_group_type.dart';
+import 'package:flutter_test_project/utility/utility.dart';
 
 class SizeGenerator {
   final List<int> availableSizes;
@@ -14,22 +13,14 @@ class SizeGenerator {
     this.r = new Random();
   }
 
-  int nextSize(ChartType type, int index, int remaining) {
-    //todo check if refactor is necessary
-    if (type == ChartType.Text) {
-      return 2;
-    }
-    else
-      return calculateNextSize(index, remaining);
-  }
-
   int calculateNextSize(int index, int remaining) {
     /// [remaining] is smaller then 4 so no small group can
     /// be completed. remove 1 from available sizes if present
     if (remaining < 4) {
       List<int> available = List<int>.of(availableSizes);
       available.remove(1);
-      return available[r.nextInt(available.length)];
+      return r.nextObject(available);
+      // return available[r.nextInt(available.length)];
     }
     int next = fillUpTileSize(index);
     sizes.add(next);
@@ -40,7 +31,8 @@ class SizeGenerator {
   /// a new random size from [availableSizes]
   int fillUpTileSize(int index) {
     //start with new random size and adjust if necessary
-    int next = availableSizes[r.nextInt(availableSizes.length)];
+    int next = r.nextObject(availableSizes);
+    // availableSizes[r.nextInt(availableSizes.length)];
     if (sizes.isNotEmpty) {
       int previous = sizes[index - 1];
       // either a small group is completed or the current tile is part of a small tile group
@@ -54,7 +46,7 @@ class SizeGenerator {
     return next;
   }
 
-  /// small group is completed when the last
+  /// a small group is completed when the last
   /// 4 tiles before [index] are all of size 1
   /// (already checked for first with [previous]
   bool isSmallGroupCompleted(int index) {
@@ -67,7 +59,9 @@ class SizeGenerator {
     }
     return false;
   }
-
+  /// a medium group is completed when the last
+  /// 2 tiles before [index] are of size 2
+  /// (already checked for first with [previous]
   bool isMediumGroupCompleted(int index) {
     if (sizes.length >= 2) {
       if (sizes[index - 2] == 2) {

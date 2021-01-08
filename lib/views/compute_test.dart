@@ -22,22 +22,13 @@ class _ComputeTestState extends State<ComputeTest> {
             child: CircularProgressIndicator(),
           ),
           FlatButton(
-              onPressed: () async {
-                int sum = await compute(press, 100000000);
-                print(sum);
-              },
-              child: Text("calculate computed")
+            onPressed: () async => print(await compute(press, 100000000)),
+            child: Text("calculate computed")
           ),
           FlatButton(
-              onPressed: () async {
-                int sum = press(100000000);
-                print(sum);
-              },
-              child: Text("calculate non-computed")
+            onPressed: () => print(press(100000000)),
+            child: Text("calculate non-computed")
           ),
-//        LineChartSample1(),
-//        PieChartSample1(),
-//        BarChartGraph(),
         ],
       )
     );
@@ -47,11 +38,8 @@ class _ComputeTestState extends State<ComputeTest> {
 
 int press(int max) {
   int sum = 0;
-  DateTime start = DateTime.now();
   for (int i = 0; i < max; ++i) {
     sum += i;
   }
-  DateTime end = DateTime.now();
-  print('done in:  ${end.difference(start).inMilliseconds}');
   return sum;
 }

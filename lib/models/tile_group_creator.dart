@@ -11,12 +11,10 @@ class TileGroupCreator {
         return SmallTileGroup(children);
       case 2:
         return MediumTileGroup(children);
-      case 3:
-        return null;
       case 4:
         return LargeTileGroup(children);
       default:
-        return SmallTileGroup(children);
+        throw StateError('Can\'t create a tileGroup for size $size');
     }
   }
 }

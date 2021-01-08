@@ -36,6 +36,7 @@ class _TextChartState extends State<TextChart> {
       children: <Widget>[
         Text(
           widget.title,
+          textAlign: TextAlign.center,
           style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
         ),
         Text(

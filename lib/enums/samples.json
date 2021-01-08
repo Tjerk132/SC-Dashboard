@@ -1,6 +1,6 @@
 {
   "0": {
-    "date": "2020-12-15T10:10:00",
+    "date": "2020-12-24T10:10:00",
     "0": {
       "type": "LineChart",
       "title": "Reactie",
@@ -53,7 +53,7 @@
     }
   },
   "1": {
-    "date": "2020-12-12T10:10:00",
+    "date": "2020-12-22T10:10:00",
     "0": {
       "type": "LineChart",
       "title": "Parcours",
@@ -98,8 +98,63 @@
     },
     "3" : {
       "type": "Text",
-      "title": "Totaal aantal rondes",
+      "title": "todo remove",
       "content": "12"
+    },
+    "4" : {
+      "type": "Text",
+      "title": "todo remove",
+      "content": "17"
+    }
+  },
+  "2": {
+    "date": "2020-12-19T12:40:00",
+    "0": {
+      "type": "LineChart",
+      "title": "Parcours",
+      "subTitle": "Afstand per sec",
+      "bottomTitles": {
+        "0": "Start",
+        "12": "Eind"
+      },
+      "leftTitles": {
+        "0": "0s",
+        "1": "5s",
+        "2": "10s",
+        "3": "15s",
+        "4": "20s",
+        "5": "25s",
+        "6": "30s"
+      },
+      "colors": {
+        "0": "#ff13d38e"
+      },
+      "spots": {
+        "0": [
+          [0, 0],
+          [3, 0.9],
+          [5, 1],
+          [7, 1.2],
+          [9, 1.9],
+          [11, 2.1],
+          [13, 2.3]
+        ]
+      }
+    },
+    "1" : {
+      "type": "Text",
+      "title": "Snelste ronde",
+      "content": "21 seconden"
+    },
+    "2" : {
+      "type": "Text",
+      "title": "Gemiddelde tijd",
+      "content": "25 seconden"
+    },
+    "3" : {
+      "type": "Text",
+      "title": "Totaal aantal rondes",
+      "content": "10"
     }
   }
 }

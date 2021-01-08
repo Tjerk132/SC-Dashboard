@@ -1,22 +1,33 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/dialogs/custom_dialog.dart';
+import 'package:flutter_test_project/enums/time_filter_type.dart';
 
 class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  DateTime _start = DateTime.now();
-  DateTime _end = DateTime.now();
+  DateTime _start;
+  DateTime _end;
+  TimeFilterType _type;
 
   DateTime get start => _start;
   DateTime get end => _end;
+  TimeFilterType get type => _type;
 
   void onSelectedDate(
-    BuildContext context, {
+    BuildContext context,
+    TimeFilterType type, {
     DateTime start,
     DateTime end,
   }) {
-    print('received filter for start=$start & end=$end');
-    start = start ?? _start;
-    end = end ?? _end;
+    print('filtering for $type, $start & $end');
+    _type = type ?? _type;
+    if(type != TimeFilterType.adjusted) {
+      start = _type.start;
+      end = _type.end;
+    }
+    else {
+      start = start ?? _start;
+      end = end ?? _end;
+    }
     //if start is after end then end is always before start
     if (start.isAfter(end)) {
       showDialog(
@@ -26,7 +37,7 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
           message: 'Gelieve geldige datums in te voeren',
           icon: Icons.info,
           actions: <String, Function()>{
-            'oke': () async {
+            'oké': () async {
               Navigator.of(context).pop(true);
             }
           },
@@ -45,9 +56,23 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<DateTime>('startDate', _start,
-        description: 'filter startDate', defaultValue: DateTime.now()));
-    properties.add(DiagnosticsProperty<DateTime>('endDate', _end,
-        description: 'filter endDate', defaultValue: DateTime.now()));
+    properties.add(DiagnosticsProperty<DateTime>(
+      'startDate',
+      _start,
+      description: 'filter startDate',
+      defaultValue: DateTime.now(),
+    ));
+    properties.add(DiagnosticsProperty<DateTime>(
+      'endDate',
+      _end,
+      description: 'filter endDate',
+      defaultValue: DateTime.now(),
+    ));
+    properties.add(DiagnosticsProperty<TimeFilterType>(
+      'timeFilterType',
+      _type,
+      description: 'the type of filter',
+      defaultValue: TimeFilterType.lastWeek,
+    ));
   }
 }

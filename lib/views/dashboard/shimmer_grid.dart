@@ -11,7 +11,7 @@ class ShimmerGrid extends StatefulWidget {
     Key key,
     this.count = 4,
     this.crossAxisCount = 1,
-    List<int> availableSizes = const <int>[1, 4],
+    List<int> availableSizes,
   })  : sizeGenerator = new SizeGenerator(availableSizes: availableSizes),
         super(key: key);
 
