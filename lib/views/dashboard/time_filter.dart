@@ -118,13 +118,13 @@ class _TimeFilterState extends State<TimeFilter>
                 child: Text('Aangepast'),
               ),
               DateTimePicker(
-                initialDate: widget.initialFilter.start,
+                initialDate: start,
                 onFocus: () => setTabIndex(2),
                 onSelected: (DateTime selected) => setStartDate(selected),
               ),
               Text(' - '),
               DateTimePicker(
-                initialDate: widget.initialFilter.end,
+                initialDate: end,
                 onFocus: () => setTabIndex(2),
                 onSelected: (DateTime selected) => setEndDate(selected),
               ),

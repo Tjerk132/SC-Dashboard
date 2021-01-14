@@ -25,10 +25,11 @@ class Session {
   }
 
   void retrieveGroups(Map<String, dynamic> session) {
+    /// the date is used to create a [TitleTileGroup], remove to start with index 0
+    session.remove("date");
     int sessionItemCount = session.values.length;
 
-    /// 0 is the date that is used to create a [TitleTileGroup] so start with index 1
-    for (int i = 1; i < sessionItemCount;) {
+    for (int i = 0; i < sessionItemCount;) {
       int remaining = sessionItemCount - i;
       int singularSize = _sizeGenerator.calculateNextSize(i, remaining);
 
@@ -39,7 +40,8 @@ class Session {
               session.values.toList().sublist(i, i + 4), singularSize),
         );
         i += 4;
-      } else {
+      }
+      else {
         children.add(
           retrieveChart(session.values.elementAt(i), singularSize),
         );
@@ -58,7 +60,7 @@ class Session {
         (e) => e.toString().split('.').last == sessionData['type'],
         orElse: () => ChartType.Text);
     //todo fix chart type for pies (null) or remove completely
-    return type.instance(sessionData, singularSize, null);
+    return type.instance(sessionData, singularSize/*, null*/);
   }
 
   List<Widget> retrieveSmallGroupCharts(

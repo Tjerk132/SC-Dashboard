@@ -17,33 +17,34 @@ class ChartTitle extends StatefulWidget {
 class _ChartTitleState extends State<ChartTitle> {
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
+    return Padding(
+      padding: EdgeInsets.only(left: 8.0),
       child: Column(
         children: <Widget>[
-          Text(
-            widget.title,
-            style: TextStyle(
-              color: Colors.black,
-              // fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
+              ),
             ),
-            textAlign: TextAlign.left,
           ),
           SizedBox(
             height: 2,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 15.0, bottom: 2.0),
+          Align(
+            alignment: Alignment.centerLeft,
             child: Text(
               widget.subTitle,
               style: TextStyle(
                 color: Colors.black.withOpacity(0.9),
                 fontWeight: FontWeight.bold,
-                // fontSize: 12,
+                fontSize: 13,
               ),
-              textAlign: TextAlign.left,
             ),
           ),
         ],

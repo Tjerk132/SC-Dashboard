@@ -1,6 +1,6 @@
 {
   "0": {
-    "date": "2020-12-24T10:10:00",
+    "date": "2021-01-10T10:10:00",
     "0": {
       "type": "LineChart",
       "title": "Reactie",
@@ -53,7 +53,7 @@
     }
   },
   "1": {
-    "date": "2020-12-22T10:10:00",
+    "date": "2021-01-09T10:10:00",
     "0": {
       "type": "LineChart",
       "title": "Parcours",
@@ -96,19 +96,25 @@
       "title": "Gemiddelde tijd",
       "content": "29 seconden"
     },
-    "3" : {
-      "type": "Text",
-      "title": "todo remove",
-      "content": "12"
-    },
-    "4" : {
-      "type": "Text",
-      "title": "todo remove",
-      "content": "17"
+    "3": {
+      "type": "PieChart",
+      "title": "Meest gespeelde rondes",
+      "values": [
+        66.5,
+        34.5
+      ],
+      "indicatorText": [
+        "8",
+        "10"
+      ],
+      "sectionColors": [
+        "ff13d38e",
+        "fff8b250"
+      ]
     }
   },
   "2": {
-    "date": "2020-12-19T12:40:00",
+    "date": "2021-01-08T12:40:00",
     "0": {
       "type": "LineChart",
       "title": "Parcours",
@@ -155,6 +161,25 @@
       "type": "Text",
       "title": "Totaal aantal rondes",
       "content": "10"
+    },
+    "4": {
+      "type": "BarChart",
+      "title": "Gespeelde rondes",
+      "subTitle": "",
+      "barValues": [
+        20.0,
+        23.5,
+        25.1,
+        28.2,
+        29.4
+      ],
+      "barTouchTooltipData": [
+        "11",
+        "12",
+        "13",
+        "15",
+        "16"
+      ]
     }
   }
 }

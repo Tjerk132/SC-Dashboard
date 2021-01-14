@@ -7,6 +7,7 @@ import 'package:flutter_test_project/enums/time_filter_type.dart';
 import 'package:flutter_test_project/logic/dashboard_logic.dart';
 import 'package:flutter_test_project/models/session/session.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
+import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
 import 'package:flutter_test_project/sizing.dart';
 import 'package:flutter_test_project/views/dashboard/session_grid.dart';
 import 'package:flutter_test_project/views/dashboard/shimmer_grid.dart';
@@ -25,17 +26,17 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   DashboardLogic _logic;
   TimeFilterProvider provider;
-  Future<List<Session>> _future;
-  final TimeFilterType initialFilter = TimeFilterType.lastWeek;
+  List<Session> _sessions;
+  final TimeFilterType initialFilter = TimeFilterType.adjusted;
 
   @override
   void initState() {
-    _logic = new DashboardLogic(widget.crossAxisCount);
+    _logic = new DashboardLogic(widget.crossAxisCount, context);
 
     provider = context.read<TimeFilterProvider>();
     provider.addListener(providerCallback);
 
-    _future = this.getFuture(byProvider: false);
+    this.getSessions();
     super.initState();
   }
 
@@ -48,22 +49,33 @@ class _DashboardState extends State<Dashboard> {
   void providerCallback() {
     if (this.mounted) {
       setState(() {
-        _future = this.getFuture();
+        this.filterSessions(true);
       });
     }
   }
 
+  Future<void> getSessions() async {
+    await _logic.fetchSessions(context);
+    this.filterSessions(false);
+  }
+
+  Future<void> filterSessions(bool byProvider) async {
+    List<Session> sessions = await this.getFuture(byProvider: byProvider);
+    setState(() {
+      this._sessions = sessions;
+    });
+  }
+
   Future<List<Session>> getFuture({bool byProvider = true}) {
-    if ((byProvider ? provider.type : initialFilter) == TimeFilterType.lastSession) {
-      return _logic.lastSession(context);
+    if ((byProvider ? provider.type : initialFilter) ==
+        TimeFilterType.lastSession) {
+      return _logic.lastSession();
     }
-    else {
-      return _logic.sessions(
-        context,
+    else
+      return _logic.sessionsByDate(
         start: byProvider ? provider.start : initialFilter.start,
         end: byProvider ? provider.end : initialFilter.end,
       );
-    }
   }
 
   @override
@@ -86,47 +98,40 @@ class _DashboardState extends State<Dashboard> {
           initialFilter: initialFilter,
         ),
       ),
-      body: FutureBuilder<List<Session>>(
-        future: _future,
-        builder: (BuildContext context, AsyncSnapshot<List<Session>> snapshot) {
-          return SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: snapshot.hasData
-                  ? snapshot.data.length > 0
-                      ? snapshot.data
-                          .map(
-                            (session) {
-                              return <Widget>[
-                                session.title,
-                                SessionGrid(
-                                  session: session,
-                                  crossAxisCount: widget.crossAxisCount,
-                                ),
-                              ];
-                            },
-                          )
-                          .reduce((value, element) => [...value, ...element])
-                          .toList()
-                      : <Widget>[
-                          SizedBox(height: Sizing.getSize(mediaQuery, 2)),
-                          Align(
-                            child: Text(
-                              'Er zijn geen sessies gevonden voor de gekozen filter',
-                              style: TextStyle(fontSize: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          children: _sessions != null
+              ? _sessions.length > 0
+                  ? _sessions
+                      .map(
+                        (session) {
+                          return <Widget>[
+                            session.title,
+                            SessionGrid(
+                              session: session,
+                              crossAxisCount: widget.crossAxisCount,
                             ),
-                          ),
-                        ]
+                          ];
+                        },
+                      )
+                      .reduce((value, element) => [...value, ...element])
+                      .toList()
                   : <Widget>[
-                      ShimmerGrid(
-                        count: 6,
-                        crossAxisCount: widget.crossAxisCount ~/ 4,
-                        availableSizes: <int>[1, 4],
+                      SizedBox(height: Sizing.getSize(mediaQuery, 2)),
+                      Align(
+                        child: Text(
+                          'Er zijn geen sessies gevonden voor de gekozen filter',
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
-                    ],
-            ),
-          );
-        },
+                    ]
+              : <Widget>[
+                  ShimmerGrid(
+                    count: 6,
+                    crossAxisCount: widget.crossAxisCount ~/ 4,
+                  ),
+                ],
+        ),
       ),
     );
   }

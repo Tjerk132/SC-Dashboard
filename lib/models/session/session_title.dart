@@ -23,7 +23,7 @@ class _SessionTitleState extends State<SessionTitle> {
       padding: widget.insets,
       child: Text(
         'Sessie ${DateFormat('yyyy-MM-dd hh:mm').format(widget.date)}',
-        style: TextStyle(fontSize: 20.0),
+        style: TextStyle(fontSize: 24.0),
       ),
     );
   }

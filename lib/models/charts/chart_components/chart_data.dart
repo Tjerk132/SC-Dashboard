@@ -8,9 +8,9 @@ class ChartData extends StatefulWidget {
   final String title;
   final String subTitle;
 
-  ChartData({
+  ChartData(
+    this.data, {
     Key key,
-    @required this.data,
     this.showTitle = true,
     this.title = '',
     this.subTitle = '',
@@ -35,6 +35,9 @@ class _ChartDataState extends State<ChartData> {
             padding: EdgeInsets.all(2.0),
             child: widget.data,
           ),
+        ),
+        SizedBox(
+          height: 12.0,
         ),
         widget.showTitle
             ? ChartTitle(

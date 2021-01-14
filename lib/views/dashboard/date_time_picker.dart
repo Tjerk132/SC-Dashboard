@@ -33,14 +33,14 @@ class _DateTimePickerState extends State<DateTimePicker> {
 
   DateTime selectedDate;
 
-  void _onSelect(BuildContext context) {
+  void _onSelect() {
     if (widget.onFocus != null) {
       widget.onFocus();
     }
-    _selectDate(context);
+    _selectDate();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate() async {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -66,7 +66,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       color: widget.backgroundColor,
       child: Center(
         child: GestureDetector(
-          onTap: () => _onSelect(context),
+          onTap: () => _onSelect(),
           child: Text(
             DateFormat.yMd().format(selectedDate),
             style: widget.textStyle,

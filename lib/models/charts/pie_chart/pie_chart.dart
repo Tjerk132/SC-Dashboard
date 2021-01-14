@@ -95,8 +95,7 @@ class PieChartGraphState extends State<PieChartGraph> {
                 alignment: Alignment.center,
                 children: <Widget>[
                   ChartData(
-                    showTitle: false,
-                    data: PieChart(
+                    PieChart(
                       BasicPieChartData(
                         sectionColors: widget.sectionColors,
                         values: widget.values,
@@ -111,6 +110,7 @@ class PieChartGraphState extends State<PieChartGraph> {
                         ),
                       ),
                     ),
+                    showTitle: false,
                   ),
                   widget.data.centerProgressIndicator
                       ? CenterProgressIndicator(

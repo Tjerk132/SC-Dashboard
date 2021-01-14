@@ -16,23 +16,24 @@ class SizeGenerator {
   int calculateNextSize(int index, int remaining) {
     /// [remaining] is smaller then 4 so no small group can
     /// be completed. remove 1 from available sizes if present
+    int next;
     if (remaining < 4) {
       List<int> available = List<int>.of(availableSizes);
       available.remove(1);
-      return r.nextObject(available);
-      // return available[r.nextInt(available.length)];
+      next = r.nextObject(available);
     }
-    int next = fillUpTileSize(index);
+    else {
+      next = fillUpTile(index);
+    }
     sizes.add(next);
     return next;
   }
 
   /// returns the size to fill up the current tile or returns
   /// a new random size from [availableSizes]
-  int fillUpTileSize(int index) {
+  int fillUpTile(int index) {
     //start with new random size and adjust if necessary
     int next = r.nextObject(availableSizes);
-    // availableSizes[r.nextInt(availableSizes.length)];
     if (sizes.isNotEmpty) {
       int previous = sizes[index - 1];
       // either a small group is completed or the current tile is part of a small tile group

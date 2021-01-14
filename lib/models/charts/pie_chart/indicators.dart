@@ -67,7 +67,7 @@ class _IndicatorsState extends State<Indicators> {
       case PieChartType.divided:
         return Column(
           children: <Widget>[
-            title(insets: EdgeInsets.only(bottom: 15.0)),
+            title(insets: EdgeInsets.only(left: 8.0, top: 4.0)),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -91,10 +91,7 @@ class _IndicatorsState extends State<Indicators> {
         );
       case PieChartType.progression:
         return title(
-          insets: EdgeInsets.only(
-            left: 8.0,
-            top: 4.0,
-          ),
+          insets: EdgeInsets.only(left: 8.0, top: 4.0),
         );
       default:
         return SizedBox();

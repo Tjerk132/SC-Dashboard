@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/models/tile_group_creator.dart';
+import 'package:flutter_test_project/shimmering/skeleton.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
 import '../tile.dart';
@@ -33,6 +34,10 @@ abstract class TileGroup extends StatefulWidget {
     return TileGroupCreator().bySize(singularSize, children);
   }
 
+  factory TileGroup.asShimmer(int singularSize) {
+    return TileGroupCreator().bySize(singularSize, List.filled(1, Skeleton()));
+  }
+
   /// the children that will be displayed inside the group
   final List<Widget> children;
 
@@ -62,8 +67,7 @@ class _TileGroupState extends State<TileGroup> {
   Widget getTile() {
     if (index > (widget.children.length - 1)) {
       return SizedBox();
-    }
-    else {
+    } else {
       Widget child = widget.children[index];
       index++;
       //todo scale for phone (with DeviceType)
@@ -73,15 +77,13 @@ class _TileGroupState extends State<TileGroup> {
           landscapeTileHeightRatio: 1.88,
           portraitTileHeightRatio: 4.93,
         );
-      }
-      else if (widget is TitleTileGroup) {
+      } else if (widget is TitleTileGroup) {
         return ConstrainedTile(
           child: child,
-          landscapeTileHeightRatio: 15.0,
-          portraitTileHeightRatio: 40.0,
+          landscapeTileHeightRatio: 20.0,
+          portraitTileHeightRatio: 35.0,
         );
-      }
-      else
+      } else
         return Tile(child: child);
     }
   }

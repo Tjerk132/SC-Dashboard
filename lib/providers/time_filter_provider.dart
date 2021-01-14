@@ -12,13 +12,16 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
   DateTime get end => _end;
   TimeFilterType get type => _type;
 
+  /// the [TimeFilterType] is necessary in case the user wants to filter
+  /// for lastSession, see the getFuture method of [Dashboard]
   void onSelectedDate(
     BuildContext context,
     TimeFilterType type, {
     DateTime start,
     DateTime end,
   }) {
-    print('filtering for $type, $start & $end');
+    print('filtering with start: $start & end: $end');
+    assert((start != null && end != null) || type == TimeFilterType.adjusted);
     _type = type ?? _type;
     if(type != TimeFilterType.adjusted) {
       start = _type.start;
@@ -51,6 +54,7 @@ class TimeFilterProvider with ChangeNotifier, DiagnosticableTreeMixin {
       notifyListeners();
     }
   }
+
 
   /// Makes `TimeFilterProvider` readable inside the devtools by listing all of its properties
   @override

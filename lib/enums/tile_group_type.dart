@@ -15,14 +15,14 @@ extension ChartTypeExtension on ChartType {
   Widget instance(
     Map<String, dynamic> json,
     int singularSize,
-    dynamic type,
+    // dynamic type,
   ) {
     switch (this) {
       case ChartType.PieChart:
         return PieChartGraph.fromJson(
           json,
           singularSize: singularSize,
-          type: type,
+          // type: type,
         );
       case ChartType.BarChart:
         return BarChartGraph.fromJson(

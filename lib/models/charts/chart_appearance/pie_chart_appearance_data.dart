@@ -30,7 +30,7 @@ class PieChartAppearanceData {
         this.showPieTitle = true;
         this.centerProgressIndicator = false;
         this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 11.0 + singularSize;
+        this.fontSize = 13.0 + singularSize;
         break;
 
       case PieChartType.divided:
@@ -41,7 +41,7 @@ class PieChartAppearanceData {
         this.showPieTitle = true;
         this.centerProgressIndicator = false;
         this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 10.0 + singularSize;
+        this.fontSize = 12.0 + singularSize;
         break;
 
       case PieChartType.circle:
@@ -52,7 +52,7 @@ class PieChartAppearanceData {
         this.showPieTitle = false;
         this.centerProgressIndicator = false;
         this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 12.0 + singularSize;
+        this.fontSize = 14.0 + singularSize;
         break;
 
       case PieChartType.progression:
@@ -63,7 +63,7 @@ class PieChartAppearanceData {
         this.showPieTitle = false;
         this.centerProgressIndicator = true;
         this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 10.0 + (2 * singularSize);
+        this.fontSize = 12.0 + (2 * singularSize);
         break;
 
       default:

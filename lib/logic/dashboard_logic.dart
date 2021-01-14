@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_test_project/enums/pie_chart_type.dart';
 import 'package:flutter_test_project/models/session/session.dart';
+
 // import 'package:flutter_test_project/data/image_dao.dart';
 import 'package:flutter_test_project/printers/logger.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
@@ -25,37 +27,23 @@ class DashboardLogic {
 
   // ImageDao dao;
 
-  DashboardLogic(this.crossAxisCount) {
+  DashboardLogic(this.crossAxisCount, BuildContext context) {
     this._sessions = new List<Session>();
     // this.dao = new ImageDao();
   }
 
-  Future<List<Session>> lastSession(BuildContext context) async {
-    //only fetch data if it is not already fetched before
-    if (_sessions.isEmpty) {
-      await fetchSessions(context);
-    }
-    List<Session> sessions = sortByNew(
-      List<Session>.of(_sessions)
-    );
-    Session lastSession = sessions.last;
+  Future<List<Session>> lastSession() async {
+    List<Session> sessions = sortByNew(List<Session>.of(_sessions));
+    Session lastSession = sessions.first;
     this.alignSessionGroups(lastSession);
     return <Session>[lastSession];
   }
 
-  Future<List<Session>> sessions(
-    BuildContext context, {
+  Future<List<Session>> sessionsByDate({
     @required DateTime start,
     @required DateTime end,
   }) async {
-    //only fetch data if it is not already fetched before
-    if (_sessions.isEmpty) {
-      await fetchSessions(context);
-    }
-    List<Session> sessions = sortByNew(
-      this.filterSessionsByDate(start, end)
-    );
-    // print(sessions.length);
+    List<Session> sessions = sortByNew(this.filterSessionsByDate(start, end));
     sessions.forEach((session) => this.alignSessionGroups(session));
     return sessions;
   }
@@ -63,13 +51,13 @@ class DashboardLogic {
   Future<void> fetchSessions(BuildContext context) async {
     //load all charts for the local file
     String jsonData = await DefaultAssetBundle.of(context)
-        .loadString('lib/enums/samples.json');
+        .loadString('lib/assets/samples.json');
     Map<String, dynamic> sessions = await compute(decodeCharts, jsonData);
     this.assignSessionData(sessions);
   }
 
   void assignSessionData(Map<String, dynamic> sessions) {
-    for (int i = 0; i < sessions.length; ++i) {
+    for (int i = 0; i < sessions.length; i++) {
       Map<String, dynamic> sessionData = sessions['$i'];
       Session session = new Session(sessionData['date']);
       session.retrieveGroups(sessionData);
@@ -80,10 +68,7 @@ class DashboardLogic {
   }
 
   /// returns the [_sessions] filtered by [start] and [end]
-  List<Session> filterSessionsByDate(
-    DateTime start,
-    DateTime end,
-  ) {
+  List<Session> filterSessionsByDate(DateTime start, DateTime end) {
     return List<Session>.of(_sessions)
         .where((session) =>
             session.date.isAfter(start) && session.date.isBefore(end))
@@ -97,15 +82,16 @@ class DashboardLogic {
   }
 
   Session alignSessionGroups(Session session) {
-    if(session.isAligned) {
+    if (session.isAligned) {
       return session;
     }
     //only works for an even crossAxisCount
     int remaining = session.occupied % (crossAxisCount ~/ 2);
     //groups can't be filled up but bottom could be not aligned.
-    if(remaining == 0) {
+    if (remaining == 0) {
       //check for bottom alignment
-      if(session.groups.length.isOdd) {
+      //todo doesn't work because of medium tileGroups
+      if (session.groups.length.isOdd) {
         remaining = 4;
       }
     }

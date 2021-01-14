@@ -42,6 +42,7 @@ class BarChartGraph extends Chart {
     Map<String, dynamic> json, {
     int singularSize,
   }) {
+    //todo only executed with breakpoint/
     BarChartGraph graph = _$BarChartGraphFromJson(json);
     graph.init(singularSize);
     return graph;
@@ -62,7 +63,7 @@ class BarChartGraphState extends State<BarChartGraph> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ChartData(
-            data: BarChart(
+            BarChart(
               BasicBarChartData(
                 getBottomTitle: (String title) => title,
                 barTouchTooltipData: widget.barTouchTooltipData,

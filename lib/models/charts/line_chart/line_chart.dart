@@ -33,16 +33,16 @@ class LineChartGraph extends Chart {
 
   static _spotsFromJson(Map<String, dynamic> spots) {
     return spots?.castTo<int, List<FlSpot>>(
-      // the to be converted array looks like: [ [1,1], [2,1.5] etc. ]
-      getValue: (value) {
-        List<FlSpot> spots = new List<FlSpot>();
-        for (List<dynamic> spotCoordinates in value) {
-          List<double> doubleCoordinates = spotCoordinates.map<double>((e) => e.toDouble()).toList();
-          spots.add(FlSpot(doubleCoordinates[0], doubleCoordinates[1]));
-        }
-        return spots;
+        // the to be converted array looks like: [ [1,1], [2,1.5] etc. ]
+        getValue: (value) {
+      List<FlSpot> spots = new List<FlSpot>();
+      for (List<dynamic> spotCoordinates in value) {
+        List<double> doubleCoordinates =
+            spotCoordinates.map<double>((e) => e.toDouble()).toList();
+        spots.add(FlSpot(doubleCoordinates[0], doubleCoordinates[1]));
       }
-    );
+      return spots;
+    });
   }
 
   static _spotsToJson(Map<int, List<FlSpot>> spots) {
@@ -129,7 +129,7 @@ class LineChartGraphState extends State<LineChartGraph> {
                   ),
                 ),
                 child: ChartData(
-                  data: LineChart(
+                  LineChart(
                     BasicLineChartData(
                       gridData: FlGridData(
                         show: false,
