@@ -9,10 +9,10 @@ class Indicator extends StatelessWidget {
   final Color textColor;
 
   const Indicator({
-    Key key,
-    this.color,
-    this.text,
-    this.shape,
+    Key? key,
+    required this.color,
+    required this.text,
+    required this.shape,
     this.size = 16,
     this.fontSize = 16,
     this.textColor = const Color(0xff505050),
@@ -21,7 +21,10 @@ class Indicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 0,
+        vertical: 2.0,
+      ),
       child: Row(
         children: <Widget>[
           Container(
@@ -37,7 +40,11 @@ class Indicator extends StatelessWidget {
           ),
           Text(
             text,
-            style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: textColor),
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
           )
         ],
       ),

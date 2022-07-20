@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Tile extends StatefulWidget {
-  const Tile({
-    Key key,
-    this.child,
-  }) : super(key: key);
 
   final Widget child;
+
+  const Tile({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   State<Tile> createState() => _TileState();
@@ -17,7 +18,7 @@ class _TileState extends State<Tile> {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       clipBehavior: Clip.antiAlias,
 //      elevation: 4,
       child: AspectRatio(

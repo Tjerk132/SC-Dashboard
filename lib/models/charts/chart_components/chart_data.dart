@@ -5,18 +5,16 @@ import 'chart_title.dart';
 class ChartData extends StatefulWidget {
   final ImplicitlyAnimatedWidget data;
   final bool showTitle;
-  final String title;
-  final String subTitle;
+  final String? title;
+  final String? subtitle;
 
-  ChartData(
-    this.data, {
-    Key key,
+  ChartData({
+    Key? key,
+    required this.data,
     this.showTitle = true,
-    this.title = '',
-    this.subTitle = '',
-  }) : super(key: key) {
-    assert(data != null);
-  }
+    this.title,
+    this.subtitle,
+  }) : super(key: key);
 
   @override
   State<ChartData> createState() => _ChartDataState();
@@ -42,7 +40,7 @@ class _ChartDataState extends State<ChartData> {
         widget.showTitle
             ? ChartTitle(
                 title: widget.title,
-                subTitle: widget.subTitle,
+                subtitle: widget.subtitle,
               )
             : SizedBox(),
       ],

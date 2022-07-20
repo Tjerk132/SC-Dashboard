@@ -6,23 +6,22 @@ part of 'bar_chart.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BarChartGraph _$BarChartGraphFromJson(Map<String, dynamic> json) {
-  return BarChartGraph(
-    title: json['title'] as String,
-    subTitle: json['subTitle'] as String,
-    barValues: (json['barValues'] as List)
-        ?.map((e) => (e as num)?.toDouble())
-        ?.toList(),
-    barTouchTooltipData: (json['barTouchTooltipData'] as List)
-        ?.map((e) => e as String)
-        ?.toList(),
-  );
-}
+BarChartGraph _$BarChartGraphFromJson(Map<String, dynamic> json) =>
+    BarChartGraph(
+      title: json['title'] as String,
+      barValues: (json['barValues'] as List<dynamic>?)
+              ?.map((e) => (e as num).toDouble())
+              .toList() ??
+          const [],
+      barTouchTooltipData: (json['barTouchTooltipData'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
 
 Map<String, dynamic> _$BarChartGraphToJson(BarChartGraph instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'subTitle': instance.subTitle,
       'barValues': instance.barValues,
       'barTouchTooltipData': instance.barTouchTooltipData,
     };

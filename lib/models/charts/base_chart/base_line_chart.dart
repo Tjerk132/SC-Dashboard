@@ -6,31 +6,26 @@ import 'package:flutter_test_project/utility/utility.dart';
 class BaseLineChart with BaseChart {
   List<LineChartBarData> lineGroups(
     Map<int, List<FlSpot>> spots,
-    Map<int, Color> colors,
+    Color color,
     double lineWidth, {
-    bool showBelowBarData = false,
-    List<Color> belowBarColors,
+    bool? showBelowBarData = false,
+    Color? belowBarColor,
   }) {
     return List<LineChartBarData>.generate(
       spots.length,
       (i) => LineChartBarData(
         spots: spots[i],
         isCurved: true,
-        colors: [colors[i]],
+        color: color,
         barWidth: lineWidth,
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
           show: showBelowBarData,
-          colors: belowBarColors ??
-              <Color>[
-                ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a))
-                    .lerp(0.2)
-                    .withOpacity(0.1),
-                ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a))
-                    .lerp(0.2)
-                    .withOpacity(0.1),
-              ],
+          color: belowBarColor ??
+              ColorTween(begin: Color(0xff23b6e6), end: Color(0xff02d39a))
+                  .lerp(0.2)
+                  ?.withOpacity(0.1),
         ),
       ),
     );
@@ -39,18 +34,17 @@ class BaseLineChart with BaseChart {
   //only creates tooltipIndicator for first line
   List<ShowingTooltipIndicators> tooltipIndicators(
     Map<int, List<FlSpot>> spots, {
-    List<Color> colors = const [],
+    Color color = Colors.white,
     List<int> showIndexes = const [1, 3, 5],
   }) {
     List<LineChartBarData> lineBarsData =
-        createLineBarsData(spots[0], showIndexes, colors: colors);
+        createLineBarsData(spots[0]!, showIndexes, color: color);
 
     final LineChartBarData tooltipsOnBar = lineBarsData[0];
 
     return showIndexes
         .map(
           (i) => ShowingTooltipIndicators(
-            i,
             <LineBarSpot>[
               LineBarSpot(
                 tooltipsOnBar,
@@ -66,7 +60,7 @@ class BaseLineChart with BaseChart {
   List<LineChartBarData> createLineBarsData(
     List<FlSpot> spots,
     List<int> showingIndicators, {
-    List<Color> colors,
+    Color? color,
   }) {
     return List<LineChartBarData>.generate(
       1,
@@ -88,7 +82,7 @@ class BaseLineChart with BaseChart {
         //   ],
         // ),
         // dotData: FlDotData(show: false),
-        colors: colors,
+        color: color,
         // colors: [
         //   Color(0xff12c2e9),
         //   Color(0xffc471ed),
@@ -100,13 +94,14 @@ class BaseLineChart with BaseChart {
   }
 
   LineTouchData lineTouchData({
-    Color color = Colors.black,
+    Color? color = Colors.black,
   }) {
     return LineTouchData(
       enabled: false,
       touchTooltipData: LineTouchTooltipData(
         tooltipBgColor: Colors.transparent,
-        tooltipBottomMargin: 1,
+        tooltipMargin: 1.0,
+        // tooltipBottomMargin: 1,
         getTooltipItems: (List<LineBarSpot> touchedSpots) {
           return touchedSpots
               .map((spot) => LineTooltipItem(

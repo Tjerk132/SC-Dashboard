@@ -6,8 +6,8 @@ import 'package:flutter_test_project/utility/utility.dart';
 class BaseBarChart with BaseChart {
   BarTouchData touchData(
     List<String> barTouchTooltipData, {
-    TextStyle toolTipStyle,
-    Color tooltipBgColor,
+    required TextStyle toolTipStyle,
+    Color? tooltipBgColor,
   }) {
     return BarTouchData(
       touchTooltipData: BarTouchTooltipData(
@@ -18,7 +18,7 @@ class BaseBarChart with BaseChart {
           // String tooltip = barTouchTooltipData[x];
           return BarTooltipItem(
             //'$tooltip\n${rod.y}'
-            rod.y.toString(),
+            rod.toY.toString(), //rod.y.toString()
             toolTipStyle,
           );
         },
@@ -30,20 +30,20 @@ class BaseBarChart with BaseChart {
     List<double> barValues,
     double barWidth,
     int rodCount,
-    int singularSize, {
-    Color rodColor = Colors.yellowAccent,
-    Color backgroundColor,
-    BorderRadius rodBorderRadius,
+    int factor, {
+    Color? rodColor = Colors.yellowAccent,
+    Color? backgroundColor,
+    BorderRadius? rodBorderRadius,
     bool showBackGround = true,
   }) {
-    double width = singularSize + (barWidth / rodCount);
-    List<BarChartGroupData> bars = new List<BarChartGroupData>();
-    for (int i = 0; i < barValues.length; ++i) {
-      int x = i;
-      double y = barValues.getOrElse(i, null);
+    double width = factor + (barWidth / rodCount);
+    List<BarChartGroupData> bars = <BarChartGroupData>[];
+
+    barValues.asMap().forEach((i, value) {
+      double y = barValues.getOrElse(i, 0);
       bars.add(
         new BarChartGroupData(
-          x: x,
+          x: i,
           barRods: List<BarChartRodData>.generate(
             rodCount,
             (i) => createRod(
@@ -58,31 +58,30 @@ class BaseBarChart with BaseChart {
           ),
         ),
       );
-    }
+    });
+
     return bars;
   }
 
   BarChartRodData createRod(
     double y,
     double backDrawRodDataY, {
-    double width,
-    Color color,
-    Color backgroundColor = const Color(0xff72d8bf),
-    BorderRadius borderRadius = BorderRadius.zero,
-    bool showBackGround,
+    double? width,
+    Color? color,
+    Color? backgroundColor = const Color(0xff72d8bf),
+    BorderRadius? borderRadius = BorderRadius.zero,
+    bool showBackGround = true,
   }) {
     return BarChartRodData(
-      y: y,
+      toY: y,
       color: color,
       width: width,
       borderRadius: borderRadius,
-      backDrawRodData: showBackGround
-          ? BackgroundBarChartRodData(
-              show: true,
-              y: backDrawRodDataY,
-              color: backgroundColor,
-            )
-          : BackgroundBarChartRodData(),
+      backDrawRodData: BackgroundBarChartRodData(
+        show: showBackGround,
+        toY: backDrawRodDataY,
+        color: backgroundColor,
+      ),
     );
   }
 }

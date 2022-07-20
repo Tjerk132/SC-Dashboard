@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/device_type.dart';
 import 'package:flutter_test_project/models/charts/chart.dart';
-import 'package:flutter_test_project/views/dashboard/tile.dart';
+import 'package:flutter_test_project/views/dashboard/components/tile.dart';
 import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
 
 /// the purpose of this class in to align 2x1 and [TitleTileGroup] tiles in the grid
@@ -14,10 +13,10 @@ class ConstrainedTile extends StatefulWidget {
   final double landscapeTileHeightRatio;
 
   ConstrainedTile({
-    Key key,
-    this.child,
-    this.portraitTileHeightRatio,
-    this.landscapeTileHeightRatio
+    Key? key,
+    required this.child,
+    required this.portraitTileHeightRatio,
+    required this.landscapeTileHeightRatio
   }) : super(key: key);
 
   @override

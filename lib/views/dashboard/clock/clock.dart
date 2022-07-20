@@ -7,9 +7,9 @@ class Clock extends StatefulWidget {
   final TextStyle textStyle;
 
   Clock({
-    Key key,
+    Key? key,
     this.updateInterval = const Duration(seconds: 1),
-    this.textStyle,
+    this.textStyle = const TextStyle(),
   }) : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class Clock extends StatefulWidget {
 
 class _ClockState extends State<Clock> {
   String _timeString = '';
-  Timer timer;
+  Timer? timer;
 
   @override
   void initState() {
@@ -29,14 +29,14 @@ class _ClockState extends State<Clock> {
   void _getCurrentTime() {
     if (mounted) {
       setState(() {
-        _timeString = DateFormat('hh:mm').format(DateTime.now());
+        _timeString = DateFormat('HH:mm').format(DateTime.now());
       });
     }
   }
 
   @override
   void dispose() {
-    timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 

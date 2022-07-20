@@ -1,38 +1,60 @@
-import 'package:flutter/foundation.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test_project/providers/time_filter_provider.dart';
+import 'package:flutter_test_project/services/group_type_service.dart';
+import 'package:flutter_test_project/services/session_service.dart';
+import 'package:flutter_test_project/views/dashboard/dashboard_view.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_test_project/connection.dart';
-import 'package:flutter_test_project/context_navigator.dart';
-import 'package:flutter_test_project/views/browser/browser.dart';
-import 'package:flutter_test_project/views/todos.dart';
+import 'app/locator.dart';
 
-import 'controllers/todo_view_controller.dart';
-import 'providers/slot_machine_provider.dart';
+Future<void> main() async {
+  setupLocator();
 
-import 'dialogs/custom_dialog.dart';
-
-void main() {
   Intl.defaultLocale = 'nl';
   runApp(
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder: (context) {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => SlotMachineProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => TimeFilterProvider(),
-        )
+        ),
       ],
       child: App(),
     ),
+    // },
+    // ),
   );
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> with WidgetsBindingObserver {
+  final SessionService _sessionService = locator<SessionService>();
+  final GroupTypeService _groupTypeService = locator<GroupTypeService>();
+
+  @override
+  void initState() {
+    super.initState();
+    this.loadData();
+  }
+
+  void loadData() async {
+    await _sessionService.initialize();
+  }
+
+  final List<Locale> locales = const [
+    Locale('nl', 'NL'),
+    Locale('en', 'US'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,93 +62,19 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en'),
-        const Locale('nl'),
-      ],
-      title: 'Flutter Dashboard Project',
+      supportedLocales: locales,
+      title: 'SmartClips Dashboard',
       theme: ThemeData(
         // brightness: Brightness.dark,
         // primaryColor: Color(0xff13d38e),
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: 'Todo List'),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  final String title;
-
-  HomePage({
-    Key key,
-    this.title,
-  }) : super(key: key);
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final TodoViewController controller = new TodoViewController();
-
-  @override
-  void initState() {
-    super.initState();
-    this.checkInternet();
-  }
-
-  void checkInternet() {
-    Connection.isConnectedToInternet().then(
-      (isConnected) => {
-        print('isConnected: $isConnected'),
-        if (!isConnected)
-          {
-            print('Please connect to the internet'),
-            this.showDialogConnectToInternet(
-                'It is advised to connect you device to the internet in order to use this application'),
-          }
-      },
-    );
-  }
-
-  showDialogConnectToInternet(textAlert) async {
-    showDialog(
-      context: context,
-      child: CustomDialog(
-        title: "Internet",
-        message: textAlert,
-        icon: Icons.wifi,
-        actions: <String, Function()>{
-          'later': () {
-            print('Tapped later');
-            Navigator.of(context).pop(false);
-          },
-          'oke': () async {
-            print('Tapped okay');
-            Navigator.of(context).pop(true);
-          }
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        leading: IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () => ContextNavigator.push(context, Browser())),
-      ),
-      body: Todos(controller: controller),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => controller.addTodo(),
-        label: Text('Add todo'),
-        icon: Icon(Icons.add),
-      ),
+      // locale: DevicePreview.locale(context),
+      // builder: DevicePreview.appBuilder,
+      // navigatorKey: StackedService.navigatorKey,
+      // onGenerateRoute: StackedRouter().onGenerateRoute,
+      home: DashboardView(),
     );
   }
 }

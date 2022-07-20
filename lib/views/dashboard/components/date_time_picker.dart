@@ -8,21 +8,19 @@ class DateTimePicker extends StatefulWidget {
   final double height;
   final Color backgroundColor;
   final TextStyle textStyle;
-  final VoidCallback onFocus;
-  final Function(DateTime) onSelected;
+  final VoidCallback? onFocus;
+  final Function(DateTime)? onSelected;
 
   DateTimePicker({
-    Key key,
-    @required this.initialDate,
+    Key? key,
+    required this.initialDate,
     this.width = 110,
     this.height = 30,
     this.backgroundColor = Colors.white,
     this.textStyle = const TextStyle(color: Colors.black),
     this.onFocus,
     this.onSelected,
-  }) : super(key: key) {
-    assert(initialDate != null);
-  }
+  }) : super(key: key);
 
   @override
   _DateTimePickerState createState() => _DateTimePickerState(this.initialDate);
@@ -34,27 +32,23 @@ class _DateTimePickerState extends State<DateTimePicker> {
   DateTime selectedDate;
 
   void _onSelect() {
-    if (widget.onFocus != null) {
-      widget.onFocus();
-    }
+    widget.onFocus?.call();
     _selectDate();
   }
 
   Future<void> _selectDate() async {
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101),
-      locale: Locale(Intl.defaultLocale),
+      locale: Locale(Intl.defaultLocale!),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
-    }
-    if (widget.onSelected != null) {
-      widget.onSelected(selectedDate);
+      widget.onSelected?.call(selectedDate);
     }
   }
 

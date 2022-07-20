@@ -7,11 +7,11 @@ class CustomDialog extends StatelessWidget {
   final Map<String, Function()> actions;
 
   CustomDialog({
-    Key key,
-    @required this.title,
-    @required this.message,
-    @required this.icon,
-    @required this.actions,
+    Key? key,
+    required this.title,
+    required this.message,
+    required this.icon,
+    required this.actions,
   }) : super(key: key);
 
   @override
@@ -60,9 +60,9 @@ class CustomDialog extends StatelessWidget {
         ),
       ),
       actions: actions.keys.map<Widget>((key) {
-        Function() action = actions[key];
-        return RaisedButton(
-          textColor: Colors.black,
+        Function()? action = actions[key];
+        return ElevatedButton(
+          style: ButtonStyle(foregroundColor: MaterialStateProperty.resolveWith((states) => Colors.black)),
           child: Text(key),
           onPressed: action,
         );

@@ -1,88 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_project/enums/tile_group_type.dart';
-import 'package:flutter_test_project/logic/size_generator.dart';
+import 'package:flutter_test_project/logic/type_generator.dart';
+import 'package:flutter_test_project/models/charts/chart.dart';
 import 'package:flutter_test_project/models/session/session_title.dart';
-import 'package:flutter_test_project/views/dashboard/tile_components/tile_groups.dart';
-import '../../views/dashboard/tile_components/tile_group.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
+import 'package:collection/collection.dart';
 
 class Session {
-  TitleTileGroup title;
-  List<TileGroup> _groups;
-  DateTime date;
-  int _occupied = 0;
-  bool _isAligned = false;
+  final List<TileGroup> groups = <TileGroup>[];
+  final DateTime date;
+  final TypeGenerator typeGenerator = TypeGenerator();
 
-  SizeGenerator _sizeGenerator;
+  bool isAligned = false;
 
-  Session(String date) {
-    this._groups = new List<TileGroup>();
-    this._sizeGenerator = new SizeGenerator();
-    this.date = DateTime.parse(date);
-    this.title = TitleTileGroup(SessionTitle(
-      date: this.date,
-      insets: EdgeInsets.only(left: 10.0, top: 6.0),
-    ));
+  Map<TileGroupType, List<Widget>> get asMap =>
+      groupBy(groups, (TileGroup group) => group.type).map((type, groups) {
+        return MapEntry(
+            type,
+            groups
+                .map((e) => e.children)
+                .expand((children) => children)
+                .toList());
+      });
+
+  TileGroup get title => TileGroup.large([
+    SessionTitle(
+      date: date,
+      insets: EdgeInsets.symmetric(
+        horizontal: 10.0,
+        vertical: 10.0,
+      ),
+    )
+  ]);
+
+  int get occupied =>
+      groups.fold<int>(0, (previous, next) => previous + next.occupationSize);
+
+  Session.fromJson(Map<String, dynamic> json)
+      : date = DateTime.parse(json['date'])
+  {
+    _groupsFromJson(json['charts']);
   }
 
-  void retrieveGroups(Map<String, dynamic> session) {
-    /// the date is used to create a [TitleTileGroup], remove to start with index 0
-    session.remove("date");
-    int sessionItemCount = session.values.length;
+  //todo: make toJson, FromJson methods for tileGroup?
+  void _groupsFromJson(List<dynamic> chartsJson) {
+    List<Chart> charts =
+        chartsJson.map<Chart>((json) => Chart.fromJson(json)).toList();
 
-    for (int i = 0; i < sessionItemCount;) {
-      int remaining = sessionItemCount - i;
-      int singularSize = _sizeGenerator.calculateNextSize(i, remaining);
+    List<TileGroupType> types = typeGenerator.generateSizes(charts.length);
+    //todo: find alternative for loop
+    for (int i = 0; i < charts.length;) {
+      TileGroupType tileGroupType = types[i];
+      // todo: use TileGroupType childCount for fetch?
+      List<Chart> children = tileGroupType == TileGroupType.small
+          ? charts.sublist(i, i + 4 /*i + tileGroupType.childCount*/)
+          : [charts[i]];
 
-      List<Widget> children = new List<Widget>();
-      if (singularSize == 1) {
-        children.addAll(
-          retrieveSmallGroupCharts(
-              session.values.toList().sublist(i, i + 4), singularSize),
-        );
-        i += 4;
-      }
-      else {
-        children.add(
-          retrieveChart(session.values.elementAt(i), singularSize),
-        );
-        i++;
-      }
-      TileGroup g = TileGroup.singularSizeFactory(children, singularSize);
-      this.addGroup(g);
+      groups.add(tileGroupType.instance(children));
+      i += children.length;
     }
   }
 
-  Widget retrieveChart(
-    Map<String, dynamic> sessionData,
-    int singularSize,
-  ) {
-    ChartType type = ChartType.values.firstWhere(
-        (e) => e.toString().split('.').last == sessionData['type'],
-        orElse: () => ChartType.Text);
-    //todo fix chart type for pies (null) or remove completely
-    return type.instance(sessionData, singularSize/*, null*/);
+  static String groupsToJson(List<TileGroup> tileGroups) {
+    //[] around
+    return tileGroups
+        .map(
+            (e) => (e.children as List<Chart>).map((e) => e.toJson()).join(','))
+        .join(',');
   }
-
-  List<Widget> retrieveSmallGroupCharts(
-    List<dynamic> sessionsData,
-    int singularSize,
-  ) {
-    return <Widget>[
-      for (Map<String, dynamic> sessionData in sessionsData)
-        retrieveChart(sessionData, singularSize)
-    ];
-  }
-
-  void addGroup(TileGroup tileGroup) {
-    this._groups.add(tileGroup);
-    this._occupied += tileGroup.occupationSize;
-  }
-
-  List<TileGroup> get groups => _groups;
-
-  int get occupied => _occupied;
-
-  bool get isAligned => _isAligned;
-
-  set isAligned(bool isAligned) => this._isAligned = isAligned;
 }

@@ -6,34 +6,32 @@ import 'date_time_picker.dart';
 import 'package:provider/provider.dart';
 
 class TimeFilter extends StatefulWidget implements PreferredSizeWidget {
-  final double appBarHeight;
+  final double height;
   final TimeFilterType initialFilter;
 
   TimeFilter({
-    Key key,
-    this.appBarHeight,
-    @required this.initialFilter,
-  }) : super(key: key) {
-    assert(initialFilter != null);
-  }
+    Key? key,
+    required this.height,
+    required this.initialFilter,
+  }) : super(key: key);
 
   @override
   _TimeFilterState createState() => _TimeFilterState();
 
   @override
-  Size get preferredSize => new Size.fromHeight(appBarHeight);
+  Size get preferredSize => Size.fromHeight(height);
 }
 
-class _TimeFilterState extends State<TimeFilter>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  TimeFilterType filterType;
+class _TimeFilterState extends State<TimeFilter> with SingleTickerProviderStateMixin {
+
+  late TabController _tabController;
+  late TimeFilterType filterType;
 
   /// These dates are adjusted with the methods [setStartDate]
   /// and [setEndDate] called from the onSelected method
   /// of [DateTimePicker]
-  DateTime start;
-  DateTime end;
+  late DateTime start;
+  late DateTime end;
 
   @override
   void initState() {
@@ -43,6 +41,7 @@ class _TimeFilterState extends State<TimeFilter>
       length: TimeFilterType.values.length,
       vsync: this,
     );
+    filterType = widget.initialFilter;
     // set the initial dates for the dateTimePickers
     start = widget.initialFilter.start;
     end = widget.initialFilter.end;
@@ -50,39 +49,39 @@ class _TimeFilterState extends State<TimeFilter>
 
   @override
   void dispose() {
-    _tabController?.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
   void tabChanged(int index) {
-    this.filterType = TimeFilterType.values.firstWhere((type) => type.index == index);
+    filterType = TimeFilterType.values.firstWhere((type) => type.index == index);
     // Adjusted filter has non constant values and gets updated with
     // the methods [setStartDate] and [setEndDate]
-    if(this.filterType == TimeFilterType.adjusted) {
+    if(filterType == TimeFilterType.adjusted) {
       this.readContext(start, end);
     }
     else {
-      this.readContext(this.filterType.start, this.filterType.end);
+      this.readContext(filterType.start, filterType.end);
     }
   }
 
   // set startDate for adjusted timespan from start DateTimePicker
   void setStartDate(DateTime startDate) {
-    this.start = startDate;
-    this.readContext(this.start, this.end);
+    start = startDate;
+    this.readContext(start, end);
   }
 
   // set endDate for adjusted timespan from end DateTimePicker
   void setEndDate(DateTime endDate) {
     // add 1 day to also count all activities of the last day
-    this.end = endDate.add(Duration(days: 1));
-    this.readContext(this.start, this.end);
+    end = endDate.add(Duration(days: 1));
+    this.readContext(start, end);
   }
 
   void readContext(DateTime start, DateTime end) {
     context.read<TimeFilterProvider>().onSelectedDate(
       context,
-      this.filterType,
+      filterType,
       start: start,
       end: end,
     );

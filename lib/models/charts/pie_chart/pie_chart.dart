@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/enums/tile_group_type.dart';
+import 'package:flutter_test_project/app/locator.dart';
+import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/enums/pie_chart_type.dart';
+import 'package:flutter_test_project/enums/tile_group_type.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/pie_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/center_progress_indicator.dart';
 import 'package:flutter_test_project/models/charts/pie_chart/indicators.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
+import 'package:flutter_test_project/services/group_type_service.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import '../chart.dart';
 import '../chart_components/chart_data.dart';
@@ -17,55 +20,41 @@ import 'package:json_annotation/json_annotation.dart';
 part 'pie_chart.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-// ignore: must_be_immutable
 class PieChartGraph extends Chart {
   final List<double> values;
   final List<String> indicatorText;
   @JsonKey(fromJson: _colorsFromJson, toJson: _colorsToJson)
   final List<Color> sectionColors;
 
-  @JsonKey(ignore: true)
-  PieChartAppearanceData data;
+  final PieChartType pieChartType;
 
   static _colorsFromJson(List<dynamic> colors) {
-    return colors?.castTo<Color>(
+    return colors.castTo<Color>(
       getValue: (value) => HexColor.fromHex(value),
     );
   }
 
   static _colorsToJson(List<Color> colors) {
-    return colors?.map((c) => c.toHex())?.toList();
+    return colors.map((c) => c.toHex()).toList();
   }
 
   PieChartGraph({
-    String title,
+    required String title,
+    required List<Color> sectionColors,
+    required this.pieChartType,
     this.values = const [],
     this.indicatorText = const [],
-    List<Color> sectionColors,
-  })  : sectionColors =
-            sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
+  })  : sectionColors = sectionColors.isEmpty ? ThemeScheme.chartPalette : sectionColors,
         super(
           type: ChartType.PieChart,
           title: title,
         );
 
-  void init(PieChartType type, int singularSize) {
-    this.data = PieChartAppearanceData(
-      type: type,
-      singularSize: singularSize,
-    );
-  }
+  @override
+  factory PieChartGraph.fromJson(Map<String, dynamic> json) =>
+      _$PieChartGraphFromJson(json);
 
-  factory PieChartGraph.fromJson(
-    Map<String, dynamic> json, {
-    PieChartType type = PieChartType.divided,
-    int singularSize,
-  }) {
-    PieChartGraph graph = _$PieChartGraphFromJson(json);
-    graph.init(type, singularSize);
-    return graph;
-  }
-
+  @override
   String toJson() => jsonEncode(_$PieChartGraphToJson(this));
 
   @override
@@ -73,61 +62,64 @@ class PieChartGraph extends Chart {
 }
 
 class PieChartGraphState extends State<PieChartGraph> {
+  final GroupTypeService _groupTypeService = locator<GroupTypeService>();
+
+  PieChartAppearanceData get appearanceData => new PieChartAppearanceData(
+        type: widget.pieChartType,
+        factor: _groupTypeService.getByChart(widget).factor,
+      );
+
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Flex(
-        direction: widget.data.axis,
-        children: <Widget>[
-          Indicators(
-            indicatorSize: widget.data.indicatorSize,
-            fontSize: widget.data.fontSize,
-            type: widget.data.type,
-            indicatorText: widget.indicatorText,
-            sectionColors: widget.sectionColors,
-            title: widget.title,
-          ),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  ChartData(
-                    PieChart(
-                      BasicPieChartData(
-                        sectionColors: widget.sectionColors,
-                        values: widget.values,
-                        pieRadius: widget.data.pieRadius,
-                        fontSize: widget.data.fontSize,
-                        showPieTitle: widget.data.showPieTitle,
-                        sectionsSpace: widget.data.sectionSpace,
-                        centerSpaceRadius: widget.data.centerSpaceRadius,
-                        startDegreeOffset: 180,
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                      ),
+    return Flex(
+      direction: appearanceData.axis,
+      children: <Widget>[
+        Indicators(
+          indicatorSize: appearanceData.indicatorSize,
+          fontSize: appearanceData.fontSize,
+          type: appearanceData.type,
+          indicatorText: widget.indicatorText,
+          sectionColors: widget.sectionColors,
+          title: widget.title,
+        ),
+        Expanded(
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                ChartData(
+                  data: PieChart(
+                    BasicPieChartData(
+                      sectionColors: widget.sectionColors,
+                      values: widget.values,
+                      pieRadius: appearanceData.pieRadius,
+                      fontSize: appearanceData.fontSize,
+                      showPieTitle: appearanceData.showTitle,
+                      sectionsSpace: appearanceData.sectionSpace,
+                      centerSpaceRadius: appearanceData.centerSpaceRadius,
+                      startDegreeOffset: appearanceData.startDegreeOffset,
                     ),
-                    showTitle: false,
                   ),
-                  widget.data.centerProgressIndicator
-                      ? CenterProgressIndicator(
-                          value: widget.values[0],
-                          style: TextStyle(
-                            fontSize: widget.data.fontSize * 2,
-                            color: widget.sectionColors[0],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : SizedBox(),
-                ],
-              ),
+                  showTitle: false,
+                ),
+                appearanceData.centerProgressIndicator
+                    ? CenterProgressIndicator(
+                        title: widget.title,
+                        type: appearanceData.type,
+                        value: widget.values[0],
+                        style: TextStyle(
+                          fontSize: appearanceData.fontSize * 2,
+                          // color: widget.sectionColors[0],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : SizedBox(),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

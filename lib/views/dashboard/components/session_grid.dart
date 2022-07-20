@@ -7,9 +7,9 @@ class SessionGrid extends StatefulWidget {
   final int crossAxisCount;
 
   SessionGrid({
-    Key key,
-    this.session,
-    this.crossAxisCount,
+    Key? key,
+    required this.session,
+    required this.crossAxisCount,
   }) : super(key: key);
 
   @override
@@ -19,14 +19,14 @@ class SessionGrid extends StatefulWidget {
 class _SessionGridState extends State<SessionGrid> {
   @override
   Widget build(BuildContext context) {
-    return StaggeredGridView.countBuilder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+    return StaggeredGrid.count(
       crossAxisCount: widget.crossAxisCount,
-      itemCount: widget.session.groups.length,
-      itemBuilder: (BuildContext context, int index) =>
-          widget.session.groups[index],
-      staggeredTileBuilder: (int index) => StaggeredTile.fit(widget.crossAxisCount ~/ 2),
+      children: widget.session.groups.map((group) {
+        return StaggeredGridTile.fit(
+          crossAxisCellCount: widget.crossAxisCount ~/ 2,
+          child: group,
+        );
+      }).toList(),
     );
   }
 }

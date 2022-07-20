@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_project/logic/size_generator.dart';
-import 'package:flutter_test_project/shimmering/tile_shimmer.dart';
+import 'package:flutter_test_project/views/dashboard/tile_components/tile_group.dart';
 
 class ShimmerGrid extends StatefulWidget {
   final int count;
   final int crossAxisCount;
 
   ShimmerGrid({
-    Key key,
+    Key? key,
     this.count = 4,
     this.crossAxisCount = 1,
   }) : super(key: key);
@@ -25,7 +24,7 @@ class _ShimmerGridState extends State<ShimmerGrid> {
       shrinkWrap: true,
       childAspectRatio: 0.8,
       crossAxisSpacing: 2,
-      children: List<TileShimmer>.filled(widget.count, TileShimmer()),
+      children: List<TileGroup>.filled(widget.count, TileGroup.asShimmer()),
     );
   }
 }

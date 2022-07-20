@@ -6,13 +6,13 @@ import 'package:flutter_test_project/models/charts/base_chart/base_pie_chart.dar
 class BasicPieChartData extends PieChartData {
   @protected
   BasicPieChartData._({
-    List<PieChartSectionData> sections,
-    double centerSpaceRadius,
-    Color centerSpaceColor,
-    double sectionsSpace,
-    double startDegreeOffset,
-    PieTouchData pieTouchData,
-    FlBorderData borderData,
+    List<PieChartSectionData>? sections,
+    double? centerSpaceRadius,
+    Color? centerSpaceColor,
+    double? sectionsSpace,
+    double? startDegreeOffset,
+    PieTouchData? pieTouchData,
+    FlBorderData? borderData,
   }) : super(
           sections: sections,
           centerSpaceRadius: centerSpaceRadius,
@@ -24,21 +24,20 @@ class BasicPieChartData extends PieChartData {
         );
 
   factory BasicPieChartData({
-    @required List<Color> sectionColors,
-    @required List<double> values,
-    @required double pieRadius,
-    double fontSize,
-    bool showPieTitle,
-    double centerSpaceRadius,
-    Color centerSpaceColor,
-    double sectionsSpace,
-    double startDegreeOffset,
-    PieTouchData pieTouchData,
-    FlBorderData borderData,
+    required List<double> values,
+    List<Color>? sectionColors,
+    double? pieRadius,
+    double? fontSize,
+    bool? showPieTitle,
+    double? centerSpaceRadius,
+    Color? centerSpaceColor,
+    double? sectionsSpace,
+    double? startDegreeOffset,
+    PieTouchData? pieTouchData,
+    FlBorderData? borderData,
   }) {
-    sectionColors = sectionColors ?? const [];
-    values = values ?? List.filled(sectionColors.length, 100 / sectionColors.length);
-    pieRadius = pieRadius ?? 60;
+    sectionColors ??= const [];
+    pieRadius ??= 60;
     BasePieChart base = BasePieChart();
 
     List<PieChartSectionData> sections = base.basePieGroups(

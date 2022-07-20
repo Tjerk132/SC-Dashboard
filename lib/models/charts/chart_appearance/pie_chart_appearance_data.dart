@@ -6,64 +6,61 @@ import 'package:flutter_test_project/enums/pie_chart_type.dart';
 ///between types easily
 class PieChartAppearanceData {
 
-  PieChartType type;
-  double pieRadius;
-  Axis axis;
-  double sectionSpace;
-  double centerSpaceRadius;
-  bool showPieTitle;
-  bool centerProgressIndicator;
-  double indicatorSize;
-  double fontSize;
+  final PieChartType type;
+  late double pieRadius;
+  late Axis axis;
+  late double centerSpaceRadius;
+  late double startDegreeOffset;
+  late double indicatorSize;
+  late double fontSize;
+
+  bool get showTitle => type.showTitle;
+
+  bool get centerProgressIndicator => type.centerProgressIndicator;
+
+  double get sectionSpace => type.sectionSpace;
 
   PieChartAppearanceData({
-    @required this.type,
-    int singularSize,
+    required this.type,
+    required int factor,
   }) {
-    double factor = 6.5;
-    switch (this.type) {
+    indicatorSize = 11 + (factor * 3.0);
+    fontSize = 12.0 + (2 * factor);
+
+    switch (type) {
       case PieChartType.donut:
-        this.pieRadius = 32 + (4.0 * singularSize);
-        this.axis = Axis.horizontal;
-        this.sectionSpace = 0;
-        this.centerSpaceRadius = singularSize * 18.0;
-        this.showPieTitle = true;
-        this.centerProgressIndicator = false;
-        this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 13.0 + singularSize;
+        pieRadius = 32 + (factor * 4);
+        axis = Axis.horizontal;
+        centerSpaceRadius = factor * 15.0;
+        startDegreeOffset = 180;
         break;
 
       case PieChartType.divided:
-        this.pieRadius = (1 + singularSize) * (factor * 3.5);
-        this.axis = Axis.vertical;
-        this.sectionSpace = 8.0 + singularSize;
-        this.centerSpaceRadius = 12;
-        this.showPieTitle = true;
-        this.centerProgressIndicator = false;
-        this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 12.0 + singularSize;
+        pieRadius = (factor * 3) * 12;
+        axis = Axis.vertical;
+        centerSpaceRadius = 10;
+        startDegreeOffset = 180;
         break;
 
       case PieChartType.circle:
-        this.pieRadius = (0.7 + singularSize) * (factor * 4.0);
-        this.axis = Axis.horizontal;
-        this.sectionSpace = 0;
-        this.centerSpaceRadius = 0;
-        this.showPieTitle = false;
-        this.centerProgressIndicator = false;
-        this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 14.0 + singularSize;
+        pieRadius = (factor * 2) * 15;
+        axis = Axis.horizontal;
+        centerSpaceRadius = 0;
+        startDegreeOffset = 180;
         break;
 
       case PieChartType.progression:
-        this.pieRadius = 10.0 * singularSize;
-        this.axis = Axis.vertical;
-        this.sectionSpace = 0;
-        this.centerSpaceRadius = 50 + (singularSize * 4.0);
-        this.showPieTitle = false;
-        this.centerProgressIndicator = true;
-        this.indicatorSize = 11 + (singularSize * 3.0);
-        this.fontSize = 12.0 + (2 * singularSize);
+        pieRadius = (factor * 1.5) * 10;
+        axis = Axis.vertical;
+        centerSpaceRadius = 50 + (factor * 4.0);
+        startDegreeOffset = 180;
+        break;
+
+      case PieChartType.gauge:
+        pieRadius = (factor * 1.5) * 10;
+        axis = Axis.vertical;
+        centerSpaceRadius = 55 + (factor * 4.0);
+        startDegreeOffset = 90;
         break;
 
       default:

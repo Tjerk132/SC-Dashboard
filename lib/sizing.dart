@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Sizing {
   static double getSize(MediaQueryData mediaQuery, double divider,
-      {double multiplier, bool reverse}) {
+      {double? multiplier, bool? reverse}) {
     double landscapeRatio = mediaQuery.orientation == Orientation.portrait
         ? mediaQuery.size.height / mediaQuery.size.width
         : mediaQuery.size.width / mediaQuery.size.height;
@@ -20,7 +20,7 @@ class Sizing {
 
   static double getSizeConstraint(
       MediaQueryData mediaQuery, BoxConstraints constraint, double divider,
-      {double multiplier, bool reverse}) {
+      {double? multiplier, bool? reverse}) {
     double _multiplier = multiplier != null && multiplier > 0 ? multiplier : 1;
     return reverse == null || !reverse
         ? (constraint.biggest.width / divider * _multiplier).roundToDouble()

@@ -7,7 +7,7 @@ extension DefaultMap<K, V> on Map<K, V> {
   /// see https://stackoverflow.com/questions/59736337/default-value-in-dart-map
   V getOrElse(K key, V defaultValue) {
     if (this.containsKey(key)) {
-      return this[key];
+      return this[key]!;
     }
     else {
       return defaultValue;
@@ -22,16 +22,14 @@ extension DefaultMap<K, V> on Map<K, V> {
   /// functions [getKey] and [getValue]
   //  see: https://github.com/dart-lang/sdk/issues/36836
   Map<K, T> castTo<K, T>({
-    K Function(dynamic) getKey,
-    T Function(dynamic) getValue,
+    K Function(dynamic)? getKey,
+    T Function(dynamic)? getValue,
   }) {
-    if (this == null) return const {};
+    getKey ??= (key) => int.tryParse(key as String) as K;
+    getValue ??= (value) => value as T;
 
-    getKey = getKey ?? (key) => int.tryParse(key as String) as K;
-    getValue = getValue ?? (value) => value as T;
-
-    return this?.map(
-      (key, value) => MapEntry<K, T>(getKey(key), getValue(value)),
+    return this.map(
+      (key, value) => MapEntry<K, T>(getKey!(key), getValue!(value)),
     );
   }
 }
@@ -49,13 +47,11 @@ extension DefaultList<E> on List<E> {
 
   /// variation of https://github.com/dart-lang/sdk/issues/36836
   List<T> castTo<T>({
-    T Function(dynamic) getValue,
+    T Function(dynamic)? getValue,
   }) {
-    if (this == null) return const [];
+    getValue ??= (value) => value as T;
 
-    getValue = getValue ?? (value) => value as T;
-
-    return List<T>.generate(length, (index) => getValue(this[index]));
+    return List<T>.generate(length, (index) => getValue!(this[index]));
   }
 }
 
@@ -69,13 +65,13 @@ extension DefaultNumberList<double> on List<double> {
 }
 
 extension IndexedIterable<E> on Iterable<E> {
-  /// variation of https://stackoverflow.com/questions/54898767/enumerate-or-map-through-a-list-with-index-and-value-in-dart
+  /// Variation of https://stackoverflow.com/questions/54898767/enumerate-or-map-through-a-list-with-index-and-value-in-dart
   Iterable<T> mapIndexed<T>(T f(E e, int i)) {
     var i = 0;
     return this.map((e) => f(e, i++));
   }
 
-  /// determines if any element in the list satisfies the given [match] condition.
+  /// Determines if any element in the list satisfies the given [match] condition.
   bool anyMatch(bool match(E element)) {
     for (E element in this) {
       if(match(element)) {
@@ -85,7 +81,7 @@ extension IndexedIterable<E> on Iterable<E> {
     return false;
   }
 
-  /// determines if every element in the list satisfies the given [match] condition.
+  /// Determines if every element in the list satisfies the given [match] condition.
   bool allMatch(bool match(E element)) {
     for (E element in this) {
       if(!match(element)) {
@@ -95,7 +91,7 @@ extension IndexedIterable<E> on Iterable<E> {
     return true;
   }
 
-  /// determines if not a single element in the list satisfies the given [match] condition.
+  /// Determines if not a single element in the list satisfies the given [match] condition.
   bool noneMatch(bool match(E element)) {
     for (E element in this) {
       if(match(element)) {
@@ -107,7 +103,7 @@ extension IndexedIterable<E> on Iterable<E> {
 }
 
 extension RandomExtension on Random {
-  Object nextObject(List<Object> list) => list[nextInt(list.length)];
+  T nextObject<T>(List<T> list) => list[nextInt(list.length)];
 }
 
 /// see https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
@@ -184,7 +180,7 @@ extension DateTimeExtension on DateTime {
     return buffer.toString();
   }
 
-  String writeAsUnit(List<int> timeUnits, {String startDivider, String endDivider}) {
+  String writeAsUnit(List<int> timeUnits, {String? startDivider, String? endDivider}) {
     StringBuffer buffer = StringBuffer();
     for (int timeUnit in timeUnits) {
       if(startDivider != null) {

@@ -11,7 +11,7 @@ extension TimeFilterExtension on TimeFilterType {
   DateTime get start {
     DateTime now = DateTime.now();
     if (this == TimeFilterType.lastSession) {
-      return DateTime(now.year, now.month, now.day);
+      return now;//aDateTime(now.year, now.month, now.day);
     }
     else
       return now.subtract(Duration(days: 7));

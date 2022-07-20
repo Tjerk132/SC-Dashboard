@@ -1,11 +1,8 @@
 class BarChartAppearanceData {
-
-  int singularSize;
-  double barWidth;
+  final int factor;
+  final double barWidth;
 
   BarChartAppearanceData({
-    this.singularSize,
-  }) {
-    this.barWidth = 12.0 + singularSize;
-  }
+    required this.factor,
+  }) : barWidth = 12.0 + factor;
 }

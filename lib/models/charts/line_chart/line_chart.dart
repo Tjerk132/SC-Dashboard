@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/app/locator.dart';
+import 'package:flutter_test_project/enums/chart_type.dart';
 import 'package:flutter_test_project/enums/tile_group_type.dart';
 import 'package:flutter_test_project/models/charts/base_chart_data/basic_line_chart_data.dart';
 import 'package:flutter_test_project/models/charts/chart_appearance/line_chart_appearance_data.dart';
 import 'package:flutter_test_project/models/charts/chart_components/chart_data.dart';
 import 'package:flutter_test_project/models/theme_scheme.dart';
+import 'package:flutter_test_project/services/group_type_service.dart';
 import '../chart.dart';
 import 'package:flutter_test_project/utility/utility.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,7 +17,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'line_chart.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-// ignore: must_be_immutable
 class LineChartGraph extends Chart {
   final double lineWidth;
 
@@ -26,27 +28,25 @@ class LineChartGraph extends Chart {
   @JsonKey(fromJson: _spotsFromJson, toJson: _spotsToJson)
   final Map<int, List<FlSpot>> spots;
   @JsonKey(fromJson: _colorsFromJson, toJson: _colorsToJson)
-  final Map<int, Color> colors;
-
-  @JsonKey(ignore: true)
-  LineChartAppearanceData data;
+  final Color color;
 
   static _spotsFromJson(Map<String, dynamic> spots) {
-    return spots?.castTo<int, List<FlSpot>>(
-        // the to be converted array looks like: [ [1,1], [2,1.5] etc. ]
-        getValue: (value) {
-      List<FlSpot> spots = new List<FlSpot>();
-      for (List<dynamic> spotCoordinates in value) {
-        List<double> doubleCoordinates =
-            spotCoordinates.map<double>((e) => e.toDouble()).toList();
-        spots.add(FlSpot(doubleCoordinates[0], doubleCoordinates[1]));
-      }
-      return spots;
-    });
+    return spots.castTo<int, List<FlSpot>>(
+      // the to be converted array looks like: [ [1,1], [2,1.5] etc. ]
+      getValue: (value) {
+        List<FlSpot> spots = <FlSpot>[];
+        for (List<dynamic> spotCoordinates in value) {
+          List<double> coordinates =
+              spotCoordinates.map<double>((e) => e.toDouble()).toList();
+          spots.add(FlSpot(coordinates[0], coordinates[1]));
+        }
+        return spots;
+      },
+    );
   }
 
   static _spotsToJson(Map<int, List<FlSpot>> spots) {
-    return spots?.map(
+    return spots.map(
       (k, e) => MapEntry(
         k.toString(),
         e.map((e) => [e.x, e.y]).toList(),
@@ -54,53 +54,43 @@ class LineChartGraph extends Chart {
     );
   }
 
-  static _colorsFromJson(Map<String, dynamic> colors) {
-    return colors?.castTo<int, Color>(
-      getValue: (value) => HexColor.fromHex(value),
-    );
-  }
+  static _colorsFromJson(dynamic color) => HexColor.fromHex(color);
 
-  static _colorsToJson(Map<int, Color> colors) {
-    return colors?.map(
-      (k, e) => MapEntry(
-        k.toString(),
-        e.toHex(),
-      ),
-    );
-  }
+  // return colors?.castTo<int, Color>(
+  //   getValue: (value) => HexColor.fromHex(value),
+  // );
+
+  static _colorsToJson(Color color) => color.toHex();
+
+  // return colors?.map(
+  //   (k, e) => MapEntry(
+  //     k.toString(),
+  //     e.toHex(),
+  //   ),
+  // );
 
   LineChartGraph({
-    String title,
-    String subTitle,
+    required String title,
+    String? subTitle,
     this.lineWidth = 8,
     this.topTitles = const {},
     this.bottomTitles = const {},
     this.leftTitles = const {},
     this.rightTitles = const {},
     this.spots = const {},
-    Map<int, Color> colors,
-  })  : colors = colors.isEmpty ? ThemeScheme.chartPalette.asMap() : colors,
+    Color? color,
+  })  : color = color ?? ThemeScheme.primaryColor,
         super(
           type: ChartType.LineChart,
           title: title,
-          subTitle: subTitle,
+          subtitle: subTitle,
         );
 
-  void init(int singularSize) {
-    this.data = LineChartAppearanceData(
-      singularSize: singularSize,
-    );
-  }
+  @override
+  factory LineChartGraph.fromJson(Map<String, dynamic> json) =>
+      _$LineChartGraphFromJson(json);
 
-  factory LineChartGraph.fromJson(
-    Map<String, dynamic> json, {
-    int singularSize,
-  }) {
-    LineChartGraph graph = _$LineChartGraphFromJson(json);
-    graph.init(singularSize);
-    return graph;
-  }
-
+  @override
   String toJson() => jsonEncode(_$LineChartGraphToJson(this));
 
   @override
@@ -108,6 +98,12 @@ class LineChartGraph extends Chart {
 }
 
 class LineChartGraphState extends State<LineChartGraph> {
+  final GroupTypeService _groupTypeService = locator<GroupTypeService>();
+
+  LineChartAppearanceData get appearanceData => new LineChartAppearanceData(
+        factor: _groupTypeService.getByChart(widget).factor,
+      );
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -121,7 +117,7 @@ class LineChartGraphState extends State<LineChartGraph> {
           children: <Widget>[
             //for stocks only
             AspectRatio(
-              aspectRatio: widget.data.aspectRatio,
+              aspectRatio: appearanceData.aspectRatio,
               child: Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
@@ -129,13 +125,13 @@ class LineChartGraphState extends State<LineChartGraph> {
                   ),
                 ),
                 child: ChartData(
-                  LineChart(
+                  data: LineChart(
                     BasicLineChartData(
                       gridData: FlGridData(
                         show: false,
                       ),
                       reservedSize: 22,
-                      margin: 8,
+                      margin: 1,
                       topTitles: widget.topTitles,
                       bottomTitles: widget.bottomTitles,
                       leftTitles: widget.leftTitles,
@@ -145,7 +141,7 @@ class LineChartGraphState extends State<LineChartGraph> {
                       minY: 0,
                       maxY: 4,
                       spots: widget.spots,
-                      colors: widget.colors,
+                      color: widget.color,
                       lineWidth: widget.lineWidth,
                       borderData: FlBorderData(
                         show: true,
@@ -164,7 +160,7 @@ class LineChartGraphState extends State<LineChartGraph> {
                     ),
                   ),
                   title: widget.title,
-                  subTitle: widget.subTitle,
+                  subtitle: widget.subtitle,
                 ),
               ),
             ),

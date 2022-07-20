@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_project/enums/pie_chart_type.dart';
 
 class CenterProgressIndicator extends StatefulWidget {
+  final String? title;
+  final PieChartType type;
   final double value;
   final TextStyle style;
 
   CenterProgressIndicator({
-    Key key,
-    this.value,
-    this.style,
+    Key? key,
+    this.title,
+    required this.type,
+    required this.value,
+    required this.style,
   }) : super(key: key);
 
   @override
@@ -19,13 +24,30 @@ class _CenterProgressIndicatorState extends State<CenterProgressIndicator> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      widthFactor: 5.3,
-      child: Container(
-        color: Colors.white.withOpacity(0.8),
-        child: Text(
-          '${widget.value}%',
-          style: widget.style,
-        ),
+      // widthFactor: 5.3,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          widget.type == PieChartType.gauge
+              ? SizedBox(
+                  width: 100,
+                  child: Text(
+                    widget.title!,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          Text(
+            '${widget.value}%',
+            style: widget.style,
+          ),
+        ],
       ),
     );
   }

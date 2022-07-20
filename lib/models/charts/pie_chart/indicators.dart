@@ -13,12 +13,12 @@ class Indicators extends StatefulWidget {
   final String title;
 
   Indicators({
-    Key key,
-    @required this.indicatorText,
-    @required this.sectionColors,
-    @required this.type,
-    this.indicatorSize,
-    this.fontSize,
+    Key? key,
+    required this.indicatorText,
+    required this.sectionColors,
+    required this.type,
+    required this.indicatorSize,
+    required this.fontSize,
     this.shape = BoxShape.rectangle,
     this.title = '',
   }) : super(key: key);
@@ -43,7 +43,7 @@ class _IndicatorsState extends State<Indicators> {
   }
 
   Padding title({
-    EdgeInsets insets = const EdgeInsets.all(0.0),
+    EdgeInsets insets = EdgeInsets.zero,
   }) {
     return Padding(
       padding: insets,
@@ -93,6 +93,7 @@ class _IndicatorsState extends State<Indicators> {
         return title(
           insets: EdgeInsets.only(left: 8.0, top: 4.0),
         );
+      case PieChartType.gauge:
       default:
         return SizedBox();
     }
